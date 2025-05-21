@@ -19,6 +19,10 @@ if IsDuplicityVersion() then
         local player = ps.getPlayer(source)
         return player.PlayerData.charinfo.firstname .. " " .. player.PlayerData.charinfo.lastname
     end
+    function ps.getPlayerNameByIdentifier(identifier)
+        local player = ps.getPlayerByIdentifier(identifier)
+        return player.PlayerData.charinfo.firstname .. " " .. player.PlayerData.charinfo.lastname
+    end
     function ps.getPlayerData(source)
         local player = ps.getPlayer(source)
         return player.PlayerData
