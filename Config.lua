@@ -1,9 +1,10 @@
 Config = {}
-Config.Framework = "qbx" -- QBCore or ESX
-Config.Notify = "ox" -- QBCore or ESX or ox
+Config.Framework = "qb" -- QBCore or ESX
+Config.Notify = "qb" -- QBCore or ESX or ox
 Config.Progressbar = "oxbar" -- QBCore or ESX or ox
-Config.Target = "ox" -- QBCore or ESX or ox or interact 
-Config.Inventory = "ox" -- QBCore or ESX or ox
+Config.Target = "qb" -- QBCore or ESX or ox or interact 
+Config.Inventory = "qb" -- QBCore or ESX or ox
+Config.Logs = "discord" -- fivemerr or discord
 ps = {}
 if Config.Framework == "qb" then
     QBCore = exports['qb-core']:GetCoreObject()

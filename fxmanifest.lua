@@ -32,6 +32,7 @@ server_scripts {
     'inventory/**.lua',
     'commands.lua',
     'interactions.lua',
+    'logger.lua',
     'misc.lua',
 }
 
