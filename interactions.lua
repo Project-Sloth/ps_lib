@@ -19,6 +19,25 @@ if IsDuplicityVersion() then
         return {source, text, type, time}
     end
 else
+    function ps.drawText(text)
+        if not text then return end
+        if Config.DrawText == 'qb' then
+            exports['qb-core']:ShowText(text)
+        elseif Config.DrawText == 'ox' then
+            lib.showTextUI(text)
+        elseif Config.DrawText == 'ps' then
+            exports['ps-ui']:DisplayText(text, "yellow")
+        end
+    end
+    function ps.hideText()
+        if Config.DrawText == 'qb' then
+            exports['qb-core']:HideText()
+        elseif Config.DrawText == 'ox' then
+            lib.hideTextUI()
+        elseif Config.DrawText == 'ps' then
+            exports['ps-ui']:HideText()
+        end
+    end
     function ps.notify(text, type, time)
         if not text then return end
         if not type then type = 'info' end
@@ -105,4 +124,5 @@ else
 			TriggerEvent('animations:client:EmoteCommandStart', {"c"})
 		end
     end
+
 end

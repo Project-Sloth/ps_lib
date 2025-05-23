@@ -1,6 +1,5 @@
 
 if IsDuplicityVersion() then
-    ps.debug('Loading Commands module')
     function ps.addCommand(name, info, args,  func)
         if not info.admin then info.admin = false end
         local can = false

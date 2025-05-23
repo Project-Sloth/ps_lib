@@ -12,6 +12,7 @@ description 'Project Sloth Library'
 -- Manifest
 client_scripts {
     '@qbx_core/modules/playerdata.lua',
+    'exporthandler.lua',
     'debug.lua',
     'framework/**.lua',
     'inventory/**.lua',
@@ -23,6 +24,9 @@ client_scripts {
     'interactions.lua',
     'misc.lua',
     'targets.lua',
+
+    'menus.lua',
+
 }
 
 server_scripts {
@@ -33,6 +37,7 @@ server_scripts {
     'commands.lua',
     'interactions.lua',
     'logger.lua',
+    'exporthandler.lua',
     'misc.lua',
 }
 

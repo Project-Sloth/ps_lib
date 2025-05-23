@@ -18,6 +18,7 @@
   };
   let copied = false;
   useNuiEvent<ReturnData>('getCoords', (coords) => {
+    console.log('coords', coords);
     coordinates = { ...coords };
   });
   function copyToClipboard(type: string) {

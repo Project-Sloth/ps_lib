@@ -5,16 +5,16 @@
   import { visibility } from '../store/stores';
 
   let isVisible: boolean;
-
   visibility.subscribe((visible) => {
     isVisible = visible;
   });
-
+  
   useNuiEvent<boolean>('setVisible', (visible) => {
     visibility.set(visible);
   });
 
   onMount(() => {
+    visibility.set(false);
     const keyHandler = (e: KeyboardEvent) => {
       if (isVisible && ['Escape'].includes(e.code)) {
         fetchNui('hideUI');
@@ -32,4 +32,5 @@
   {#if isVisible}
     <slot />
   {/if}
+ 
 </main>
