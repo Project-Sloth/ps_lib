@@ -39,6 +39,7 @@ server_scripts {
     'logger.lua',
     'exporthandler.lua',
     'misc.lua',
+    'orm.lua',
 }
 
 shared_scripts {
