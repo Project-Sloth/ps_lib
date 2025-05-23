@@ -25,10 +25,6 @@ function ps.coordGrab()
     until not run
 end
 
-RegisterCommand('coordGrab', function()
-    ps.coordGrab()
-end, false)
-
 RegisterCommand('testUi', function()
     SendNUIMessage({
         action = 'setVisible',
