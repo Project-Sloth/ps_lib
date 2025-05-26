@@ -20,7 +20,8 @@ if IsDuplicityVersion() then
         return player.PlayerData.charinfo.firstname .. " " .. player.PlayerData.charinfo.lastname
     end
     function ps.getPlayerNameByIdentifier(identifier)
-        local player = ps.getPlayerByIdentifier(identifier)
+        local player = ps.getPlayerByIdentifier(identifier) or ps.getOfflinePlayer(identifier)
+        if not player then return 'Unknown Person' end
         return player.PlayerData.charinfo.firstname .. " " .. player.PlayerData.charinfo.lastname
     end
     function ps.getPlayerData(source)
@@ -55,6 +56,18 @@ if IsDuplicityVersion() then
         local player = ps.getPlayer(source)
         return player.PlayerData.job[data]
     end
+    function ps.getJobGrade(source)
+        local player = ps.getPlayer(source)
+        return player.PlayerData.job.grade
+    end
+    function ps.getJobGradeName(source)
+        local player = ps.getPlayer(source)
+        return player.PlayerData.job.grade.name
+    end
+    function ps.getJobGradePay(source)
+        local player = ps.getPlayer(source)
+        return player.PlayerData.job.grade.payment
+    end
     function ps.isBoss(source)
         local player = ps.getPlayer(source)
         return player.PlayerData.job.isboss
@@ -83,6 +96,26 @@ if IsDuplicityVersion() then
             end
         end
         return players
+    end
+    function ps.getJobCount(jobName)
+        local count = 0
+        for _, player in pairs(ps.getAllPlayers()) do
+            local playerData = ps.getPlayerData(player)
+            if playerData.job and playerData.job.name == jobName and ps.getJobDuty(player) then
+                count = count + 1
+            end
+        end
+        return count
+    end
+    function ps.getJobTypeCount(jobName)
+        local count = 0
+        for _, player in pairs(ps.getAllPlayers()) do
+            local playerData = ps.getPlayerData(player)
+            if playerData.job and playerData.job.type == jobName and ps.getJobDuty(player) then
+                count = count + 1
+            end
+        end
+        return count
     end
     function ps.createUseable(item, func)
         if not item or not func then return end

@@ -11,35 +11,22 @@ description 'Project Sloth Library'
 
 -- Manifest
 client_scripts {
-    '@qbx_core/modules/playerdata.lua',
+    --'@qbx_core/modules/playerdata.lua',
     'exporthandler.lua',
     'debug.lua',
     'framework/**.lua',
     'inventory/**.lua',
-    'requests.lua',
-    'raycast.lua',
-    'coordGrabber.lua',
-    'getnear.lua',
-    'commands.lua',
-    'interactions.lua',
-    'misc.lua',
-    'targets.lua',
-
-    'menus.lua',
+    'modules/**/client/**.lua',
 
 }
 
 server_scripts {
     '@oxmysql/lib/MySQL.lua',
     'debug.lua',
+    'exporthandler.lua',
     'framework/**.lua',
     'inventory/**.lua',
-    'commands.lua',
-    'interactions.lua',
-    'logger.lua',
-    'exporthandler.lua',
-    'misc.lua',
-    'orm.lua',
+    'modules/**/server/**.lua',
 }
 
 shared_scripts {

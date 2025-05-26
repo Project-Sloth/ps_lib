@@ -24,7 +24,3 @@ if Config.Logs == 'fivemerr' then
          end)
     end
 end
-
-RegisterCommand('log', function(source, args, rawCommand)
-    ps.log('Test log from command', {player = ps.getPlayerName(source), testing = true})
-end, false)

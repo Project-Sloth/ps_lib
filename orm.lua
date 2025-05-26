@@ -1,5 +1,4 @@
-local MySQL = require('oxmysql')
-
+ps.ORM = {}
 function ps.ORM.find(table, conditions)
     local query = 'SELECT * FROM ' .. table .. ' WHERE '
     local params = {}
