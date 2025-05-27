@@ -1,17 +1,22 @@
 ps.ORM = {}
 
 --- Fetch all rows that match the condition asynchronously.
+--- Or fetch all rows if `conditions == nil`.
 ---@param table string
----@param conditions table
+---@param conditions table|nil
 ---@param cb function
 function ps.ORM.find(table, conditions, cb)
     local query = 'SELECT * FROM ' .. table .. ' WHERE '
     local params = {}
-    for key, value in pairs(conditions) do
-        params[#params+1]=value
-        query = query .. key .. ' = ? AND '
+    if conditions then
+        for key, value in pairs(conditions) do
+            params[#params + 1] = value
+            query = query .. key .. ' = ? AND '
+        end
+        query = query:sub(1, -5)     -- Remove the last ' AND '
+    else
+        query = query:sub(1, -7)     -- Remove ' WHERE '
     end
-    query = query:sub(1, -5) -- Remove the last ' AND '
     return MySQL.query(query, params, cb)
 end
 
