@@ -12,7 +12,7 @@ description 'Project Sloth Library'
 -- Manifest
 client_scripts {
     --'@qbx_core/modules/playerdata.lua',
-    'modules/startFirst/client/**.lua',
+    'startFirst/client/**.lua',
     'framework/**.lua',
     'inventory/**.lua',
     'modules/**/client/**.lua',
@@ -21,7 +21,7 @@ client_scripts {
 
 server_scripts {
     '@oxmysql/lib/MySQL.lua',
-    'modules/startFirst/server/**.lua',
+    'startFirst/server/**.lua',
     'framework/**.lua',
     'inventory/**.lua',
     'modules/**/server/**.lua',

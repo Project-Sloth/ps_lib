@@ -32,3 +32,24 @@ ps.exportChange('qb-input', 'ShowInput', function(data)
     end
     local test = exports['ps-ui']:Input(newInput)
 end)
+
+RegisterCommand("qb-menu", function()
+    local input = exports['ps-ui']:Input({
+        title = "Test",
+        inputs = {
+            {
+                type = "checkbox",
+                placeholder = "test2"
+            },
+            {
+                type = "password",
+                placeholder = "password"
+            },
+            {
+                type = "checkbox",
+                placeholder = "666"
+            },
+        }
+    })
+    ps.debug(input)
+end)
