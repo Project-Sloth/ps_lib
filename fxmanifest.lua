@@ -25,6 +25,7 @@ server_scripts {
     'framework/**.lua',
     'inventory/**.lua',
     'modules/**/server/**.lua',
+    'orm.lua'
 }
 
 shared_scripts {

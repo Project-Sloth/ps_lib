@@ -1,54 +1,73 @@
 ps.ORM = {}
-function ps.ORM.find(table, conditions)
+
+--- Fetch all rows that match the condition asynchronously.
+---@param table string
+---@param conditions table
+---@param cb function
+function ps.ORM.find(table, conditions, cb)
     local query = 'SELECT * FROM ' .. table .. ' WHERE '
     local params = {}
     for key, value in pairs(conditions) do
-        table.insert(params, value)
+        params[#params+1]=value
         query = query .. key .. ' = ? AND '
     end
     query = query:sub(1, -5) -- Remove the last ' AND '
-    return MySQL.Async.fetchAll(query, params)
+    return MySQL.query(query, params, cb)
 end
 
-function ps.ORM.create(table, data)
+--- Create new rows in a table asynchronously.
+---@param table string
+---@param data table
+---@param cb function
+function ps.ORM.create(table, data, cb)
     local columns = ''
     local placeholders = ''
     local params = {}
     for key, value in pairs(data) do
         columns = columns .. key .. ', '
         placeholders = placeholders .. '?, '
-        table.insert(params, value)
+        params[#params+1]=value
     end
     columns = columns:sub(1, -3) -- Remove the last ', '
     placeholders = placeholders:sub(1, -3) -- Remove the last ', '
     local query = 'INSERT INTO ' .. table .. ' (' .. columns .. ') VALUES (' .. placeholders .. ')'
-    return MySQL.Async.execute(query, params)
+    return MySQL.insert(query, params, cb)
 end
 
-function  ps.ORM.update(table, data, conditions)
+--- Update fields in a table based on conditions asynchronously.
+---@param table string
+---@param data table
+---@param conditions table
+---@param cb function
+function ps.ORM.update(table, data, conditions, cb)
     local setClause = ''
     local params = {}
     for key, value in pairs(data) do
         setClause = setClause .. key .. ' = ?, '
-        table.insert(params, value)
+        params[#params + 1] = value
     end
-    setClause = setClause:sub(1, -3) -- Remove the last ', '
+    setClause = setClause:sub(1, -3) .. ' WHERE ' -- Remove the last ', '
     for key, value in pairs(conditions) do
-        table.insert(params, value)
-        setClause = setClause .. ' AND ' .. key .. ' = ?'
+        params[#params + 1] = value
+        setClause = setClause .. key .. ' = ? AND '
     end
+    setClause = setClause:sub(1, -5) -- Remove the last ' AND '
     local query = 'UPDATE ' .. table .. ' SET ' .. setClause
-    return MySQL.Async.execute(query, params)
+    return MySQL.update(query, params, cb)
 end
 
-function  ps.ORM.delete(table, conditions)
+--- Delete rows based on conditions asynchronously.
+---@param table string
+---@param data table
+---@param conditions table
+---@param cb function
+function  ps.ORM.delete(table, conditions, cb)
     local query = 'DELETE FROM ' .. table .. ' WHERE '
-    local params = {} 
+    local params = {}
     for key, value in pairs(conditions) do
-        table.insert(params, value)
+        params[#params + 1] = value
         query = query .. key .. ' = ? AND '
     end
     query = query:sub(1, -5) -- Remove the last ' AND '
-
-    return MySQL.Async.execute(query, params)
+    return MySQL.rawExecute(query, params, cb)
 end
