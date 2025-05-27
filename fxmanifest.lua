@@ -31,6 +31,7 @@ server_scripts {
 shared_scripts {
     '@ox_lib/init.lua',
     'Config.lua',
+    'startFirst/shared/**.lua',
     'init.lua'
 }
 
