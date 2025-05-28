@@ -20,6 +20,23 @@ function ps.ORM.find(table, conditions, cb)
     return MySQL.query(query, params, cb)
 end
 
+function ps.ORM.findOrderedLimited(table, conditions, orderBy, orderDirection, limit, cb)
+    local query = 'SELECT * FROM ' .. table .. ' WHERE '
+    local params = {}
+    if conditions then
+        for key, value in pairs(conditions) do
+            params[#params + 1] = value
+            query = query .. key .. ' = ? AND '
+        end
+        query = query:sub(1, -5) -- Remove the last ' AND '
+    else
+        query = query:sub(1, -7) -- Remove ' WHERE '
+    end
+    query = query .. ' ORDER BY ' .. orderBy .. ' ' .. orderDirection
+    query = query .. ' LIMIT ' .. limit
+    return MySQL.query(query, params, cb)
+end
+
 --- Create new rows in a table asynchronously.
 ---@param table string
 ---@param data table
