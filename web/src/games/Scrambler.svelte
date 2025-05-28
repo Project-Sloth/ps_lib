@@ -99,7 +99,8 @@
 
         setTimeout(() => {
             if(!isDevMode) {
-                fetchNui('minigame:callback', hackSuccess);
+                fetchNui('scrambler-result', hackSuccess);
+                fetchNui('psui:close');
                 dispatch('game-ended', { hackSuccess });
             }
             dispatch('minigame:callback', hackSuccess);

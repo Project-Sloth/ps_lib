@@ -4,7 +4,6 @@
 --- @param icon string: Icon to display on the status bar.
 --- @param values table: List of items to display in the status bar. Each item is typically a table with `key` and `value` fields.
 local function statusShow(title, description, icon, values)
-    ps.debug("StatusBar called with " .. title .. " title, " .. description .. " description, " .. icon .. " icon, and " .. json.encode(values) .. " values")
     SendNUI("ShowStatusBar", nil, {
         title = title,
         description = description,

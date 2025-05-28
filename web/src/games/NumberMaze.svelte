@@ -172,7 +172,8 @@
             setTimeout(() => {
                 gameEnded = true;
                 if(!isDevMode) {
-                    fetchNui('minigame:callback', false);
+                    fetchNui('maze-result', false);
+                    fetchNui('psui:close');
                     dispatch('game-ended', { hackSuccess: false });
                 }
                 dispatch('closeUI', {hackSuccess: false});
@@ -187,7 +188,8 @@
             setTimeout(() => {
                 gameEnded = true;
                 if(!isDevMode) {
-                    fetchNui('minigame:callback', true);
+                    fetchNui('maze-result', true);
+                    fetchNui('psui:close');
                     dispatch('game-ended', { hackSuccess: true });
                 }
                 dispatch('closeUI', {hackSuccess: true});

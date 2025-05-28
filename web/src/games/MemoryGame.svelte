@@ -172,7 +172,8 @@
     $: {
         if(gameEnded) {
             if(!isDevMode) {
-                fetchNui('minigame:callback', hackSuccess);
+                fetchNui('thermite-result', hackSuccess);
+                fetchNui('psui:close');
                 dispatch('game-ended', { hackSuccess });
             }
             

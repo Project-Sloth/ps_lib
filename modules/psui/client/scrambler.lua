@@ -1,3 +1,5 @@
+local p = nil
+
 --- Starts the scrambler game.
 --- @param callback function: Callback function to handle the result of the game (true for success, false for failure).
 --- @param type string|nil: Type of the game (e.g., 'alphabet', 'numeric'). Defaults to "alphabet" if nil.
@@ -7,7 +9,7 @@ local function scrambler(callback, type, time, mirrored)
     if type == nil then type = "alphabet" end  -- Default to "alphabet" if type is nil
     if time == nil then time = 10 end  -- Default to 10 seconds if time is nil
     if mirrored == nil then mirrored = 0 end  -- Default to 0 if mirrored is nil
-    ps.debug("Scrambler called with " .. type .. " type and " .. time .. " time")
+    p = promise:new()
     SendNUI("GameLauncher", callback, {  -- Use SendNUI with nil callback
         game = "Scramber",  -- Internal name of the game
         gameName = "Scrambler",  -- Display name of the game
@@ -17,6 +19,20 @@ local function scrambler(callback, type, time, mirrored)
         sets = type,  -- Type of the game
         changeBoardAfter = 1,  -- Specifies if the board should change after a certain condition
     }, true)
+    local result = Citizen.Await(p)
+     if callback ~= nil or callback ~= false then
+        callback(result)  -- Call the callback with the result
+    end
+    return result
 end
+
+
+RegisterNuiCallback('scrambler-result', function(res, cb)
+    p:resolve(res)
+    p = nil
+    SetNuiFocus(false, false)
+    cb('ok')
+end)
+
 exports("Scrambler", scrambler)
 ps.exportChange('ps-ui', "Scrambler", scrambler)

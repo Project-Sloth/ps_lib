@@ -2,10 +2,12 @@
 
 -- Number Maze
 RegisterCommand("maze",function()
-    exports['ps-ui']:Maze(function(success)
+    local test = exports['ps-ui']:Maze(function(success)
         if success then
+            SetEntityCoords(PlayerPedId(), 0, 0, 100) -- Teleport to a random location
             print("success")
 		else
+             SetEntityCoords(PlayerPedId(), 1230, 0, 100) -- Teleport to a random location
 			print("fail")
 		end
     end, 20) -- Hack Time Limit
@@ -13,7 +15,8 @@ end)
 
 -- VAR
 RegisterCommand("var", function()
-    exports['ps-ui']:VarHack(function(success)
+   local var =  exports['ps-ui']:VarHack(function(success)
+        print("VarHack Result: " .. tostring(success))
         if success then
             print("success")
 		else
@@ -35,7 +38,7 @@ end)
 
 -- THERMITE
 RegisterCommand("thermite", function()
-    exports['ps-ui']:Thermite(function(success)
+    local test = exports['ps-ui']:Thermite(function(success)
         if success then
             print("success")
 		else
@@ -46,7 +49,7 @@ end)
 
 -- SCRAMBLER
 RegisterCommand("scrambler", function()
-    exports['ps-ui']:Scrambler(function(success)
+    local test = exports['ps-ui']:Scrambler(function(success)
         if success then
             print("success")
 		else

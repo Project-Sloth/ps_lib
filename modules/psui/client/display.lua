@@ -19,8 +19,7 @@ local function display(text, color, icon)
         }
     })
 end
-exports("DisplayText",display)
-ps.exportChange('ps-ui', "DisplayText", display)
+
 --- Hides the currently displayed text.
 local function hide()
     storedText = ""
@@ -29,8 +28,6 @@ local function hide()
         action = "HideDrawTextMenu",
     })
 end
-exports("HideText", hide)
-ps.exportChange('ps-ui', "HideText", hide)
 
 
 --- Updates the displayed text.
@@ -47,6 +44,13 @@ local function UpdateText(text, color, icon)
         }
     })
 end
+
+
+exports("DisplayText",display)
+ps.exportChange('ps-ui', "DisplayText", display)
+
+exports("HideText", hide)
+ps.exportChange('ps-ui', "HideText", hide)
+
 exports("UpdateText", UpdateText)
 ps.exportChange('ps-ui', "UpdateText", UpdateText)
-
