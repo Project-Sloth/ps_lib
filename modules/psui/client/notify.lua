@@ -18,3 +18,15 @@ RegisterNetEvent('ps-ui:Notify', notify)
 
 exports('Notify', notify)
 ps.exportChange('ps-ui', "Notify", notify)
+CreateThread(function()
+    Wait(2000)
+    notify("PS-UI is loaded", "success", 1000)
+    Wait(1200)
+    notify('test', 'warning', 1000) -- Example notification for testing
+    Wait(1200)
+    notify('This is a primary notification', 'error', 1000) -- Example notification for testing
+    Wait(1200)
+    notify('This is a success notification', 'info', 1000) -- Example notification for testing
+    Wait(1200)
+    notify('This is a mint notification', 'primary', 5000) -- Example mint notification
+end)
