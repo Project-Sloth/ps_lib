@@ -7,7 +7,6 @@ local p = nil
 local function varHack(callback, blocks, speed)
     if speed == nil or (speed < 2) then speed = 20 end  -- Default speed if not provided or less than 2
     if blocks == nil or (blocks < 1 or blocks > 15) then blocks = 5 end  -- Default blocks if not provided or out of range (1-15
-    ps.debug("VarHack called with " .. blocks .. " blocks and " .. speed .. " speed")
     p = promise:new()  -- Create a new promise for the game result
     SendNUI("GameLauncher", callback, {
         game = "NumberPuzzle",  -- Name of the game

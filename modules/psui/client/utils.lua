@@ -10,8 +10,6 @@ RegisterNUICallback('minigame:callback', function(res, cb)
         callback(res)
     end
 
-    ps.debug("Minigame closed. Result: " .. tostring(res))
-
     isActive = false
 
     cb('ok')

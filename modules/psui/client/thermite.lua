@@ -18,10 +18,9 @@ local function thermite(cb, time, gridsize, wrong, correctBlocks)
     if time == nil then time = 10 end
     if gridsize <= 5 or gridsize == nil then gridsize = 6 end 
     if wrong == nil then wrong = 3 end
-
     local correctBlockCount = correctBlocks or correctBlocksBasedOnGrid[gridsize]
-    ps.debug("Thermite called with " .. correctBlockCount .. " correct blocks and " .. time .. " time")
     p = promise:new()  -- Create a new promise for the game result
+    
     SendNUI("GameLauncher", cb, {  -- Use SendNUI with nil callback
         game = "MemoryGame",  -- Name of the game
         gameName = "Memory Game",  -- Display name of the game
