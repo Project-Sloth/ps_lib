@@ -143,19 +143,49 @@ RegisterCommand("input", function()
         title = "Test",
         inputs = {
             {
+                label = "Test Input 1",
                 type = "text",
-                placeholder = "test2"
+                placeholder = "test2",
             },
             {
-                type = "password",
-                placeholder = "password"
-            },
-            {
+                label = "Test Input 2",
                 type = "number",
-                placeholder = "666"
+                placeholder = "test2",
             },
+            {
+                label = "Test Input 3",
+                type = "password",
+                placeholder = "test2",
+                icon = "fa-solid fa-circle",
+            },
+            {
+                label = "Test Input 4",
+                type = "textarea",
+                placeholder = "test2",
+                icon = "fa-solid fa-circle",
+            },
+            {
+                label = "Test Input 5",
+                type = "select",
+                placeholder = "test2",
+                icon = "fa-solid fa-circle",
+                options = {
+                    { label = "Option 1", value = true },
+                    { label = "Option 2", value = false },
+                    { label = "Option 3", value = true },
+                }
+            },
+            {
+                label = "Test Input 6",
+                type = "checkbox",
+                placeholder = "test2",
+                icon = "fa-solid fa-circle",
+                
+            },
+           
         }
     })
+    ps.debug("Input Result: ", json.encode(input))
 end)
 
 RegisterCommand("showimage", function()

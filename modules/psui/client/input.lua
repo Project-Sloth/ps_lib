@@ -5,7 +5,17 @@ local active = false
 --- @param InputData table: Data to be used for the input form, typically includes fields like labels, types, and icons.
 --- @return table: User input data as returned from the form.
 local function input(InputData)
-    ps.debug("Input called with " .. json.encode(InputData))
+    if not InputData.inputs or #InputData.inputs == 0 then
+        error("InputData must contain at least one input field.")
+    end
+    for k, v in pairs(InputData.inputs) do
+       if not v.value then 
+              v.value = ""
+        end
+        if not v.id then
+            v.id = k
+        end
+    end
     p = promise.new()
     while active do Wait(0) end
     active = true
@@ -35,6 +45,11 @@ end)
 --- @param cb function: Callback function to signal completion of the NUI callback (must be called to complete the NUI callback).
 RegisterNUICallback('input-close', function(data, cb)
     SetNuiFocus(false, false)
+    if p then
+        p:resolve(nil)
+        p = nil
+    end
+    active = false
     cb('ok')
 end)
 

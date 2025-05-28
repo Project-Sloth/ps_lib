@@ -9,27 +9,36 @@
     document.onkeyup = handleKeyUp;
     let inputData:any = $inputStore;
 
-    onMount(() => {
-        inputData = inputData.map((val) => {
-            val.value = null;
-            return val;
-        });
-    });
 
     function submit() {
         let returnData = [];
 
         let inputs = document.querySelectorAll('input');
+        let textareas = document.querySelectorAll('textarea');
+        let selects = document.querySelectorAll('select');
+        selects.forEach((select: HTMLInputElement, index) => {
+            let returnObj = {
+                id:select.id,
+                value: select.value,
+            };
+            returnData.push(returnObj)
+        });
+        textareas.forEach((textarea: HTMLTextAreaElement, index) => {
+            let returnObj = {
+                id:  textarea.id,
+                value: textarea.value,
+            };
+            returnData.push(returnObj)
+        });
         inputs.forEach((input: HTMLInputElement, index) => {
             let returnObj = {
                 id: input.id,
 				value: input.value,
-                // compIndex: index
             };
             
             returnData.push(returnObj)
 		});
-
+        console.log('returnData', JSON.stringify(returnData));
         if(!isDevMode) {
             fetchNui('input-callback', returnData);
         }
@@ -38,13 +47,7 @@
     }
 
     export function closeInputs(): void {
-        let inputs = document.querySelectorAll('input');
-		inputs.forEach((input: HTMLInputElement) => {
-			input.value = '';
-		});
-
-        inputData = [];
-
+        
         if(!isDevMode) {
             fetchNui('input-close', { ok: true });
         }
@@ -54,54 +57,56 @@
 </script>
 
 <div class="input-base-wrapper">
-    <div class="input-message">
-        {inputData.title || "Please fill out this form"}
-        {#if inputData.message}
-            <p class="input-message">{inputData.message}</p>
-        {/if}
-        
+    <div class="logo">
+        <img src="./images/ps-logo.png" alt="ps-logo" />
     </div>
+
     <div class="input-form">
-        {#each inputData as inputValue}
+        {#each inputData.inputs as inputValue}
             <div class="input-wrapper">
                 <div class="input-data-wrapper">
                     <div class="input-icon">
-                        <Icon icon={inputValue.icon} color="ps-text-green" classes="text-2xl" />
+                        <Icon icon={inputValue.icon || 'fa-solid fa-user'} color="ps-text-green" classes="text-2xl" />
                     </div>
                     <div class="input-area">
-                        <p class="label">
-                            {inputValue.label}
-                        </p>
-                        {#if inputValue.type === 'text' || inputValue.type === 'number'}
-                            <input
-                                type = {inputValue.type}
-                                id={inputValue.id}
-                                class="value"
-                                placeholder={inputValue.placeholder || "Insert info"}
-                            />
-                        {:else if inputValue.type === 'checkbox'}
-                            <label class="checkbox-wrapper">
-                                <input
-                                    type="checkbox"
-                                    id={inputValue.id}
-                                    checked={inputValue.value}
-                                    on:change={(e) => handleInputChange(inputValue.id, e.target.checked)}
-                                />
-                                <span class="checkbox-label">{inputValue.checkboxLabel || "Enable"}</span>
-                            </label>
+                        {#if inputValue.type === 'text'}
+                            <p class="label">
+                                {inputValue.label}
+                            </p>
+                            <input id={inputValue.id} type={inputValue.type} class="value" placeholder={inputValue.placeholder} value={inputValue.value} />
+                        {:else if inputValue.type === 'number'}
+                            <p class="label">
+                                {inputValue.label}
+                            </p>
+                            <input id={inputValue.id} type={inputValue.type} class="value" placeholder={inputValue.placeholder} value={Number(inputValue.value)} />
+                        {:else if inputValue.type === 'password'}
+                            <p class="label">
+                                {inputValue.label}
+                            </p>
+                            <input id={inputValue.id} type={inputValue.type} class="value" placeholder={inputValue.placeholder} value={inputValue.value} />
+                        {:else if inputValue.type === 'textarea'}
+                            <p class="label">
+                                {inputValue.label}
+                            </p>
+                            <textarea id={inputValue.id} class="value" placeholder={inputValue.placeholder} rows="3">{inputValue.value}</textarea>
                         {:else if inputValue.type === 'select'}
-                            <select
-                                id={inputValue.id}
-                                class="value"
-                            >
+                            <p class="label">
+                                {inputValue.label}
+                            </p>
+                            <select id={inputValue.id} class="value">
                                 {#each inputValue.options as option}
-                                    <option value={option.value}>
-                                        {option.label}
-                                    </option>
+                                    <option value={option.value} selected={option.value === inputValue.value}>{option.label}</option>
                                 {/each}
                             </select>
+                        {:else if inputValue.type === 'checkbox'}
+                            <p class="label">
+                                {inputValue.label}
+                            </p>
+                            <input id={inputValue.id} type={inputValue.type} class="value" checked={inputValue.value} />
                         {/if}
-                       
+                        {#if inputValue.message}
+                            <p class="input-message">{inputValue.message}</p>
+                        {/if}
                     </div>
                 </div>
                 <div class="horizontal-line"></div>
@@ -117,138 +122,116 @@
 
 <style>
     .input-base-wrapper {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 28vw;
-    max-width: 400px;
-    background-color: var(--color-darkblue);
-    border-radius: 0.6vw;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    padding: 2vw 2.5vw;
-    display: flex;
-    flex-direction: column;
-    color: white;
-}
+        /* centering the view */
+        position: absolute;
+        left: 50%;  
+        top: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);  
 
-.input-message {
-    font-size: clamp(1rem, 1.4vw, 1.6rem);
-    font-weight: 600;
-    text-transform: uppercase;
-    margin-bottom: 1.2vw;
-    text-align: center;
-    color: white;
-}
+        width: 25vw;
+        min-height: 28vw;
+        height: fit-content;
 
-.input-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1vw;
-}
+        overflow: hidden;
 
-.input-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5vw;
-}
+        background-color: var(--color-darkblue);
+        border-radius: 0.3vw;
 
-.horizontal-line {
-    width: 100%;
-    height: 1px;
-    background-color: var(--color-lightgrey);
-}
+        padding: 0.5vw 2vw;
+        display: flex;
+        flex-direction: column;
+    }
 
-.input-message {
-    font-size: clamp(0.75rem, 0.9vw, 1rem);
-    opacity: 0.7;
-    color: var(--color-lightgrey);
-    text-transform: capitalize;
-}
+    .input-base-wrapper > .input-form {
+        margin-top: 1vw;
+        height: 100%;
 
-.input-data-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 1vw;
-}
+        /* border: 0.1px solid red; */
+    }
 
-.input-icon {
-    width: 1.5vw;
-    height: 1.5vw;
-    margin-top: auto;
-    margin-bottom: auto;
-    opacity: 0.6;
-}
+    .input-base-wrapper > .input-form > .input-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
 
-.input-area {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
+    .input-base-wrapper > .input-form > .input-wrapper > .horizontal-line {
+        width: inherit;
+        height: 1px;
+        background-color: var(--color-lightgrey);
+    }
+    .input-base-wrapper > .input-form > .input-wrapper > .input-message {
+        font-size: 0.8vw;
+        opacity: 0.85;
+        color: var(--color-lightgrey);
+        margin-top: 0.2vw;
+        text-transform: capitalize;
+    }
+    .input-base-wrapper > .input-form > .input-wrapper > .input-data-wrapper {
+        display: flex;
+        flex-direction: row;
 
-.input-area .label {
-    font-size: clamp(0.9rem, 1.1vw, 1.2rem);
-    font-weight: 500;
-    margin-bottom: 0.3vw;
-}
+        padding: 0.5vw 0;
+    }
+    .input-base-wrapper > .input-form > .input-wrapper:not(:last-child) {
+        margin-bottom: 1vw;
+    }
 
-.input-area .value {
-    font-size: clamp(0.75rem, 0.9vw, 1rem);
-    font-weight: 300;
-    background: transparent;
-    border: none;
-    padding-left: 0.5vw;
-    transition: border-color 0.3s ease;
-    width: 100%;
-    outline: none;
-}
+    .input-base-wrapper > .input-form > .input-wrapper > .input-data-wrapper > .input-icon {
+        margin-right: 0.75vw;
+        width: 1.5vw;
 
-.input-area .value:focus {
-    border-bottom-color: var(--color-green);
-    padding-left: 0;
-}
+        margin-top: auto;
+        margin-bottom: auto;
+    }
+    .input-base-wrapper > .input-form > .input-wrapper > .input-data-wrapper > .input-area {
+        display: flex;
+        flex-direction: column;
 
-/* Button Wrapper */
-.button-wrapper {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 1.5vw;
-    gap: 1vw;
-}
+        color: var(--color-lightgrey);
+    }
+    .input-base-wrapper > .input-form > .input-wrapper > .input-data-wrapper > .input-area > .label {
+        font-size: 1vw;
+        font-weight: 500 !important;
+    }
+    .input-base-wrapper > .input-form > .input-wrapper > .input-data-wrapper > .input-area > .value {
+        font-size: 0.8vw;
+        font-weight: 300 !important;
+        width: 18vw;
+        background-color: inherit;
+        margin-top: 0.2vw;
+    }
 
-.submit-btn,
-.cancel-btn {
-    flex: 1;
-    padding: 0.6vw 1.2vw;
-    font-size: clamp(0.8rem, 0.95vw, 1.1rem);
-    font-weight: 600;
-    text-transform: uppercase;
-    border-radius: 0.4vw;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
+    input:focus {
+		padding-left: 0;
+		outline: none;
+		border-bottom-width: 2px;
+		border-bottom-color: var(--color-green);
+		margin-bottom: -1px;
+	}
 
-.submit-btn {
-    background-color: var(--color-green);
-    color: white;
-}
+    .input-base-wrapper > .button-wrapper {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
 
-.submit-btn:hover {
-    background-color: #2ecc71; /* brighter green */
-}
+        margin: 1.5vw auto 1.25vw auto;
+        color: var(--color-black);
+    }
+    .input-base-wrapper > .button-wrapper > .submit-btn {
+        background-color: var(--color-green);
+    }
+    .input-base-wrapper > .button-wrapper > .cancel-btn {
+        background-color: var(--color-darkgrey);
+    }
 
-.cancel-btn {
-    background-color: var(--color-darkgrey);
-    color: var(--color-text);
-}
-
-.cancel-btn:hover {
-    background-color: #95a5a6;
-}
-
-
-.input-wrapper {
-    animation: fadeIn 0.3s ease forwards;
-}
+    button {
+        border-radius: 0.3vw;
+        padding: 0.3vw 1vw;
+        text-transform: uppercase;
+        font-weight: 500 !important;
+    }
+    button:not(:last-child) {
+        margin-right: 0.5vw;
+    }
 </style>
