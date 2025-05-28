@@ -8,23 +8,23 @@ game 'gta5'
 name 'ps_lib'
 version '1.0.0'
 description 'Project Sloth Library'
+author 'Project Sloth'
 
 -- Manifest
 client_scripts {
     --'@qbx_core/modules/playerdata.lua',
     'startFirst/client/**.lua',
-    'framework/**.lua',
+    'bridge/framework/client.lua',
     'inventory/**.lua',
     'modules/**/client/**.lua',
-
 }
 
 server_scripts {
     '@oxmysql/lib/MySQL.lua',
     'startFirst/server/**.lua',
-    'framework/**.lua',
     'inventory/**.lua',
     'modules/**/server/**.lua',
+    'bridge/framework/server.lua',
     'orm.lua'
 }
 
@@ -38,7 +38,8 @@ shared_scripts {
 
 files {
   'web/build/index.html',
-  'web/build/**/*'
+  'web/build/**/*',
+  'bridge/**/*',
 }
 
 ui_page 'web/build/index.html'

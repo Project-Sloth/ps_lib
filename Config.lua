@@ -1,5 +1,4 @@
 Config = {}
-Config.Framework = "qb" -- QBCore or ESX
 Config.Notify = "qb" -- QBCore or ESX or ox
 Config.Progressbar = "oxbar" -- QBCore or ESX or ox
 Config.Target = "qb" -- QBCore or ESX or ox or interact 
