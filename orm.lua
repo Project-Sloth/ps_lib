@@ -2,9 +2,9 @@ ps.ORM = {}
 
 --- Fetch all rows that match the condition asynchronously.
 --- Or fetch all rows if `conditions == nil`.
----@param table string
----@param conditions table|nil
----@param cb function
+---@param table string The database table to query
+---@param conditions table|nil Conditions for the WHERE clause (can be nil to fetch all)
+---@param cb function Callback function to handle the results
 function ps.ORM.find(table, conditions, cb)
     local query = 'SELECT * FROM ' .. table .. ' WHERE '
     local params = {}
@@ -20,6 +20,13 @@ function ps.ORM.find(table, conditions, cb)
     return MySQL.query(query, params, cb)
 end
 
+--- Fetch rows that match the condition, ordered by a column and limited to a specific count.
+---@param table string The database table to query
+---@param conditions table|nil Conditions for the WHERE clause (can be nil to fetch all)
+---@param orderBy string The column to order by
+---@param orderDirection string The direction to order by ('ASC' or 'DESC')
+---@param limit number The maximum number of rows to return
+---@param cb function Callback function to handle the results
 function ps.ORM.findOrderedLimited(table, conditions, orderBy, orderDirection, limit, cb)
     local query = 'SELECT * FROM ' .. table .. ' WHERE '
     local params = {}
@@ -38,9 +45,9 @@ function ps.ORM.findOrderedLimited(table, conditions, orderBy, orderDirection, l
 end
 
 --- Create new rows in a table asynchronously.
----@param table string
----@param data table
----@param cb function
+---@param table string The database table to query
+---@param data table Table containing column-value pairs to insert into the database
+---@param cb function Callback function to handle the results
 function ps.ORM.create(table, data, cb)
     local columns = ''
     local placeholders = ''
@@ -57,10 +64,10 @@ function ps.ORM.create(table, data, cb)
 end
 
 --- Update fields in a table based on conditions asynchronously.
----@param table string
----@param data table
----@param conditions table
----@param cb function
+---@param table string The database table to query
+---@param data table Table containing column-value pairs to update in the database
+---@param conditions table Conditions for the WHERE clause
+---@param cb function Callback function to handle the results
 function ps.ORM.update(table, data, conditions, cb)
     local setClause = ''
     local params = {}
@@ -79,10 +86,9 @@ function ps.ORM.update(table, data, conditions, cb)
 end
 
 --- Delete rows based on conditions asynchronously.
----@param table string
----@param data table
----@param conditions table
----@param cb function
+---@param table string The database table to query
+---@param conditions table Conditions for the WHERE clause
+---@param cb function Callback function to handle the result
 function  ps.ORM.delete(table, conditions, cb)
     local query = 'DELETE FROM ' .. table .. ' WHERE '
     local params = {}
