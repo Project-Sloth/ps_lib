@@ -86,23 +86,20 @@ end)
 RegisterCommand("cmenu", function()
     exports['ps-ui']:CreateMenu({
         {
+            
             header = "header1",
             text = "text1",
-            icon = "fa-solid fa-circle",
+            icon = "nui://qb-inventory/html/images/lockpick.png",
             color = "red",
-            event = "event:one",
-            args = {
-                1,
-                "two",
-                "3",
-            },
-            server = false,
+            action = function()
+                ps.debug('you clicked 1')
+            end,
             
         },
         {
             header = "header2",
             text = "text3",
-            icon = "fa-solid fa-circle",
+            icon = "https://www.1of1servers.com/logos/1of1default.svg",
             color = "blue",
             event = "event:two",
             args = {
@@ -136,45 +133,74 @@ RegisterCommand("cmenu", function()
             },
         },
     })
+
+    exports['ps-ui']:CreateMenu({
+        {
+            header = "header5",
+            text = "text5",
+            icon = "fa-solid fa-circle",
+            color = "green",
+            event = "event:five",
+            args = {
+                1,
+                "two",
+                "3",
+            },
+            server = true,
+        },
+        {
+            header = "header6",
+            text = "text6",
+            icon = "fa-solid fa-circle",
+            color = "green",
+            event = "event:six",
+            args = {
+                1,
+                "two",
+                "3",
+            },
+            server = true,
+        },
+    })
 end)
 
 RegisterCommand("input", function()
     local input = exports['ps-ui']:Input({
-        title = "Test",
+        title = "This Is The Test",
         inputs = {
             {
                 label = "Test Input 1",
                 type = "text",
                 placeholder = "test2",
             },
-            {
-                label = "Test Input 2",
-                type = "number",
-                placeholder = "test2",
-            },
-            {
-                label = "Test Input 3",
-                type = "password",
-                placeholder = "test2",
-                icon = "fa-solid fa-circle",
-            },
-            {
-                label = "Test Input 4",
-                type = "textarea",
-                placeholder = "test2",
-                icon = "fa-solid fa-circle",
-            },
-            {
-                label = "Test Input 5",
-                type = "select",
-                placeholder = "test2",
-                icon = "fa-solid fa-circle",
-                options = {
-                    { label = "Option 1", value = true },
-                    { label = "Option 2", value = false },
-                    { label = "Option 3", value = true },
-                }
-            },
+           {
+               label = "Test Input 2",
+               type = "number",
+               placeholder = "test2",
+           },
+           {
+               label = "Test Input 3",
+               type = "password",
+               placeholder = "test2",
+               icon = "fa-solid fa-circle",
+           },
+           {
+               label = "Test Input 4",
+               type = "textarea",
+               placeholder = "test2",
+               icon = "fa-solid fa-circle",
+           },
+           {
+               label = "Test Input 5",
+               type = "select",
+               placeholder = "test2",
+               icon = "fa-solid fa-circle",
+               options = {
+                   { label = "Option 1", value = true },
+                   { label = "Option 2", value = 12 },
+                   { label = "Option 3", value = 'hi' },
+               }
+           },
             {
                 label = "Test Input 6",
                 type = "checkbox",

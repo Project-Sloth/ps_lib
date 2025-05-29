@@ -3,10 +3,11 @@ local storedData = {}
 ---Creates a menu and registers its events.
 ---@param menuData table: Data for the menu, including items and submenus.
 local function createMenu(menuData)
-    for _, item in ipairs(menuData) do
-        storedData[item.id] = item
+    for k, item in pairs(menuData) do
+        table.insert(storedData, item)
+        storedData[k].id = k
         if item.subMenu then
-            for _, subItem in ipairs(item.subMenu) do
+            for _, subItem in pairs(item.subMenu) do
                 storedData[subItem.id] = subItem
             end
         end
@@ -47,13 +48,15 @@ end)
 --- @param cb function: Callback function to signal completion of the NUI callback. The callback should be called with a string status, e.g., 'ok' or an error message.
 RegisterNUICallback('MenuSelect', function(data, cb)
     local menuData = storedData[data.data.id]
+    ps.debug("MenuSelect", data.data.id, menuData)
     if menuData then
         if menuData.action then
             menuData.action()
         end
         if menuData.server then
             TriggerServerEvent(menuData.event, table.unpack(menuData.args))
-        else
+        end
+        if menuData.event and not menuData.server then
             TriggerEvent(menuData.event, table.unpack(menuData.args))
         end
 

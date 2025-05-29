@@ -9,11 +9,18 @@ local function input(InputData)
         error("InputData must contain at least one input field.")
     end
     for k, v in pairs(InputData.inputs) do
-       if not v.value then 
-              v.value = ""
+       if not v.value then
+            v.value = ""
         end
         if not v.id then
             v.id = k
+        end
+        if v.type == 'select' then
+            for i = 1, #v.options do
+                if not v.options[i].returnType then
+                    v.options[i].returnType = type(v.options[i].value)
+                end
+            end
         end
     end
     p = promise.new()
@@ -24,9 +31,37 @@ local function input(InputData)
         data = InputData
     })
     SetNuiFocus(true, true)
-
     local inputs = Citizen.Await(p)
-    return inputs
+    if not inputs then
+        return nil
+    end
+    local formatted = {}
+    ps.sorter(inputs, 'id')
+    for k, v in pairs(inputs) do
+        if v.type == "number" then
+            formatted[k] = tonumber(v.value)
+        elseif v.type == 'text' then
+            formatted[k] = v.value
+        elseif v.type == 'checkbox' then
+            formatted[k] = v.value
+        elseif v.type == 'textarea' then
+            formatted[k] = v.value
+        elseif v.type == 'select' then
+            if v.returnType == 'number' then
+                formatted[k] = tonumber(v.value)
+            elseif v.returnType == 'boolean' then
+               formatted[k] = v.value == 'true' or v.value == true
+            else
+                formatted[k] = v.value
+            end
+        elseif v.type == 'password' then
+            formatted[k] = v.value
+        end
+        if formatted[k] == nil then
+            formatted[k] = ''
+        end
+    end
+    return formatted
 end
 
 --- Callback for handling user input.
