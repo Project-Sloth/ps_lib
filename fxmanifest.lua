@@ -32,6 +32,7 @@ shared_scripts {
     '@ox_lib/init.lua',
     'Config.lua',
     'startFirst/shared/**.lua',
+    'modules/**/shared/**.lua',
     'init.lua'
 }
 

@@ -7,6 +7,7 @@ local p = nil
 local function circle(cb, circles, seconds)
     if circles == nil or circles < 1 then circles = 1 end
     if seconds == nil or seconds < 1 then seconds = 10 end
+
     p = promise.new()
     SendNUIMessage({
         action = 'CircleGame',
@@ -17,7 +18,9 @@ local function circle(cb, circles, seconds)
     })
     SetNuiFocus(true, true)
     local result = Citizen.Await(p)
-    cb(result)
+    if cb then
+        cb(result)
+    end
     return result
 end
 

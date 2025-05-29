@@ -5,7 +5,24 @@ local active = false
 --- @param InputData table: Data to be used for the input form, typically includes fields like labels, types, and icons.
 --- @return table: User input data as returned from the form.
 local function input(InputData)
-    ps.debug("Input called with " .. json.encode(InputData))
+    if not InputData.inputs or #InputData.inputs == 0 then
+        error("InputData must contain at least one input field.")
+    end
+    for k, v in pairs(InputData.inputs) do
+       if not v.value then
+            v.value = ""
+        end
+        if not v.id then
+            v.id = k
+        end
+        if v.type == 'select' then
+            for i = 1, #v.options do
+                if not v.options[i].returnType then
+                    v.options[i].returnType = type(v.options[i].value)
+                end
+            end
+        end
+    end
     p = promise.new()
     while active do Wait(0) end
     active = true
@@ -14,9 +31,37 @@ local function input(InputData)
         data = InputData
     })
     SetNuiFocus(true, true)
-
     local inputs = Citizen.Await(p)
-    return inputs
+    if not inputs then
+        return nil
+    end
+    local formatted = {}
+    ps.sorter(inputs, 'id')
+    for k, v in pairs(inputs) do
+        if v.type == "number" then
+            formatted[k] = tonumber(v.value)
+        elseif v.type == 'text' then
+            formatted[k] = v.value
+        elseif v.type == 'checkbox' then
+            formatted[k] = v.value
+        elseif v.type == 'textarea' then
+            formatted[k] = v.value
+        elseif v.type == 'select' then
+            if v.returnType == 'number' then
+                formatted[k] = tonumber(v.value)
+            elseif v.returnType == 'boolean' then
+               formatted[k] = v.value == 'true' or v.value == true
+            else
+                formatted[k] = v.value
+            end
+        elseif v.type == 'password' then
+            formatted[k] = v.value
+        end
+        if formatted[k] == nil then
+            formatted[k] = ''
+        end
+    end
+    return formatted
 end
 
 --- Callback for handling user input.
@@ -35,6 +80,11 @@ end)
 --- @param cb function: Callback function to signal completion of the NUI callback (must be called to complete the NUI callback).
 RegisterNUICallback('input-close', function(data, cb)
     SetNuiFocus(false, false)
+    if p then
+        p:resolve(nil)
+        p = nil
+    end
+    active = false
     cb('ok')
 end)
 

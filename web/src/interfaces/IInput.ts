@@ -4,4 +4,5 @@ export interface IInput {
 	icon: string;
 	placeholder?: string;
 	type: string;
+    inputs: any;
 }

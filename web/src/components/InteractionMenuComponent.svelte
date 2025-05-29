@@ -15,9 +15,14 @@
         id: null, color: 'black'
     };
 
-    function handleMenuSelection(selectedMenu) {
+    function handleMenuSelection(selectedMenu, index) {
         selectedMenuItem = selectedMenu;
-
+        console.log(index)
+        if(selectedMenuItem) {
+            selectedMenuItem.id = index + 1;
+        } else {
+            selectedMenuItem = null;
+        }
         if(selectedMenu) {
             
             if(!selectedMenu.subMenu && !isDevMode) {
@@ -67,16 +72,14 @@
 <div class="menu-base-wrapper">
     <div class="screen-base">
         {#if !selectedMenuItem}
-            <div class="header-slot" style="border: 3px solid var(--color-green);">
-                <img src="./images/ps-logo.png" alt="ps-logo" />
+            <div class="header-slot">
+                <h1 style="text-align:center;color: white;">Interaction Menu</h1>
             </div>
 
             <div class="screen-body">
                 {#each menuData as menu, index}
                     <div id={"menu-"+index} class="each-panel" 
-                    on:mouseenter={() => handleItemHover("menu-"+index, index, menu.color, 'enter', false)} 
-                    on:mouseleave={() => handleItemHover("menu-"+index, index, menu.color, 'leave', false)} 
-                    on:click={() => handleMenuSelection(menu)}>
+                    on:click={() => handleMenuSelection(menu, index)}>
                         <div class="menu-icon">
                         {#if menu.icon} 
                             {#if menu.icon.startsWith('https') || menu.icon.startsWith('nui')}
@@ -132,143 +135,133 @@
 </div>
 
 <style>
-.menu-base-wrapper {
-    /* centering the view */
-    position: absolute;
-    left: 70%;  
-    top: 40%;
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);  
+    .menu-base-wrapper {
+        position: absolute;
+        left: 70%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 20vw;
+        height: fit-content;
+        min-height: 20vw;
+        max-height: 80vh;
+        background-color: #00000000;
+        border-radius: 0.4vw;
+        box-shadow: 0 0 0 rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        font-family: 'Segoe UI', sans-serif;
+        padding: 0.5vw;
+    }
 
-    width: 20vw;
-    height: 30vw;
-    /* min-height: 4vw;
-    height: fit-content; */
+    .screen-base {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
 
-    overflow: hidden;
-    /* border: 0.1px solid red; */
-}
+    /* Header */
+    .header-slot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        text-align: center;
+        padding: 0.6vw 1.5vw;
+        background-color: rgb(23, 23, 23);
+        border-bottom: 0.05vw solid rgb(23, 23, 23);
+    }
 
-.menu-base-wrapper > .screen-base {
-    height: 100%;
-    /* border: 0.1px solid yellow; */
+    .header-slot img {
+        height: 2.5vw;
+    }
 
-    display: flex;
-    flex-direction: column;
-}
+    /* Submenu Header */
+    .submenu-header-slot {
+        display: flex;
+        align-items: center;
+        padding: 0.6vw 1vw;
+        background-color: rgb(23, 23, 23);
+        color: var(--color-white);
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
 
-.menu-base-wrapper > .screen-base > .header-slot {
-    background-color: var(--color-darkblue);
-    border-radius: 0.3vw;
+    .submenu-header-slot:hover {
+        background-color: rgba(255, 255, 255, 0.08);
+        color: black;
+    }
 
-    padding: 0.5vw 2vw;
-    display: flex;
-    flex-direction: row;
+    .left-chevron {
+        margin-right: 0.5vw;
+        font-size: 1.1vw;
+    }
 
-    min-height: 3vw;
-    height: fit-content;
-}
-.menu-base-wrapper > .screen-base > .header-slot > img {
-    height: 4vw;
-    align-self: center;
-}
+    .main-menu {
+        font-size: 1.1vw;
+        font-weight: 600;
+    }
 
-.menu-base-wrapper > .screen-base > .submenu-header-slot {
-    min-height: 4vw;
-    height: max-content;
+    /* Body */
+    .screen-body {
+        flex: 1;
+        padding: 0.5vw 0;
+        overflow-y: auto;
+    }
 
-    background-color: var(--color-darkblue);
-    border-radius: 0.3vw;
-    color: var(--color-white);
+    .screen-body::-webkit-scrollbar {
+        display: none;
+    }
 
-    padding: 0.3vw 1vw;
-    cursor: pointer;
+    /* Menu Item Panel */
+    .each-panel {
+        display: flex;
+        align-items: center;
+        padding: 5% 0 5% 1.5vw;
+        margin-bottom: 0.4vw;
+        background-color: rgb(23, 23, 23);
+        border-radius: 0.3vw;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
 
-    display: flex;
-    flex-direction: row;
-}
-.menu-base-wrapper > .screen-base > .submenu-header-slot > .left-chevron {
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-right: 0.5vw;
+    .each-panel:hover {
+        background-color: #FBBF24;
+        transform: translateX(0.2vw);
+        color: black;
+    }
 
-    width: 1.5vw;
-    
-    font-size: 1.1vw;
-}
-.menu-base-wrapper > .screen-base > .submenu-header-slot > .main-menu {
-    font-weight: 500;
-    font-size: 1.25vw;
+    .menu-icon {
+        font-size: 1.1vw;
+        margin-right: 0.7vw;
+    }
 
-    margin-top: auto;
-    margin-bottom: auto;
-}
+    .menu-details {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
 
-.menu-base-wrapper > .screen-base > .screen-body {
-    margin-top: 0.3vw;
-    height: 100%;
-    overflow-y: auto;
-    
-    display: flex;
-    flex-direction: column;
-    /* border: 0.1px solid blue; */
-}
-.menu-base-wrapper > .screen-base > .screen-body::-webkit-scrollbar {
-display: none;
-}
+    .menu-details .header {
+        font-size: 0.9vw;
+        font-weight: 500;
+        color: var(--color-white);
+        white-space: nowrap;
+    }
 
-.menu-base-wrapper > .screen-base > .screen-body > .each-panel {
-    min-height: 4vw;
-    height: max-content;
+    .menu-details .text {
+        font-size: 0.7vw;
+        color: black;
+        white-space: nowrap;
+    }
 
-    background-color: var(--color-darkblue);
-    border-radius: 0.3vw;
+    .chevron {
+        font-size: 1vw;
+        color: var(--color-lightgrey);
+        margin-left: auto;
+        transition: transform 0.2s ease;
+    }
 
-    padding: 0.5vw 1vw;
-    cursor: pointer;
-
-    display: flex;
-    flex-direction: row;
-}
-.menu-base-wrapper > .screen-base > .screen-body > .each-panel:not(:last-child) {
-    margin-bottom: 0.3vw;
-}
-
-.menu-base-wrapper > .screen-base > .screen-body > .each-panel > .menu-icon {
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-right: 0.5vw;
-
-    width: 1.5vw;
-    
-    font-size: 1vw;
-}
-
-.menu-base-wrapper > .screen-base > .screen-body > .each-panel > .menu-details {
-    display: flex;
-    flex-direction: column;
-    margin-top: auto;
-    margin-bottom: auto;
-}
-
-.menu-base-wrapper > .screen-base > .screen-body > .each-panel > .menu-details > .header {
-    font-size: 0.8vw;
-    white-space: nowrap;
-    /* color: var(--color-white); */
-}
-
-.menu-base-wrapper > .screen-base > .screen-body > .each-panel > .menu-details > .text {
-    font-size: 0.6vw;
-    white-space: nowrap;
-    /* color: var(--color-lightgrey); */
-}
-
-.menu-base-wrapper > .screen-base > .screen-body > .each-panel > .chevron {
-    margin-left: 72%;
-    font-size: 1vw;
-    /* color: var(--color-white); */
-
-    margin-top: auto;
-    margin-bottom: auto;
-}
+    .each-panel:hover .chevron {
+        transform: translateX(0.3vw);
+        color: var(--color-white);
+    }
 </style>

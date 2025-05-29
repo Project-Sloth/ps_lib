@@ -6,7 +6,7 @@ local correctBlocksBasedOnGrid = {
     [9] = 24,
     [10] = 28,
 }
-
+local p = nil
 --- Starts the Thermite game with the specified parameters.
 --- @param cb function: Callback function that will receive the result of the game (true for success, false for failure).
 --- @param time number|nil: Time duration for the game in seconds. Default is 10 if nil.
@@ -18,9 +18,9 @@ local function thermite(cb, time, gridsize, wrong, correctBlocks)
     if time == nil then time = 10 end
     if gridsize <= 5 or gridsize == nil then gridsize = 6 end 
     if wrong == nil then wrong = 3 end
-
     local correctBlockCount = correctBlocks or correctBlocksBasedOnGrid[gridsize]
-    ps.debug("Thermite called with " .. correctBlockCount .. " correct blocks and " .. time .. " time")
+    p = promise:new()  -- Create a new promise for the game result
+    
     SendNUI("GameLauncher", cb, {  -- Use SendNUI with nil callback
         game = "MemoryGame",  -- Name of the game
         gameName = "Memory Game",  -- Display name of the game
@@ -31,6 +31,19 @@ local function thermite(cb, time, gridsize, wrong, correctBlocks)
         displayInitialAnswersFor = 3,  -- Time to display initial answers (seconds)
         gridSize = gridsize,  -- Size of the game grid
     }, true)
+    local result = Citizen.Await(p)  -- Wait for the game result
+    if cb ~= nil or cb ~= false then
+        cb(result)  -- Call the callback with the result
+    end
+    return result
 end
+
+RegisterNuiCallback('thermite-result', function(res, cb)
+    p:resolve(res)
+    p = nil
+    SetNuiFocus(false, false)
+    cb('ok')
+end)
+
 exports("Thermite", thermite)
 ps.exportChange('ps-ui', "Thermite", thermite)

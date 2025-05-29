@@ -3,7 +3,7 @@ ps.exportChange('qb-menu', 'openMenu', function(data)
     local newMenu = {}
     for k, v in pairs(data) do
         table.insert(newMenu, {
-            id = v.id or k,
+            id =  k,
             header = v.header or '',
             text = v.txt or nil,
             icon = v.icon or nil,

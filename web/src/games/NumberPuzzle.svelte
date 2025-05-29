@@ -142,7 +142,8 @@
             
             setTimeout(() => {
                 if(!isDevMode) {
-                    fetchNui('minigame:callback', isSuccess);
+                    fetchNui('var-result', isSuccess);
+                    fetchNui('psui:close');
                     dispatch('game-ended', { hackSuccess: isSuccess });
                 }
                 dispatch('minigame:callback', {hackSuccess: isSuccess});

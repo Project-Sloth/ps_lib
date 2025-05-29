@@ -9,27 +9,40 @@
     document.onkeyup = handleKeyUp;
     let inputData:any = $inputStore;
 
-    onMount(() => {
-        inputData = inputData.map((val) => {
-            val.value = null;
-            return val;
-        });
-    });
-
     function submit() {
         let returnData = [];
 
         let inputs = document.querySelectorAll('input');
+        let textareas = document.querySelectorAll('textarea');
+        let selects = document.querySelectorAll('select');
+        selects.forEach((select: HTMLSelectElement, index) => {
+            let type = select.tagName.toLowerCase();
+            let returnObj = {
+                id: select.id,
+                value: JSON.parse(select.value).value ,
+                type: type,
+                returnType: JSON.parse(select.value).returnType || 'string',
+            };
+            returnData.push(returnObj);
+        });
+        textareas.forEach((textarea: HTMLTextAreaElement, index) => {
+            let returnObj = {
+                id:  textarea.id,
+                value: textarea.value,
+                type: textarea.type,
+            };
+            returnData.push(returnObj)
+        });
         inputs.forEach((input: HTMLInputElement, index) => {
             let returnObj = {
                 id: input.id,
-				value: input.value,
-                // compIndex: index
+                value: input.type === 'checkbox' ? input.checked : input.value,
+                type: input.type,
             };
-            
+        
             returnData.push(returnObj)
-		});
-
+        });
+        console.log('returnData', JSON.stringify(returnData));
         if(!isDevMode) {
             fetchNui('input-callback', returnData);
         }
@@ -38,13 +51,7 @@
     }
 
     export function closeInputs(): void {
-        let inputs = document.querySelectorAll('input');
-		inputs.forEach((input: HTMLInputElement) => {
-			input.value = '';
-		});
-
-        inputData = [];
-
+        
         if(!isDevMode) {
             fetchNui('input-close', { ok: true });
         }
@@ -54,54 +61,69 @@
 </script>
 
 <div class="input-base-wrapper">
-    <div class="input-message">
-        {inputData.title || "Please fill out this form"}
-        {#if inputData.message}
-            <p class="input-message">{inputData.message}</p>
-        {/if}
-        
+    <div class ="input-header">
+        <h1>{inputData.title}</h1>
     </div>
     <div class="input-form">
-        {#each inputData as inputValue}
+        {#each inputData.inputs as inputValue}
             <div class="input-wrapper">
                 <div class="input-data-wrapper">
                     <div class="input-icon">
-                        <Icon icon={inputValue.icon} color="ps-text-green" classes="text-2xl" />
+                        <Icon icon={inputValue.icon || 'fa-solid fa-user'} styleColor="#FBBF24" classes="text-2xl" />
                     </div>
                     <div class="input-area">
-                        <p class="label">
-                            {inputValue.label}
-                        </p>
-                        {#if inputValue.type === 'text' || inputValue.type === 'number'}
-                            <input
-                                type = {inputValue.type}
-                                id={inputValue.id}
-                                class="value"
-                                placeholder={inputValue.placeholder || "Insert info"}
-                            />
-                        {:else if inputValue.type === 'checkbox'}
-                            <label class="checkbox-wrapper">
-                                <input
-                                    type="checkbox"
-                                    id={inputValue.id}
-                                    checked={inputValue.value}
-                                    on:change={(e) => handleInputChange(inputValue.id, e.target.checked)}
-                                />
-                                <span class="checkbox-label">{inputValue.checkboxLabel || "Enable"}</span>
-                            </label>
+                        {#if inputValue.type === 'text'}
+                            <p class="label">
+                                {inputValue.label}
+                            </p>
+                            <input id={inputValue.id} type={inputValue.type} class="value" placeholder={inputValue.placeholder} value={inputValue.value} />
+                        {:else if inputValue.type === 'number'}
+                            <p class="label">
+                                {inputValue.label}
+                            </p>
+                            <input id={inputValue.id} type={inputValue.type} class="value" placeholder={inputValue.placeholder} value={Number(inputValue.value)} />
+                        {:else if inputValue.type === 'password'}
+                            <p class="label">
+                                {inputValue.label}
+                            </p>
+                            <input id={inputValue.id} type={inputValue.type} class="value" placeholder={inputValue.placeholder} value={inputValue.value} />
+                        {:else if inputValue.type === 'textarea'}
+                            <p class="label">
+                                {inputValue.label}
+                            </p>
+                            <textarea id={inputValue.id} class="value" placeholder={inputValue.placeholder} rows="3">{inputValue.value}</textarea>
                         {:else if inputValue.type === 'select'}
+                            <p class="label">
+                                {inputValue.label}
+                            </p>
                             <select
                                 id={inputValue.id}
                                 class="value"
+                                on:change={(e) => {
+                                    inputValue.value = e.target.value;
+                                }}
                             >
                                 {#each inputValue.options as option}
-                                    <option value={option.value}>
+                                    <option value={JSON.stringify({ value: option.value, returnType: option.returnType})} selected={option.value === inputValue.value}>
                                         {option.label}
                                     </option>
                                 {/each}
                             </select>
+                        {:else if inputValue.type === 'checkbox'}
+                           <p class="label">
+                               {inputValue.label}
+                           </p>
+                           <input 
+                               id={inputValue.id} 
+                               type= "checkbox" 
+                               class="value" 
+                               bind:checked={inputValue.value}
+                               on:click={() => inputValue.value}
+                           />
                         {/if}
-                       
+                        {#if inputValue.message}
+                            <p class="input-message">{inputValue.message}</p>
+                        {/if}
                     </div>
                 </div>
                 <div class="horizontal-line"></div>
@@ -116,139 +138,160 @@
 </div>
 
 <style>
+    :root {
+      --dark-bg: rgb(23, 23, 23);       
+      --card-dark-bg: rgb(14, 15, 15);  
+      --off-white: rgba(255, 255, 255, 0.7);
+      --yellow: #FBBF24;
+    }
+
     .input-base-wrapper {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 28vw;
-    max-width: 400px;
-    background-color: var(--color-darkblue);
-    border-radius: 0.6vw;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    padding: 2vw 2.5vw;
-    display: flex;
-    flex-direction: column;
-    color: white;
-}
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 25vw;
+        min-height: 10vw;
+        max-height: 80vh;
+        overflow-y: auto;
+        background-color: var(--card-dark-bg);
+        border-radius: 0.3vw;
+        padding: 0.5vw 2vw;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 0 1vw rgba(0, 0, 0, 0.5);
+        font-family: sans-serif;
+    }
 
-.input-message {
-    font-size: clamp(1rem, 1.4vw, 1.6rem);
-    font-weight: 600;
-    text-transform: uppercase;
-    margin-bottom: 1.2vw;
-    text-align: center;
-    color: white;
-}
+    .input-base-wrapper::-webkit-scrollbar {
+        display: none;
+    }
+    .input-base-wrapper::-webkit-scrollbar-thumb {
+        background-color: var(--off-white);
+        border-radius: 0.2vw;
+    }
+    .input-header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 1vw;
+        height: 10%;
 
-.input-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1vw;
-}
+    }
+    .input-header h1 {
+        font-size: 1.5vw;
+        color: var(--off-white);
+        font-weight: 600;
+        text-align: center;
+        margin: 0;
+    }
+    .input-form {
+        margin-top: 1vw;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
 
-.input-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5vw;
-}
+    .input-wrapper {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
 
-.horizontal-line {
-    width: 100%;
-    height: 1px;
-    background-color: var(--color-lightgrey);
-}
+    .input-wrapper:not(:last-child) {
+        margin-bottom: 1vw;
+    }
 
-.input-message {
-    font-size: clamp(0.75rem, 0.9vw, 1rem);
-    opacity: 0.7;
-    color: var(--color-lightgrey);
-    text-transform: capitalize;
-}
+    .horizontal-line {
+        width: 100%;
+        height: 1px;
+        background-color: rgba(255, 255, 255, 0.1);
+    }
 
-.input-data-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 1vw;
-}
+    .input-message {
+        font-size: 0.8vw;
+        opacity: 0.6;
+        color: var(--off-white);
+        margin-top: 0.2vw;
+        text-transform: capitalize;
+    }
 
-.input-icon {
-    width: 1.5vw;
-    height: 1.5vw;
-    margin-top: auto;
-    margin-bottom: auto;
-    opacity: 0.6;
-}
+    .input-data-wrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 0.5vw 0;
+    }
 
-.input-area {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
+    .input-icon {
+        margin-right: 0.75vw;
+        width: 1.5vw;
+        display: flex;
+        align-items: center;
+    }
 
-.input-area .label {
-    font-size: clamp(0.9rem, 1.1vw, 1.2rem);
-    font-weight: 500;
-    margin-bottom: 0.3vw;
-}
+    .input-area {
+        display: flex;
+        flex-direction: column;
+        color: var(--off-white);
+    }
 
-.input-area .value {
-    font-size: clamp(0.75rem, 0.9vw, 1rem);
-    font-weight: 300;
-    background: transparent;
-    border: none;
-    padding-left: 0.5vw;
-    transition: border-color 0.3s ease;
-    width: 100%;
-    outline: none;
-}
+    .input-area .label {
+        font-size: 1vw;
+        font-weight: 500;
+        margin-bottom: 0.3vw;
+    }
 
-.input-area .value:focus {
-    border-bottom-color: var(--color-green);
-    padding-left: 0;
-}
+    .input-area .value {
+        font-size: 0.8vw;
+        font-weight: 300;
+        width: 18vw;
+        background-color: transparent;
+        margin-top: 0.2vw;
+        border: none;
+        color: var(--off-white);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 0.3vw 0;
+    }
 
-/* Button Wrapper */
-.button-wrapper {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 1.5vw;
-    gap: 1vw;
-}
+    .input-area .value:focus {
+        outline: none;
+        border-bottom: 2px solid var(--yellow);
+    }
 
-.submit-btn,
-.cancel-btn {
-    flex: 1;
-    padding: 0.6vw 1.2vw;
-    font-size: clamp(0.8rem, 0.95vw, 1.1rem);
-    font-weight: 600;
-    text-transform: uppercase;
-    border-radius: 0.4vw;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
+    .button-wrapper {
+        display: flex;
+        justify-content: center;
+        gap: 1vw;
+        margin: 1.5vw auto 1.25vw auto;
+    }
 
-.submit-btn {
-    background-color: var(--color-green);
-    color: white;
-}
+    .submit-btn,
+    .cancel-btn {
+        border-radius: 0.3vw;
+        padding: 0.3vw 1vw;
+        text-transform: uppercase;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: background 0.2s ease-in-out;
+    }
 
-.submit-btn:hover {
-    background-color: #2ecc71; /* brighter green */
-}
+    .submit-btn {
+        background-color: var(--yellow);
+        color: black;
+    }
 
-.cancel-btn {
-    background-color: var(--color-darkgrey);
-    color: var(--color-text);
-}
+    .submit-btn:hover {
+        background-color: #f59e0b;
+    }
 
-.cancel-btn:hover {
-    background-color: #95a5a6;
-}
+    .cancel-btn {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: var(--off-white);
+    }
 
-
-.input-wrapper {
-    animation: fadeIn 0.3s ease forwards;
-}
+    .cancel-btn:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
 </style>

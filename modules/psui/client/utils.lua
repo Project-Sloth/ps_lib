@@ -10,13 +10,15 @@ RegisterNUICallback('minigame:callback', function(res, cb)
         callback(res)
     end
 
-    ps.debug("Minigame closed. Result: " .. tostring(res))
-
     isActive = false
 
     cb('ok')
 end)
 
+RegisterNUICallback('psui:close', function(_, cb)
+    isActive = false
+    cb('ok')
+end)
 -- Sends a NUI message to the UI
 ---@param action string -- Action to be sent to the NUI
 ---@param cb fun()|nil -- Callback function to be called when the NUI is closed, or nil if no callback is needed

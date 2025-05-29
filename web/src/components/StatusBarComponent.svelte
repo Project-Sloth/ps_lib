@@ -11,6 +11,8 @@
     statusBarStore.subscribe((value) => {
         statusData = value;
         statusDataItems = statusData.items;
+        console.log('StatusBar Data Updated:', statusData);
+        console.log('status items', JSON.stringify(statusDataItems, null, 2));
     });
 
     let hideStatusBarValue = false;
