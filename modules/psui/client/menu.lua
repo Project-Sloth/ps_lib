@@ -48,7 +48,6 @@ end)
 --- @param cb function: Callback function to signal completion of the NUI callback. The callback should be called with a string status, e.g., 'ok' or an error message.
 RegisterNUICallback('MenuSelect', function(data, cb)
     local menuData = storedData[data.data.id]
-    ps.debug("MenuSelect", data.data.id, menuData)
     if menuData then
         if menuData.action then
             menuData.action()
