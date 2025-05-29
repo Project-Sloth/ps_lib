@@ -20,7 +20,7 @@ local function scrambler(callback, type, time, mirrored)
         changeBoardAfter = 1,  -- Specifies if the board should change after a certain condition
     }, true)
     local result = Citizen.Await(p)
-     if callback ~= nil or callback ~= false then
+     if callback ~= false then
         callback(result)  -- Call the callback with the result
     end
     return result

@@ -32,7 +32,7 @@ local function thermite(cb, time, gridsize, wrong, correctBlocks)
         gridSize = gridsize,  -- Size of the game grid
     }, true)
     local result = Citizen.Await(p)  -- Wait for the game result
-    if cb ~= nil or cb ~= false then
+    if cb ~= false then
         cb(result)  -- Call the callback with the result
     end
     return result

@@ -4,6 +4,7 @@ local p = nil
 --- @param callback function: Callback function to handle the result of the game (true for success, false for failure).
 --- @param speed number|nil: Time duration of the game in seconds. Defaults to 10 seconds if nil.
 local function Maze(callback, speed)
+    print(callback)
     if speed == nil then speed = 10 end  -- Default to 10 seconds if speed is nil
     p = promise:new()
     SendNUI("GameLauncher", callback, {
@@ -15,7 +16,8 @@ local function Maze(callback, speed)
         maxAnswersIncorrect = 2,  -- Maximum number of incorrect answers allowed
     }, true)
     local result = Citizen.Await(p)
-     if callback ~= nil or callback ~= false then
+
+     if callback ~= false then
         callback(result)  -- Call the callback with the result
     end
     return result

@@ -186,3 +186,5 @@ function ps.ORM.delete(table, conditions, cb)
     MySQL.update(query, params, function(affectedRows)
         releaseLock(table)
         cb(affectedRows, params)
+    end)
+end

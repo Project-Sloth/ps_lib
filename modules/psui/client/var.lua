@@ -19,7 +19,7 @@ local function varHack(callback, blocks, speed)
         timeForNumberDisplay = 3,  -- Time to display numbers (seconds)
     }, true)
     local result = Citizen.Await(p)  -- Wait for the game result
-    if callback ~= nil or callback ~= false then
+    if callback ~= false then
         callback(result)  -- Call the callback with the result
     end
     return result
