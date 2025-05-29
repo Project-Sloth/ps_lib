@@ -1,78 +1,122 @@
 ps.ORM = {}
+local cacheStore = {}
 
---- Fetch all rows that match the condition asynchronously.
---- Or fetch all rows if `conditions == nil`.
----@param table string
----@param conditions table|nil
----@param cb function
-function ps.ORM.find(table, conditions, cb)
-    local query = 'SELECT * FROM ' .. table .. ' WHERE '
+function ps.ORM.enableCache(table, opts)
+    cacheStore[table] = {
+        ttl = opts.ttl or 60,
+        store = {}
+    }
+end
+
+local function getCacheKey(table, conditions)
+    return table .. ':' .. json.encode(conditions or {})
+end
+
+local function buildWhereClause(conditions)
+    local query = ''
     local params = {}
-    if conditions then
-        for key, value in pairs(conditions) do
-            params[#params + 1] = value
-            query = query .. key .. ' = ? AND '
+
+    if conditions and next(conditions) then
+        query = ' WHERE '
+        for k, v in pairs(conditions) do
+            query = query .. k .. ' = ? AND '
+            table.insert(params, v)
         end
-        query = query:sub(1, -5)     -- Remove the last ' AND '
-    else
-        query = query:sub(1, -7)     -- Remove ' WHERE '
+        query = query:sub(1, -5) -- Remove trailing AND sequence
     end
-    return MySQL.query(query, params, cb)
+
+    return query, params
 end
 
---- Create new rows in a table asynchronously.
----@param table string
----@param data table
----@param cb function
-function ps.ORM.create(table, data, cb)
-    local columns = ''
-    local placeholders = ''
-    local params = {}
-    for key, value in pairs(data) do
-        columns = columns .. key .. ', '
-        placeholders = placeholders .. '?, '
-        params[#params+1]=value
+
+function ps.ORM.find(table, conditions, cb)
+    local useCache = cacheStore[table]
+    local cacheKey = getCacheKey(table, conditions)
+    local whereClause, params = buildWhereClause(conditions)
+
+    if useCache and useCache.store[cacheKey] then
+        local entry = useCache.store[cacheKey]
+        if os.time() < entry.expire then
+            return cb(entry.data, params)
+        else
+            useCache.store[cacheKey] = nil
+        end
     end
-    columns = columns:sub(1, -3) -- Remove the last ', '
-    placeholders = placeholders:sub(1, -3) -- Remove the last ', '
-    local query = 'INSERT INTO ' .. table .. ' (' .. columns .. ') VALUES (' .. placeholders .. ')'
-    return MySQL.insert(query, params, cb)
+
+    local query = 'SELECT * FROM ' .. table .. whereClause
+
+    MySQL.query(query, params, function(result)
+        if useCache then
+            useCache.store[cacheKey] = { data = result, expire = os.time() + useCache.ttl }
+        end
+        cb(result, params)
+    end)
 end
 
---- Update fields in a table based on conditions asynchronously.
----@param table string
----@param data table
----@param conditions table
----@param cb function
+-- SELECT * FROM table WHERE ... LIMIT 1
+function ps.ORM.findOne(table, conditions, cb)
+    ps.ORM.find(table, conditions, function(results, params)
+        cb(results and results[1], params)
+    end)
+end
+
+
+function ps.ORM.count(table, conditions, cb)
+    local whereClause, params = buildWhereClause(conditions)
+    local query = 'SELECT COUNT(*) as count FROM ' .. table .. whereClause
+
+    MySQL.scalar(query, params, function(result)
+        cb(result, params)
+    end)
+end
+
+
 function ps.ORM.update(table, data, conditions, cb)
     local setClause = ''
     local params = {}
-    for key, value in pairs(data) do
-        setClause = setClause .. key .. ' = ?, '
-        params[#params + 1] = value
+
+    for k, v in pairs(data) do
+        setClause = setClause .. k .. ' = ?, '
+        table.insert(params, v)
     end
-    setClause = setClause:sub(1, -3) .. ' WHERE ' -- Remove the last ', '
-    for key, value in pairs(conditions) do
-        params[#params + 1] = value
-        setClause = setClause .. key .. ' = ? AND '
-    end
-    setClause = setClause:sub(1, -5) -- Remove the last ' AND '
-    local query = 'UPDATE ' .. table .. ' SET ' .. setClause
-    return MySQL.update(query, params, cb)
+    setClause = setClause:sub(1, -3)
+
+    local whereClause, whereParams = buildWhereClause(conditions)
+    for _, v in ipairs(whereParams) do table.insert(params, v) end
+
+    local query = 'UPDATE ' .. table .. ' SET ' .. setClause .. whereClause
+
+    MySQL.update(query, params, function(affectedRows)
+        cb(affectedRows, params)
+    end)
 end
 
---- Delete rows based on conditions asynchronously.
----@param table string
----@param data table
----@param conditions table
----@param cb function
-function  ps.ORM.delete(table, conditions, cb)
-    local query = 'DELETE FROM ' .. table .. ' WHERE '
-    local params = {}
-    for key, value in pairs(conditions) do
-        params[#params + 1] = value
-        query = query .. key .. ' = ? AND '
+
+function ps.ORM.create(table, data, cb)
+    local fields, values, params = '', '', {}
+
+    for k, v in pairs(data) do
+        fields = fields .. k .. ', '
+        values = values .. '?, '
+        table.insert(params, v)
     end
-    query = query:sub(1, -5) -- Remove the last ' AND '
-    return MySQL.rawExecute(query, params, cb)
+
+    fields = fields:sub(1, -3)
+    values = values:sub(1, -3)
+
+    local query = 'INSERT INTO ' .. table .. ' (' .. fields .. ') VALUES (' .. values .. ')'
+
+    MySQL.insert(query, params, function(insertId)
+        cb(insertId, params)
+    end)
+end
+
+
+function ps.ORM.delete(table, conditions, cb)
+    local whereClause, params = buildWhereClause(conditions)
+    local query = 'DELETE FROM ' .. table .. whereClause
+
+    MySQL.update(query, params, function(affectedRows)
+        cb(affectedRows, params)
+    end)
 end
