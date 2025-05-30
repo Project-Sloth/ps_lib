@@ -90,7 +90,7 @@ function ps.getGangName()
     return job.name
 end
 
-function ps.isBoss()
+function ps.isLeader()
     local Gang = ps.getGang()
     return Gang.isboss
 end
