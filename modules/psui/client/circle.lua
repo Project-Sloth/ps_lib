@@ -18,7 +18,7 @@ local function circle(cb, circles, seconds)
     })
     SetNuiFocus(true, true)
     local result = Citizen.Await(p)
-    if cb then
+    if cb ~= false then
         cb(result)
     end
     return result

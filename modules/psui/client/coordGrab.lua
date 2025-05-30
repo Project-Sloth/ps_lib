@@ -7,7 +7,7 @@ function ps.coordGrab()
         local hit, coords, surface, entity = ps.raycast()
         DrawMarker(28, coords.x, coords.y, coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5,  0.5,  0.5, 17, 233, 196, 100)
         SendNUIMessage({
-            action = 'getCoords',
+            action = 'updateCoords',
             data = { x = math.floor(coords.x * 100) / 100, y = math.floor(coords.y * 100) / 100, z = math.floor(coords.z * 100) / 100, w = GetEntityHeading(PlayerPedId()) }
         })
          if IsControlPressed(0, 38) then
@@ -19,22 +19,17 @@ function ps.coordGrab()
         if IsControlPressed(0, 49) then
             SendNUIMessage({action = 'copyCoords', data = { type = 'vec2'}})
         end
-        if IsControlPressed(0, 177) then
+        if IsControlPressed(0, 25) then
             SendNUIMessage({action = 'copyCoords', data = { type = 'stop'}})
+            run = false
         end
     until not run
 end
 
-RegisterCommand('testUi', function()
+RegisterCommand('coordGrabber', function()
     SendNUIMessage({
-        action = 'setVisible',
+        action = 'ShowStatusBar',
         data = true
     })
     ps.coordGrab()
-end)
-
-RegisterNUICallback('hideUI', function(data, cb)
-    SetNuiFocus(false, false)
-    run = false
-    cb('ok')
-end)
+end, false)

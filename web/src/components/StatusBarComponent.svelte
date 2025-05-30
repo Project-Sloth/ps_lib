@@ -1,59 +1,83 @@
 <script lang="ts">
     import { hideStatusBar, hideStatusBarStore, statusBarStore } from "../stores/StatusBarStores";
     import { onMount } from "svelte";
-    import Icon from "./Icon.svelte";
-    import type { IStatusBarItem } from "src/interfaces/IStatusBar";
     import { isDevMode, showComponent, showUi } from "../stores/GeneralStores";
 
     let statusData:any = $statusBarStore;
-    let statusDataItems:[IStatusBarItem] = statusData.items;
-
     statusBarStore.subscribe((value) => {
         statusData = value;
-        statusDataItems = statusData.items;
-        console.log('StatusBar Data Updated:', statusData);
-        console.log('status items', JSON.stringify(statusDataItems, null, 2));
     });
 
     let hideStatusBarValue = false;
     hideStatusBarStore.subscribe(value => {
         hideStatusBarValue = value;
     });
-
-    onMount(() => {
-        if(isDevMode) {
+    let coords = {
+        x: 100.0,
+        y: 200.0,
+        z: 35.00,
+        w: 180.0
+    };
+    const copyToClipboard = (str) => {
+        const el = document.createElement("textarea");
+        el.value = str;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand("copy");
+        document.body.removeChild(el);
+    };
+    let notify = false
+    function copyCoords(type) {
+        if(type === 'vec3') {
+            copyToClipboard(`vector3(${coords.x}, ${coords.y}, ${coords.z})`);
+            notify = true;
             setTimeout(() => {
-                hideStatusBar();
-            }, 10000);
+                notify = false;
+            }, 1000);
+            return;
         }
+        if(type === 'vec4') {
+            copyToClipboard(`vector4(${coords.x}, ${coords.y}, ${coords.z}, ${coords.w})`);
+            notify = true;
+            setTimeout(() => {
+                notify = false;
+            }, 1000);
+            
+            return;
+        }
+        if(type === 'vec2') {
+            copyToClipboard(`vector2(${coords.x}, ${coords.y})`);
+            notify = true;
+            setTimeout(() => {
+                notify = false;
+            }, 1000);
+            return;
+        }
+        if(type === 'stop') {
+            closeStatusBar();
+            return;
+        }
+
+    }
+    
+    onMount(() => {
+        window.addEventListener('message', (event) => {
+            if(event.data && event.data.action === 'updateCoords') {
+    
+                coords.x = event.data.data.x.toFixed(2);
+                coords.y = event.data.data.y.toFixed(2);
+                coords.z = event.data.data.z.toFixed(2);
+                coords.w = event.data.data.w.toFixed(2);
+            }
+        });
+        window.addEventListener('message', (event) => {
+            if(event.data && event.data.action === 'copyCoords') {
+                copyCoords(event.data.data.type);
+            }
+        });
     });
 
     function closeStatusBar() {
-        const statusWrapperDom = document.getElementById('status-bar-wrapper');
-        if(statusWrapperDom) {
-            statusWrapperDom.style.animation = '2s hide-statusbar';
-
-            let keyFrames = document.createElement('style');
-            
-            keyFrames.innerHTML =  `
-                @keyframes hide-statusbar {
-                    from {
-                        opacity: 1;
-                    }
-                    to {
-                        opacity: 0;
-                    }
-                }
-
-                .status-bar-wrapper {
-                    -moz-animation: 2s hide-statusbar;
-                    -webkit-animation: 2s hide-statusbar;
-                    animation: 2s hide-statusbar;
-                }
-            `;
-
-            statusWrapperDom.appendChild(keyFrames);
-
             setTimeout(() => {
                 showUi.set(false);
                 showComponent.set(null);
@@ -65,133 +89,111 @@
                     icon: '',
                 });
                 hideStatusBarStore.set(false);
-            }, 500);
+            }, 100);
         }
-    }
+    
 
     $: {
         if(hideStatusBarValue) {
-            // if(hideStatusBarValue || !hideStatusBarValue)
             closeStatusBar();
         }
     }
 </script>
 
-<div id="status-bar-wrapper" class="status-bar-wrapper">
-    <div class="status-title-wrapper">
-        <div class="icon">
-            <Icon icon={statusData.icon} color="ps-text-green" />
-        </div>
-
-        <div class="title-info">
-            <p class="title">
-                {statusData.title}
-            </p>
-            <p class="title-description">
-                {statusData.description}
-            </p>
-        </div>
+<div class="coordGrab { notify ? 'expanded' : '' }">
+    <div class="coordGrab-header">
+        <p>Coord Grabber</p>
+    </div>
+    <div class="coordGrab-data">
+        <p>X: <span id="x">{coords.x}</span></p>
+        <p>Y: <span id="y">{coords.y}</span></p>
+        <p>Z: <span id="z">{coords.z}</span></p>
+        <p>Heading: <span id="w">{coords.w}</span></p>
     </div>
 
-    <div class="items-wrapper">
-        {#each statusDataItems as item}
-            <div class="each-item">
-                <p class="label">
-                    {item.key}:
-                </p>
-                <p class="value">
-                    {item.value}
-                </p>
-            </div>
-        {/each}
+    {#if notify}
+        <div class="notification-box">
+            <p>You Copied Coords!</p>
+        </div>
+    {/if}
+
+    <div class="line"></div>
+    <div class="instructions">
+        <p>Press <span class="key">E</span> for vector3.</p>
+        <p>Press <span class="key">R</span> for vector4.</p>
+        <p>Press <span class="key">F</span> for vector2.</p>
+        <p>Press <span class="key">Mouse Right Click</span> To Quit</p>
     </div>
 </div>
-
 <style>
-    .status-bar-wrapper {
-        -moz-animation: 2s display-status;
-        -webkit-animation: 2s display-status;
-        animation: 2s display-status;
+.coordGrab {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 18%;
+    max-width: 320px;
+    background: rgba(30, 30, 30, 0.9);
+    color: white;
+    font-family: 'Inter', sans-serif, Arial;
+    border-radius: 12px;
+    padding: 16px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    height: auto;
+    max-height: 300px;
+}
 
-        position: absolute;
-        left: 50%;
-        bottom: 1%;
-        transform: translateX(-50%);
+.coordGrab.expanded {
+    padding-bottom: 8px;
+    max-height: 400px;
+}
 
-        width: 23vw;
-        min-height: 8vw;
-        height: fit-content;
+.coordGrab-header {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+.notification-box {
+   color: green;
+   text-align: center;
+   width: 100%;
+}
 
-        overflow: hidden;
+.coordGrab-data {
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.7;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
 
-        background-color: var(--color-darkblue);
-        border-radius: 0.3vw;
+.coordGrab-data p {
+    margin: 0;
+    color: #e0e0e0;
+    transition: color 0.2s ease;
+}
 
-        padding: 1vw 2vw;
-        display: flex;
-        flex-direction: column;
-    }
-    @keyframes display-status {
-        from {
-            opacity: 0;
-        }
-        to {
-            opacity: 1;
-        }
-    }
+.line {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 10px 0;
+}
 
-    .status-bar-wrapper > .status-title-wrapper {
-        display: flex;
-        flex-direction: row;
-    }
-
-    .status-bar-wrapper > .status-title-wrapper > .icon {
-        width: 1.5vw;
-        margin-right: 0.5vw;
-
-        font-size: 1.25vw;
-    }
-    .status-bar-wrapper > .status-title-wrapper > .title-info {
-        display: flex;
-        flex-direction: column;
-        
-        text-transform: capitalize;
-    } 
-    .status-bar-wrapper > .status-title-wrapper > .title-info > .title {
-        font-size: 1.3vw;
-        font-weight: 500;
-        color: var(--color-white);
-    } 
-    .status-bar-wrapper > .status-title-wrapper > .title-info > .title-description {
-        font-size: 0.95vw;
-        font-weight: 200;
-        color: var(--color-lightgrey);
-
-        margin-top: -0.2vw;
-    } 
-
-    .status-bar-wrapper > .items-wrapper {
-        margin-left: 2vw;
-        margin-top: 0.5vw;
-    }
-    .status-bar-wrapper > .items-wrapper > .each-item {
-        display: flex;
-        flex-direction: row;
-
-        word-wrap: break-word;
-        flex-wrap: wrap;
-
-        font-size: 0.95vw;
-    }
-    .status-bar-wrapper > .items-wrapper > .each-item:not(:last-child) {
-        margin-bottom: 0.3vw;
-    }
-
-    .status-bar-wrapper > .items-wrapper > .each-item > .label {
-        color: var(--color-lightgrey);
-    }
-    .status-bar-wrapper > .items-wrapper > .each-item > .value {
-        color: var(--color-green);
-        margin-left: 0.3vw;
-    }
+.instructions {
+    font-size: 12px;
+    color: #aaa;
+    text-align: center;
+    margin-top: 6px;
+    font-style: italic;
+}
 </style>
