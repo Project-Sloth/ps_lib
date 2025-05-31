@@ -1,11 +1,11 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 
-local ped = {
-    citizenid = QBCore.Functions.GetPlayerData().citizenid,
-    charinfo = QBCore.Functions.GetPlayerData().charinfo,
-    ped = PlayerPedId(),
-    name = QBCore.Functions.GetPlayerData().charinfo.firstname .. " " .. QBCore.Functions.GetPlayerData().charinfo.lastname,
-}
+
+ps.citizenid = QBCore.Functions.GetPlayerData().citizenid
+ps.charinfo = QBCore.Functions.GetPlayerData().charinfo
+ps.ped = PlayerPedId()
+ps.name = QBCore.Functions.GetPlayerData().charinfo.firstname .. " " .. QBCore.Functions.GetPlayerData().charinfo.lastname
+
 
 function ps.getPlayerData()
     return QBCore.Functions.GetPlayerData()
