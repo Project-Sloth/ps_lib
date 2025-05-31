@@ -1,7 +1,5 @@
 ClientFramework = {}
 
--- TODO: remove ox_lib dependency
-
 local GetResourceState = GetResourceState
 local ipairs = ipairs
 

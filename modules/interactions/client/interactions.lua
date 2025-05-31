@@ -121,17 +121,3 @@ function ps.minigame(type, values)
         return success
     end
 end
-function ps.playEmote(emote)
-    if GetResourceState('scully_emotemenu') == 'started' then
-        exports.scully_emotemenu:playEmoteByCommand(emote)
-    else
-       TriggerEvent('animations:client:EmoteCommandStart', {emote})
-    end
-end
-function ps.cancelEmote()
-    if GetResourceState('scully_emotemenu') == 'started' then
-		exports.scully_emotemenu:cancelEmote()
-	else
-		TriggerEvent('animations:client:EmoteCommandStart', {"c"})
-	end
-end
