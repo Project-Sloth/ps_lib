@@ -13,7 +13,7 @@ RegisterNetEvent('baseevents:enteringAborted', function()
     TriggerClientEvent('ps_lib:enteringAborted', src)
 end)
 
-RegisterNetEvent('baseevents:enteringVehicle', function(vehicle, seat, model, netId)
+RegisterNetEvent('baseevents:enteredVehicle', function(vehicle, seat, model, netId)
     local src = source
     TriggerClientEvent('ps_lib:enteringVehicle', src, vehicle, seat, model, netId)
 end)

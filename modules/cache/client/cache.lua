@@ -32,7 +32,7 @@ RegisterNetEvent('ps_lib:enteringAborted', function()
     ps.debug(ps.isInVehicle, ps.currentVehicle, ps.currentSeat, ps.model, ps.vehicleId)
 end)
 
-RegisterNetEvent('ps_lib:enteringVehicle', function(vehicle, seat, model, netId)
+RegisterNetEvent('ps_lib:enteredVehicle', function(vehicle, seat, model, netId)
     ps.isInVehicle = true
     ps.currentVehicle = vehicle
     ps.currentSeat = seat
