@@ -12,7 +12,7 @@ function ps.getPlayerData()
 end
 
 function ps.getIdentifier()
-    return ped.citizenid
+    return ps.citizenid
 end
 
 function ps.getMetadata(meta)
@@ -20,15 +20,15 @@ function ps.getMetadata(meta)
 end
 
 function ps.getCharInfo(info)
-    return ped.charinfo[info]
+    return ps.charinfo[info]
 end
 
 function ps.getPlayerName()
-    return ped.name
+    return ps.name
 end
 
 function ps.getPlayer()
-    return ped.ped
+    return ps.ped
 end
 
 function ps.getVehicleLabel(model)
