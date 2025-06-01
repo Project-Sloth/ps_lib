@@ -52,7 +52,7 @@ function ps.getJobType() end
 
 ---Check if the player is a job boss
 ---@return boolean
-function ps.isJobBoss() end
+function ps.isBoss() end
 
 ---Check if the player is on job duty
 ---@return boolean
@@ -73,7 +73,7 @@ function ps.getGangName() end
 
 ---Check if the player is a gang boss
 ---@return boolean
-function ps.isGangBoss() end
+function ps.isLeader() end
 
 ---Check if the player is on gang duty
 ---@return boolean
