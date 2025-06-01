@@ -12,7 +12,6 @@ Consolidated types for [Lua Language Server](https://github.com/LuaLS/lua-langua
 
 ```json
 "Lua.workspace.library": [
-    "~ps_lib/types",
-    "~ps_lib"
+    "~\resources\ps_lib\types",
   ],
 ```
