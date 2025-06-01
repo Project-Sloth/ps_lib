@@ -1,9 +1,11 @@
----@param ... any
----@return string
+
 local function handleException(reason, value)
     if type(value) == 'function' then return tostring(value) end
     return reason
 end
+
+---@param ... any
+---@return string
 local function formatArgs(...)
     local args = {...}
     local formatted = {}
