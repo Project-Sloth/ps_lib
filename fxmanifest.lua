@@ -17,6 +17,7 @@ client_scripts {
     'bridge/framework/client.lua',
     'inventory/**.lua',
     'modules/**/client/**.lua',
+    'testEverything.lua',
 }
 
 server_scripts {
@@ -25,12 +26,14 @@ server_scripts {
     'inventory/**.lua',
     'modules/**/server/**.lua',
     'bridge/framework/server.lua',
-    'orm.lua'
+    'orm.lua',
+    'testEverything.lua',
 }
 
 shared_scripts {
-    '@ox_lib/init.lua',
     'Config.lua',
+    '@ox_lib/init.lua',
+    
     'startFirst/shared/**.lua',
     'modules/**/shared/**.lua',
     'init.lua'

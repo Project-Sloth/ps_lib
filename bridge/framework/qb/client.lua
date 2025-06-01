@@ -1,18 +1,18 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 
-local ped = {
-    citizenid = QBCore.Functions.GetPlayerData().citizenid,
-    charinfo = QBCore.Functions.GetPlayerData().charinfo,
-    ped = PlayerPedId(),
-    name = QBCore.Functions.GetPlayerData().charinfo.firstname .. " " .. QBCore.Functions.GetPlayerData().charinfo.lastname,
-}
+
+ps.citizenid = QBCore.Functions.GetPlayerData().citizenid
+ps.charinfo = QBCore.Functions.GetPlayerData().charinfo
+ps.ped = PlayerPedId()
+ps.name = QBCore.Functions.GetPlayerData().charinfo.firstname .. " " .. QBCore.Functions.GetPlayerData().charinfo.lastname
+
 
 function ps.getPlayerData()
     return QBCore.Functions.GetPlayerData()
 end
 
 function ps.getIdentifier()
-    return ped.citizenid
+    return ps.citizenid
 end
 
 function ps.getMetadata(meta)
@@ -20,15 +20,15 @@ function ps.getMetadata(meta)
 end
 
 function ps.getCharInfo(info)
-    return ped.charinfo[info]
+    return ps.charinfo[info]
 end
 
 function ps.getPlayerName()
-    return ped.name
+    return ps.name
 end
 
 function ps.getPlayer()
-    return ped.ped
+    return ps.ped
 end
 
 function ps.getVehicleLabel(model)
@@ -90,7 +90,7 @@ function ps.getGangName()
     return job.name
 end
 
-function ps.isBoss()
+function ps.isLeader()
     local Gang = ps.getGang()
     return Gang.isboss
 end
