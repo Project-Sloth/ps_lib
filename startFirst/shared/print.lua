@@ -1,12 +1,18 @@
 ---@param ... any
 ---@return string
+local function handleException(reason, value)
+    if type(value) == 'function' then return tostring(value) end
+    return reason
+end
 local function formatArgs(...)
     local args = {...}
     local formatted = {}
+    local jsonOptions = { sort_keys = true, indent = true, exception = handleException }
+
 
     for k, v in ipairs(args) do
         if type(v) == "table" then
-            table.insert(formatted, json.encode(v))
+            table.insert(formatted, json.encode(v, jsonOptions))
         elseif type(v) == "boolean" then
             table.insert(formatted, tostring(v))
         elseif v == nil then

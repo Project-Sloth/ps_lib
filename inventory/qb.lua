@@ -1,5 +1,5 @@
 if Config.Inventory ~= 'qb' then return end
-ps.debug('qb-inventory loaded')
+
 if IsDuplicityVersion() then
     function ps.removeItem(identifier, item, amount, slot, reason)
         if not identifier or not item then return end
@@ -36,6 +36,45 @@ if IsDuplicityVersion() then
     function ps.openInventoryById(source, playerid)
         exports['qb-inventory']:OpenInventory(source, playerid)
     end
+    function ps.clearInventory(source, identifier)
+        if not identifier then return end
+        exports['qb-inventory']:ClearInventory(source, identifier)
+    end
+    function ps.clearStash(source, identifier)
+        if not identifier then return end
+        exports['qb-inventory']:ClearStash(source, identifier)
+    end
+
+    function ps.getItemCount(identifier, item)
+        if not identifier or not item then return end
+        return exports['qb-inventory']:GetItemCount(identifier, item)
+    end
+
+    function ps.getItemByName(identifier, item)
+        if not identifier or not item then return end
+        return exports['qb-inventory']:GetItemByName(identifier, item)
+    end
+
+    function ps.getItemsByNames(identifier, items)
+        if not identifier or not items then return end
+        local itemList = {}
+        for _, item in ipairs(items) do
+            local itemData = exports['qb-inventory']:GetItemByName(identifier, item)
+            if itemData then
+                table.insert(itemList, itemData)
+            end
+        end
+        return itemList
+    end
+    function ps.createShop(source, shopData)
+        if not shopData.name then shopData.name = 'Shop' end
+        if not shopData.items then shopData.items = {} end
+        if not shopData.slots then shopData.slots = #shopData.items end
+        if not shopData.label then shopData.label = shopData.name end
+        exports['qb-inventory']:CreateShop(source, shopData.name, shopData.items)
+        exports['qb-inventory']:OpenShop(source, shopData.name)
+    end
+    
 else
     function ps.getImage(item)
         local itemData = QBCore.Shared.Items[item].image

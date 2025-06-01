@@ -17,6 +17,12 @@ function ps.getIdentifier(source)
     return player.PlayerData.citizenid
 end
 
+function ps.getSource(identifier)
+    local player = ps.getPlayerByIdentifier(identifier)
+    if not player then return nil end
+    return player.PlayerData.source
+end
+
 function ps.getPlayerName(source)
     local player = ps.getPlayer(source)
     return player.PlayerData.charinfo.firstname .. " " .. player.PlayerData.charinfo.lastname
@@ -73,6 +79,11 @@ function ps.getJobGrade(source)
     return player.PlayerData.job.grade
 end
 
+function ps.getJobGradeLevel(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.job.grade.level
+end
+
 function ps.getJobGradeName(source)
     local player = ps.getPlayer(source)
     return player.PlayerData.job.grade.name
@@ -96,6 +107,13 @@ function ps.getDistance(source, location)
     local pcoords = GetEntityCoords(GetPlayerPed(source))
     local loc = vector3(location.x, location.y, location.z)
     return #(pcoords - loc)
+end
+
+function ps.checkDistance(source, location, distance)
+    if not distance then distance = 2.5 end
+    local pcoords = GetEntityCoords(GetPlayerPed(source))
+    local loc = vector3(location.x, location.y, location.z)
+    return #(pcoords - loc) <= distance
 end
 
 function ps.getNearbyPlayers(source, distance)
@@ -140,4 +158,12 @@ end
 function ps.createUseable(item, func)
     if not item or not func then return end
     QBCore.Functions.CreateUseableItem(item, func)
+end
+
+function ps.setJob(source, jobName, rank)
+    local player = ps.getPlayer(source)
+    if not player then return end
+    local job = QBCore.Shared.Jobs[jobName]
+    if not job then return end
+    player.Functions.SetJob(job.name, rank or 0)
 end
