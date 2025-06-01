@@ -22,4 +22,4 @@ function ps.versionCheck(script, link, updateLink)
      end, "GET", "", "")
 end
 
-ps.versionCheck('ps_lib', 'https://raw.githubusercontent.com/Mustachedom/md-drugs/main/version.txt', 'https://github.com/Project-Sloth/ps_lib')
+ps.versionCheck('ps_lib', 'https://raw.githubusercontent.com/Mustachedom/md-drugs/refs/heads/main/version.txt', 'https://github.com/Project-Sloth/ps_lib')
