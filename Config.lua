@@ -1,6 +1,6 @@
 Config = {}
 
-Config.Notify = "qb" -- QBCore or ESX or ox
+Config.Notify = "ox" -- QBCore or ESX or ox
 Config.Progressbar = "oxbar" -- QBCore or ESX or ox
 Config.Target = "qb" -- QBCore or ESX or ox or interact 
 Config.Inventory = "qb" -- QBCore or ESX or ox

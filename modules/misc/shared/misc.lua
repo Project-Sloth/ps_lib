@@ -24,3 +24,11 @@ function ps.random(min, max)
     return math.random(min, max)
 end
 
+function ps.tableContains(tab, value)
+    for _, v in pairs(tab) do
+        if v == value then
+            return true
+        end
+    end
+    return false
+end

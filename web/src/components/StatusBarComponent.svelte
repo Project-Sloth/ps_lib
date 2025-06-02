@@ -27,7 +27,7 @@
         document.body.removeChild(el);
     };
     let notify = false
-    function copyCoords(type) {
+    function copyCoords(type, strings) {
         if(type === 'vec3') {
             copyToClipboard(`vector3(${coords.x}, ${coords.y}, ${coords.z})`);
             notify = true;
@@ -53,6 +53,14 @@
             }, 1000);
             return;
         }
+        if(type === 'copy') {
+            copyToClipboard(strings);
+            notify = true;
+            setTimeout(() => {
+                notify = false;
+            }, 1000);
+            return;
+        }
         if(type === 'stop') {
             closeStatusBar();
             return;
@@ -72,7 +80,7 @@
         });
         window.addEventListener('message', (event) => {
             if(event.data && event.data.action === 'copyCoords') {
-                copyCoords(event.data.data.type);
+                copyCoords(event.data.data.type, event.data.data.string  || '');
             }
         });
     });
