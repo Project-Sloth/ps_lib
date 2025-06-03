@@ -167,3 +167,26 @@ function ps.setJob(source, jobName, rank)
     if not job then return end
     player.Functions.SetJob(job.name, rank or 0)
 end
+
+function ps.addMoney(source,type, amount, reason)
+    local player = ps.getPlayer(source)
+    if not player then return end
+    player.Functions.AddMoney(type, amount, reason or 'Added by script')
+    return true
+end
+
+function ps.removeMoney(source, type,  amount, reason)
+    local player = ps.getPlayer(source)
+    if not player then return end
+    if player.Functions.RemoveMoney(type, amount, reason or 'Removed by script') then
+        return true
+    else
+        return false
+    end
+end
+
+function ps.getMoney(source, type)
+    local player = ps.getPlayer(source)
+    if not player then return 0 end
+    return player.PlayerData.money[type] or 0
+end

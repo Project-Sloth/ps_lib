@@ -10,16 +10,33 @@ function ps.versionCheck(script, link, updateLink)
         return
     end
 
-     PerformHttpRequest(link, function(err, text, headers)
-         if (text ~= nil) then
-            if currentVersion == text then
-                ps.debug('^2 ' .. script .. ' is up to date: ' .. currentVersion)
+    PerformHttpRequest(link, function(err, text, headers)
+        local remoteVersion = nil
+        local changelogLines = {}
+        for line in string.gmatch(text, "[^\r\n]+") do
+            if not remoteVersion then
+                local match = string.match(line, "Newest Build:%s*(.+)")
+                if match then
+                    remoteVersion = match
+                    goto continue
+                end
             else
-                ps.debug('^1 ' .. script .. ' is outdated! Please update to version: ' .. text)
-                print('Download Here: ' .. (updateLink or 'link not provided'))
+                table.insert(changelogLines, line)
             end
-         end
-     end, "GET", "", "")
-end
+            ::continue::
+        end
 
-ps.versionCheck('ps_lib', 'https://raw.githubusercontent.com/Mustachedom/md-drugs/refs/heads/main/version.txt', 'https://github.com/Project-Sloth/ps_lib')
+        if remoteVersion then
+            if currentVersion == remoteVersion then
+                ps.success('^2 ' .. script .. ' is up to date: ' .. currentVersion)
+            else
+                ps.warn('^1 ' .. script .. ' is outdated! Please update to version: ' .. remoteVersion)
+                ps.warn('Download Here: ' .. (updateLink or 'link not provided'))
+                ps.info('Changelog:  \n ', table.concat(changelogLines, "  \n  "))
+            end
+        else
+            ps.debug("Remote version not found in expected format.")
+        end
+    end, "GET", "", "")
+end
+ps.versionCheck('ps_lib', 'https://raw.githubusercontent.com/Mustachedom/versionChecker/refs/heads/main/md-drugs2', 'https://github.com/Project-Sloth/ps_lib')

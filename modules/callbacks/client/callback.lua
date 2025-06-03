@@ -13,7 +13,6 @@ function ps.callback(name, ...)
         cb = args[1]
         table.remove(args, 1)
     end
-
     pendingCallbacks[name] = {
         callback = cb,
         promise = promise.new()
@@ -34,13 +33,8 @@ RegisterNetEvent('ps_lib:client:triggerClientCallback', function(name, ...)
         return
     end
 
-    local result = callbacks[name](function(...)
-        TriggerServerEvent('ps_lib:Server:triggerClientCallback', name, ...)
-    end, ...)
-
-    if result ~= nil then
-        TriggerServerEvent('ps_lib:Server:triggerClientCallback', name, result)
-    end
+    local result = callbacks[name](...)
+    TriggerServerEvent('ps_lib:Server:triggerClientCallback', name, result)
 end)
 
 RegisterNetEvent('ps_lib:client:triggerCallback', function(name, ...)

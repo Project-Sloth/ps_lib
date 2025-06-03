@@ -52,13 +52,9 @@ RegisterNetEvent('ps_lib:server:triggerCallback', function(name, ...)
         return
     end
 
-    local result = callbacks[name](src, function(...)
-        TriggerClientEvent('ps_lib:client:triggerCallback', src, name, ...)
-    end, ...)
-
-    if result ~= nil then
-        TriggerClientEvent('ps_lib:client:triggerCallback', src, name, result)
-    end
+    local result = callbacks[name](src, ...)
+    TriggerClientEvent('ps_lib:client:triggerCallback', src, name, result)
+    
 end)
 
 RegisterNetEvent('ps_lib:server:noCallback', function(name)
