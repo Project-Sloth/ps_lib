@@ -14,6 +14,19 @@ local function acquireLock(table)
     tableLocks[table] = true
 end
 
+
+--- Clears the cache for a specific table, to be used after CUD operations (Create, Update, Delete).
+---@param table string
+local function clearCache(table)
+    if cacheStore[table] then 
+        acquireLock(table)
+        --TODO: @TheMajorMayhem not sure if you want to clear the cache for the entire table or just the stored data 
+        -- cacheStore[table].store = {} -- optionally clear the cache store instead of the 
+        cacheStore[table] = nil
+        releaseLock(table)
+    end
+end
+
 --- Releases a lock for a table.
 ---@param table string
 local function releaseLock(table)
@@ -143,6 +156,7 @@ function ps.ORM.update(table, data, conditions, cb)
 
     MySQL.update(query, params, function(affectedRows)
         releaseLock(table)
+        clearCache(table)
         cb(affectedRows, params)
     end)
 end
@@ -169,6 +183,7 @@ function ps.ORM.create(table, data, cb)
 
     MySQL.insert(query, params, function(insertId)
         releaseLock(table)
+        clearCache(table)
         cb(insertId, params)
     end)
 end
@@ -185,6 +200,7 @@ function ps.ORM.delete(table, conditions, cb)
 
     MySQL.update(query, params, function(affectedRows)
         releaseLock(table)
+        clearCache(table)
         cb(affectedRows, params)
     end)
 end
