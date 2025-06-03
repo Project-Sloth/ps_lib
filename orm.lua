@@ -40,7 +40,9 @@ function ps.ORM.enableCache(table, opts)
     acquireLock(table)
     cacheStore[table] = {
         ttl = opts.ttl or 60, -- Time-to-live for cache entries, defaults to 60 seconds.
-        store = {} -- Stores cached query results indexed by cache key.
+        maxSize = 100,
+        store = {}, -- Stores cached query results indexed by cache key.
+        order = {}  -- Keeps track of the order of cache entries for deletion.
     }
     releaseLock(table)
 end
@@ -104,7 +106,15 @@ function ps.ORM.find(table, conditions, cb)
 
         if useCache then
             acquireLock(table)
+
             useCache.store[cacheKey] = { data = result, expire = os.time() + useCache.ttl }
+            table.insert(useCache.order, cacheKey)
+
+            -- Maintain cache size by removing the oldest entry if maxSize exceeded.
+            if #useCache.order > useCache.maxSize then 
+                local oldestKey = table.remove(useCache.order, 1)
+                useCache.store[oldestKey] = nil -- Remove the oldest entry.
+            end
             releaseLock(table)
         end
         cb(result, params, nil)
