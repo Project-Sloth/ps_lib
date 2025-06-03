@@ -97,13 +97,17 @@ function ps.ORM.find(table, conditions, cb)
 
     local query = 'SELECT * FROM ' .. table .. whereClause
 
-    MySQL.query(query, params, function(result)
+    MySQL.query(query, params, function(result, err)
+        if err then 
+            return cb(nil, params, err)
+        end
+
         if useCache then
             acquireLock(table)
             useCache.store[cacheKey] = { data = result, expire = os.time() + useCache.ttl }
             releaseLock(table)
         end
-        cb(result, params)
+        cb(result, params, nil)
     end)
 end
 
@@ -112,8 +116,11 @@ end
 ---@param conditions table Query conditions.
 ---@param cb fun(result: table, params: table) Callback function.
 function ps.ORM.findOne(table, conditions, cb)
-    ps.ORM.find(table, conditions, function(results, params)
-        cb(results and results[1], params)
+    ps.ORM.find(table, conditions, function(results, params, err)
+        if err then 
+            return cb(nil, params, err)
+        end
+        cb(results and results[1], params, nil)
     end)
 end
 
@@ -125,7 +132,12 @@ function ps.ORM.count(table, conditions, cb)
     local whereClause, params = buildWhereClause(conditions)
     local query = 'SELECT COUNT(*) as count FROM ' .. table .. whereClause
 
-    MySQL.scalar(query, params, function(result)
+
+    --TODO @TheMajorMayhem: Add table locking here if needed 
+    MySQL.scalar(query, params, function(result, err)
+        if err then 
+            return cb(nil, params, err)
+        end
         cb(result, params)
     end)
 end
@@ -154,10 +166,13 @@ function ps.ORM.update(table, data, conditions, cb)
 
     local query = 'UPDATE ' .. table .. ' SET ' .. setClause .. whereClause
 
-    MySQL.update(query, params, function(affectedRows)
+    MySQL.update(query, params, function(affectedRows, err)
         releaseLock(table)
+        if err then 
+            return cb(nil, params, err)
+        end
         clearCache(table)
-        cb(affectedRows, params)
+        cb(affectedRows, params, nil)
     end)
 end
 
@@ -181,10 +196,13 @@ function ps.ORM.create(table, data, cb)
 
     local query = 'INSERT INTO ' .. table .. ' (' .. fields .. ') VALUES (' .. values .. ')'
 
-    MySQL.insert(query, params, function(insertId)
+    MySQL.insert(query, params, function(insertId, err)
         releaseLock(table)
+        if err then 
+            return cb(nil, params, err)
+        end
         clearCache(table)
-        cb(insertId, params)
+        cb(insertId, params, nil)
     end)
 end
 
@@ -198,9 +216,12 @@ function ps.ORM.delete(table, conditions, cb)
     local whereClause, params = buildWhereClause(conditions)
     local query = 'DELETE FROM ' .. table .. whereClause
 
-    MySQL.update(query, params, function(affectedRows)
+    MySQL.update(query, params, function(affectedRows, err)
         releaseLock(table)
+        if err then 
+            return cb(nil, params, err)
+        end
         clearCache(table)
-        cb(affectedRows, params)
+        cb(affectedRows, params, nil)
     end)
 end
