@@ -117,6 +117,24 @@ function ps.ORM.count(table, conditions, cb)
     end)
 end
 
+-- Function added by Simon to find records with ordering and limit.
+function ps.ORM.findOrderedLimited(table, conditions, orderBy, orderDirection, limit, cb)
+    local query = 'SELECT * FROM ' .. table .. ' WHERE '
+    local params = {}
+    if conditions then
+        for key, value in pairs(conditions) do
+            params[#params + 1] = value
+            query = query .. key .. ' = ? AND '
+        end
+        query = query:sub(1, -5)
+    else
+        query = query:sub(1, -7) 
+    end
+    query = query .. ' ORDER BY ' .. orderBy .. ' ' .. orderDirection
+    query = query .. ' LIMIT ' .. limit
+    return MySQL.query(query, params, cb)
+end
+
 --- Updates records matching conditions with the given data.
 --- Race condition safe for write operations.
 ---@param table string Table name.
