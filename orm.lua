@@ -14,6 +14,19 @@ local function acquireLock(table)
     tableLocks[table] = true
 end
 
+
+--- Clears the cache for a specific table, to be used after CUD operations (Create, Update, Delete).
+---@param table string
+local function clearCache(table)
+    if cacheStore[table] then 
+        acquireLock(table)
+        --TODO: @TheMajorMayhem not sure if you want to clear the cache for the entire table or just the stored data 
+        -- cacheStore[table].store = {} -- optionally clear the cache store instead of the 
+        cacheStore[table] = nil
+        releaseLock(table)
+    end
+end
+
 --- Releases a lock for a table.
 ---@param table string
 local function releaseLock(table)
@@ -27,7 +40,9 @@ function ps.ORM.enableCache(table, opts)
     acquireLock(table)
     cacheStore[table] = {
         ttl = opts.ttl or 60, -- Time-to-live for cache entries, defaults to 60 seconds.
-        store = {} -- Stores cached query results indexed by cache key.
+        maxSize = 100,
+        store = {}, -- Stores cached query results indexed by cache key.
+        order = {}  -- Keeps track of the order of cache entries for deletion.
     }
     releaseLock(table)
 end
@@ -84,13 +99,25 @@ function ps.ORM.find(table, conditions, cb)
 
     local query = 'SELECT * FROM ' .. table .. whereClause
 
-    MySQL.query(query, params, function(result)
+    MySQL.query(query, params, function(result, err)
+        if err then 
+            return cb(nil, params, err)
+        end
+
         if useCache then
             acquireLock(table)
+
             useCache.store[cacheKey] = { data = result, expire = os.time() + useCache.ttl }
+            table.insert(useCache.order, cacheKey)
+
+            -- Maintain cache size by removing the oldest entry if maxSize exceeded.
+            if #useCache.order > useCache.maxSize then 
+                local oldestKey = table.remove(useCache.order, 1)
+                useCache.store[oldestKey] = nil -- Remove the oldest entry.
+            end
             releaseLock(table)
         end
-        cb(result, params)
+        cb(result, params, nil)
     end)
 end
 
@@ -99,8 +126,11 @@ end
 ---@param conditions table Query conditions.
 ---@param cb fun(result: table, params: table) Callback function.
 function ps.ORM.findOne(table, conditions, cb)
-    ps.ORM.find(table, conditions, function(results, params)
-        cb(results and results[1], params)
+    ps.ORM.find(table, conditions, function(results, params, err)
+        if err then 
+            return cb(nil, params, err)
+        end
+        cb(results and results[1], params, nil)
     end)
 end
 
@@ -112,9 +142,32 @@ function ps.ORM.count(table, conditions, cb)
     local whereClause, params = buildWhereClause(conditions)
     local query = 'SELECT COUNT(*) as count FROM ' .. table .. whereClause
 
-    MySQL.scalar(query, params, function(result)
+
+    --TODO @TheMajorMayhem: Add table locking here if needed 
+    MySQL.scalar(query, params, function(result, err)
+        if err then 
+            return cb(nil, params, err)
+        end
         cb(result, params)
     end)
+end
+
+-- Function added by Simon to find records with ordering and limit.
+function ps.ORM.findOrderedLimited(table, conditions, orderBy, orderDirection, limit, cb)
+    local query = 'SELECT * FROM ' .. table .. ' WHERE '
+    local params = {}
+    if conditions then
+        for key, value in pairs(conditions) do
+            params[#params + 1] = value
+            query = query .. key .. ' = ? AND '
+        end
+        query = query:sub(1, -5)
+    else
+        query = query:sub(1, -7) 
+    end
+    query = query .. ' ORDER BY ' .. orderBy .. ' ' .. orderDirection
+    query = query .. ' LIMIT ' .. limit
+    return MySQL.query(query, params, cb)
 end
 
 --- Updates records matching conditions with the given data.
@@ -141,9 +194,13 @@ function ps.ORM.update(table, data, conditions, cb)
 
     local query = 'UPDATE ' .. table .. ' SET ' .. setClause .. whereClause
 
-    MySQL.update(query, params, function(affectedRows)
+    MySQL.update(query, params, function(affectedRows, err)
         releaseLock(table)
-        cb(affectedRows, params)
+        if err then 
+            return cb(nil, params, err)
+        end
+        clearCache(table)
+        cb(affectedRows, params, nil)
     end)
 end
 
@@ -167,9 +224,13 @@ function ps.ORM.create(table, data, cb)
 
     local query = 'INSERT INTO ' .. table .. ' (' .. fields .. ') VALUES (' .. values .. ')'
 
-    MySQL.insert(query, params, function(insertId)
+    MySQL.insert(query, params, function(insertId, err)
         releaseLock(table)
-        cb(insertId, params)
+        if err then 
+            return cb(nil, params, err)
+        end
+        clearCache(table)
+        cb(insertId, params, nil)
     end)
 end
 
@@ -183,8 +244,12 @@ function ps.ORM.delete(table, conditions, cb)
     local whereClause, params = buildWhereClause(conditions)
     local query = 'DELETE FROM ' .. table .. whereClause
 
-    MySQL.update(query, params, function(affectedRows)
+    MySQL.update(query, params, function(affectedRows, err)
         releaseLock(table)
-        cb(affectedRows, params)
+        if err then 
+            return cb(nil, params, err)
+        end
+        clearCache(table)
+        cb(affectedRows, params, nil)
     end)
 end
