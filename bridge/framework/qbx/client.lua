@@ -1,8 +1,14 @@
-
+ps.citizenid = nil
+ps.charinfo = nil
+ps.ped = nil
+ps.name = nil
+CreateThread(function()
 ps.citizenid = QBX.PlayerData.citizenid
 ps.charinfo = QBX.PlayerData.charinfo
 ps.ped = PlayerPedId()
 ps.name = QBX.PlayerData.charinfo.firstname .. " " .. QBX.PlayerData.charinfo.lastname
+end)
+
 
 function ps.getPlayerData()
     return QBX.PlayerData
@@ -103,4 +109,25 @@ end
 
 function ps.getCoords()
     return GetEntityCoords(ps.ped)
+end
+
+function ps.getMoneyData()
+    local money = QBX.PlayerData.money
+    return money
+end
+function ps.getMoney(type)
+    local money = QBX.PlayerData.money
+    return money[type] or 0
+end
+
+function ps.getAllMoney()
+    local money = QBX.PlayerData.money
+    local moneyData = {}
+    for k, v in pairs(money) do
+       table.insert(moneyData, {
+            amount = v,
+            name = k
+        })
+    end
+    return moneyData
 end

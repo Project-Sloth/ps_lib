@@ -15,7 +15,7 @@ client_scripts {
     --'@qbx_core/modules/playerdata.lua',
     'startFirst/client/**.lua',
     'bridge/framework/client.lua',
-    'inventory/**.lua',
+    'inventory/client.lua',
     'modules/**/client/**.lua',
     'testEverything.lua',
 }
@@ -23,7 +23,7 @@ client_scripts {
 server_scripts {
     '@oxmysql/lib/MySQL.lua',
     'startFirst/server/**.lua',
-    'inventory/**.lua',
+    'bridge/framework/server.lua',
     'modules/**/server/**.lua',
     'bridge/framework/server.lua',
     'orm.lua',
@@ -33,7 +33,6 @@ server_scripts {
 shared_scripts {
     'Config.lua',
     '@ox_lib/init.lua',
-    
     'startFirst/shared/**.lua',
     'modules/**/shared/**.lua',
     'init.lua'
@@ -44,6 +43,7 @@ files {
   'web/build/index.html',
   'web/build/**/*',
   'bridge/**/*',
+  'inventory/**/*',
 }
 
 ui_page 'web/build/index.html'

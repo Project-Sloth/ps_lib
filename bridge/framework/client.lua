@@ -14,14 +14,14 @@ local frameworkFound = false
 
 for _, resource in ipairs(frameworks) do
     if GetResourceState(resource.name) == 'started' then
-        lib.load(('bridge.framework.%s.client'):format(resource.bridge))
-        ps.debug(('Framework found: %s'):format(resource.name))
+        loadLib('bridge/framework/' .. resource.bridge .. '/client.lua')
+        ps.success('Framework resource found: ' .. resource.name)
         frameworkFound = true
         break
     end
 end
 
 if not frameworkFound then
-    lib.load('bridge.framework.custom.client')
+    loadLib('bridge/framework/custom/client.lua')
     ps.warn('No framework resource found: falling back to custom')
 end
