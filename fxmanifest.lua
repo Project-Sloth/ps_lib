@@ -15,6 +15,7 @@ client_scripts {
     --'@qbx_core/modules/playerdata.lua',
     'startFirst/client/**.lua',
     'bridge/framework/client.lua',
+    'bridge/emote/client.lua',
     'inventory/**.lua',
     'modules/**/client/**.lua',
     'testEverything.lua',

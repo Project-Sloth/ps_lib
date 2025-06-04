@@ -22,5 +22,5 @@ end
 
 if not emotesFound then
     lib.load('bridge.emote.custom.client')
-    ps.warn('No framework resource found: falling back to custom')
+    ps.warn('No emote resource found: falling back to custom')
 end
