@@ -152,7 +152,13 @@ function ps.ORM.count(table, conditions, cb)
     end)
 end
 
--- Function added by Simon to find records with ordering and limit.
+--- Fetch rows that match the condition, ordered by a column and limited to a specific count
+---@param table string The database table to query
+---@param conditions table|nil Conditions for the WHERE clause (can be nil to fetch all)
+---@param orderBy string The column to order by
+---@param orderDirection string The direction to order by ('ASC' or 'DESC')
+---@param limit number The maximum number of rows to return
+---@param cb function Callback function to handle the results
 function ps.ORM.findOrderedLimited(table, conditions, orderBy, orderDirection, limit, cb)
     local query = 'SELECT * FROM ' .. table .. ' WHERE '
     local params = {}
