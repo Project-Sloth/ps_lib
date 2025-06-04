@@ -18464,4 +18464,3 @@ end
 function ps.getRandomObject()
   return objectList[math.random(1, #objectList)]
 end
-

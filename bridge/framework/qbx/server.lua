@@ -17,6 +17,10 @@ function ps.getIdentifier(source)
     return player.PlayerData.citizenid
 end
 
+function ps.getSource(identifier)
+    return qbx:GetSource(identifier)
+end
+
 function ps.getPlayerName(source)
     local player = ps.getPlayer(source)
     return player.PlayerData.charinfo.firstname .. " " .. player.PlayerData.charinfo.lastname
@@ -92,6 +96,13 @@ function ps.getDistance(source, location)
     return #(pcoords - loc)
 end
 
+function ps.checkDistance(source, location, distance)
+    if not distance then distance = 2.5 end
+    local pcoords = GetEntityCoords(GetPlayerPed(source))
+    local loc = vector3(location.x, location.y, location.z)
+    return #(pcoords - loc) <= distance
+end
+
 function ps.getNearbyPlayers(source, distance)
     if not distance then distance = 10.0 end
     local players = {}
@@ -134,4 +145,29 @@ end
 function ps.createUseable(item, func)
     if not item or not func then return end
     qbx:CreateUseableItem(item, func)
+end
+
+function ps.setJob(source, jobName, jobGrade)
+    if not source or not jobName or not jobGrade then
+        return false
+    end
+    return qbx:SetJob(source, jobName, jobGrade)
+end
+
+function ps.addMoney(source, type, amount, reason)
+    if not type then type = 'cash' end
+    if not amount then amount = 0 end
+    if not reason then reason = 'No reason provided' end
+    return qbx:AddMoney(source, type, amount, reason)
+end
+
+function ps.removeMoney(source, type, amount, reason)
+    if not type then type = 'cash' end
+    if not amount then amount = 0 end
+    if not reason then reason = 'No reason provided' end
+    return qbx:RemoveMoney(source, type, amount, reason)
+end
+
+function ps.getMoney(source, type)
+    return qbx:GetMoney(source, type or 'cash')
 end

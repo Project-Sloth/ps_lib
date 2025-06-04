@@ -794,23 +794,6 @@ local vehicleList = {
   "avenger"
 }
 
-RegisterCommand('copyVehList',function(source, args, rawCommand)
-  local newList = {}
-  for k, v in pairs(vehicleList) do
-    table.insert(newList, '"' .. k .. '"')
-  end
-  local string = 'local vehicleList = {  \n  '
-  string = string .. table.concat(newList, ',  \n  ')
-  SendNUIMessage({
-    action = 'copyCoords',
-    data = {
-        string = string .. '\n}',
-        type = 'copy'
-    }
-
-  })
-end, false)
-
 function ps.getVehicleList()
   return vehicleList
 end

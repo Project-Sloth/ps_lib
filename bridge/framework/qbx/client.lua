@@ -1,11 +1,15 @@
-qbx = exports.qbx_core
+
+ps.citizenid = QBX.PlayerData.citizenid
+ps.charinfo = QBX.PlayerData.charinfo
+ps.ped = PlayerPedId()
+ps.name = QBX.PlayerData.charinfo.firstname .. " " .. QBX.PlayerData.charinfo.lastname
 
 function ps.getPlayerData()
     return QBX.PlayerData
 end
 
 function ps.getIdentifier()
-    return ps.getPlayerData().citizenid
+    return ps.citizenid
 end
 
 function ps.getMetadata(meta)
@@ -17,12 +21,11 @@ function ps.getCharInfo(info)
 end
 
 function ps.getPlayerName()
-    local player = ps.getPlayerData()
-    return player.charinfo.firstname .. " " .. player.charinfo.lastname
+    return ps.name
 end
 
 function ps.getPlayer()
-    return PlayerPedId()
+    return ps.ped
 end
 
 function ps.getVehicleLabel(model)
@@ -88,17 +91,16 @@ function ps.getGangName()
     return job.name
 end
 
-function ps.isBoss()
+function ps.isLeader()
     local Gang = ps.getGang()
     return Gang.isboss
-end
-
-function ps.getGangDuty()
-    local Gang = ps.getGang()
-    return Gang.onduty
 end
 
 function ps.getGangData(data)
     local Gang = ps.getGang()
     return Gang[data]
+end
+
+function ps.getCoords()
+    return GetEntityCoords(ps.ped)
 end
