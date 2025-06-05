@@ -1,10 +1,12 @@
 Config = {}
 
 Config.Notify = "ox" -- QBCore or ESX or ox
-Config.Progressbar = "oxbar" -- QBCore or ESX or ox
+Config.Progressbar = "ox" -- QBCore or ESX or ox
 Config.Target = "qb" -- QBCore or ESX or ox or interact 
 Config.Inventory = "qb" -- QBCore or ESX or ox
-Config.Logs = "discord" -- fivemerr or discord
+--TODO #14
+Config.Logs = "fivemerr" -- fivemerr or fivemanage 
+
 ps = {}
 
 QBCore, ESX, qbx = nil, nil, nil
