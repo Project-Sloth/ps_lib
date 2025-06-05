@@ -18,17 +18,15 @@ client_scripts {
     'inventory/client.lua',
     'bridge/emote/client.lua',
     'modules/**/client/**.lua',
-    'testEverything.lua',
 }
 
 server_scripts {
     '@oxmysql/lib/MySQL.lua',
     'startFirst/server/**.lua',
     'bridge/framework/server.lua',
+    'inventory/server.lua',
     'modules/**/server/**.lua',
-    'bridge/framework/server.lua',
     'orm.lua',
-    'testEverything.lua',
 }
 
 shared_scripts {

@@ -1,10 +1,9 @@
 Config = {}
 
-Config.Notify = "ox" -- QBCore or ESX or ox
-Config.Progressbar = "oxbar" -- QBCore or ESX or ox
+Config.Notify = "ox" -- qb, ox, ps 
+Config.Progressbar = "oxbar" -- qb, oxbar, oxcircle
 Config.Target = "qb" -- QBCore or ESX or ox or interact 
-Config.Inventory = "qb" -- QBCore or ESX or ox
-Config.Logs = "discord" -- fivemerr or discord
+Config.Logs = "fivemerr" -- fivemerr
 ps = {}
 
 QBCore, ESX, qbx = nil, nil, nil
