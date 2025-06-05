@@ -1,10 +1,16 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 
+ps.citizenid = nil
+ps.charinfo = nil
+ps.ped = nil
+ps.name = nil
+CreateThread(function()
+    ps.citizenid = QBCore.Functions.GetPlayerData().citizenid
+    ps.charinfo = QBCore.Functions.GetPlayerData().charinfo
+    ps.ped = PlayerPedId()
+    ps.name = QBCore.Functions.GetPlayerData().charinfo.firstname .. " " .. QBCore.Functions.GetPlayerData().charinfo.lastname
+end)
 
-ps.citizenid = QBCore.Functions.GetPlayerData().citizenid
-ps.charinfo = QBCore.Functions.GetPlayerData().charinfo
-ps.ped = PlayerPedId()
-ps.name = QBCore.Functions.GetPlayerData().charinfo.firstname .. " " .. QBCore.Functions.GetPlayerData().charinfo.lastname
 
 
 ---@return: table
@@ -159,4 +165,25 @@ end
 --- @example: if ps.getCoords() then  end
 function ps.getCoords()
     return GetEntityCoords(ps.ped)
+end
+
+function ps.getMoneyData()
+    local money = QBCore.Functions.GetPlayerData().money
+    return money
+end
+function ps.getMoney(type)
+    local money = QBCore.Functions.GetPlayerData().money
+    return money[type] or 0
+end
+
+function ps.getAllMoney()
+    local money = QBCore.Functions.GetPlayerData().money
+    local moneyData = {}
+    for k, v in pairs(money) do
+       table.insert(moneyData, {
+            amount = v,
+            name = k
+        })
+    end
+    return moneyData
 end
