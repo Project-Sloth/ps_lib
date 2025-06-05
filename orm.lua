@@ -85,41 +85,45 @@ function ps.ORM.find(table, conditions, cb)
     local cacheKey = getCacheKey(table, conditions)
     local whereClause, params = buildWhereClause(conditions)
 
-    if useCache then acquireLock(table) end
-    if useCache and useCache.store[cacheKey] then
-        local entry = useCache.store[cacheKey]
-        if os.time() < entry.expire then
-            if useCache then releaseLock(table) end
-            return cb(entry.data, params)
-        else
-            useCache.store[cacheKey] = nil
-        end
+    if not useCache then
+        local query = 'SELECT * FROM ' .. table .. whereClause
+        return MySQL.query(query, params, function(result, err)
+            cb(result, params, err)
+        end)
     end
-    if useCache then releaseLock(table) end
 
-    local query = 'SELECT * FROM ' .. table .. whereClause
+    acquireLock(table)
 
-    MySQL.query(query, params, function(result, err)
-        if err then 
-            return cb(nil, params, err)
-        end
-
-        if useCache then
-            acquireLock(table)
-
-            useCache.store[cacheKey] = { data = result, expire = os.time() + useCache.ttl }
-            table.insert(useCache.order, cacheKey)
-
-            -- Maintain cache size by removing the oldest entry if maxSize exceeded.
-            if #useCache.order > useCache.maxSize then 
-                local oldestKey = table.remove(useCache.order, 1)
-                useCache.store[oldestKey] = nil -- Remove the oldest entry.
-            end
+    MySQL.query('SELECT * FROM ps_cache_metadata WHERE cache_key = ?', {cacheKey}, function(metaResult)
+        local now = os.date('%Y-%m-%d %H:%M:%S')
+        if metaResult[1] and metaResult[1].expires_at > now then
+            local data = json.decode(metaResult[1].data)
             releaseLock(table)
+            return cb(data, params)
         end
-        cb(result, params, nil)
+
+        local query = 'SELECT * FROM ' .. table .. whereClause
+        MySQL.query(query, params, function(result, err)
+            if err then
+                releaseLock(table)
+                return cb(nil, params, err)
+            end
+
+            local ttl = useCache.ttl or 60
+            local expiresAt = os.date('%Y-%m-%d %H:%M:%S', os.time() + ttl)
+            local encoded = json.encode(result)
+
+            MySQL.execute([[
+                REPLACE INTO ps_cache_metadata (cache_key, table_name, expires_at, data)
+                VALUES (?, ?, ?, ?)
+            ]], {cacheKey, table, expiresAt, encoded}, function()
+                releaseLock(table)
+                cb(result, params, nil)
+            end)
+        end)
     end)
 end
+
 
 --- Retrieves a single record matching conditions.
 ---@param table string Table name.
@@ -259,3 +263,15 @@ function ps.ORM.delete(table, conditions, cb)
         cb(affectedRows, params, nil)
     end)
 end
+
+function ps.ORM.cleanCache(cb)
+    MySQL.execute('DELETE FROM ps_cache_metadata WHERE expires_at < NOW()', {}, function(affectedRows)
+        if cb then
+            cb(affectedRows)
+        end
+    end)
+end
+-- Example usage of the ORM functions
+--[[ ps.ORM.cleanCache(function(removedCount)
+    print("Expired cache entries removed:", removedCount)
+end) ]]
