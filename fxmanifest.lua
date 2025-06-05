@@ -16,6 +16,7 @@ client_scripts {
     'startFirst/client/**.lua',
     'bridge/framework/client.lua',
     'inventory/client.lua',
+    'bridge/emote/client.lua',
     'modules/**/client/**.lua',
     'testEverything.lua',
 }
