@@ -1,26 +1,39 @@
-local logapi = ''
+
 if Config.Logs == 'fivemerr' then
-    local endpoint = 'https://api.fivemerr.com/v1/logs'
-    local headers = {
-                ['Authorization'] = logapi,
-                ['Content-Type'] = 'application/json',
-        }
-    function ps.log(message, meta)
-        local buffer = {
-            level = "info",
+    function ps.log(dataSet, level, message, meta)
+        exports['fm-logs']:createLog({
+            logType = dataSet,
             message = message,
-            resource = GetInvokingResource() or GetCurrentResourceName(),
-            metadata = meta,
-        }
-         SetTimeout(500, function()
-             PerformHttpRequest(endpoint, function(status, _, _, response)
-                 if status ~= 200 then 
-                     if type(response) == 'string' then
-                         response = json.decode(response) or response
-                     end
-                 end
-             end, 'POST', json.encode(buffer), headers)
-             buffer = nil
-         end)
+            level = level, 
+            resource = GetInvokingResource() or 'ps_lib',
+            source = meta.source or nil,
+            Metadata = meta,
+        },{Screenshot = false})
+    end
+    function ps.logImage(source, name, description)
+        exports['fm-logs']:createLog({
+            logType = name,
+            message = description,
+            level = 'Image', 
+            resource = GetInvokingResource() or 'ps_lib',
+            source = source or nil,
+            Metadata = {},
+        },{Screenshot = true})
     end
 end
+if Config.Logs == 'fivemanage' then 
+    function ps.log(dataSet, level, message, meta)
+        exports.fmsdk:Log(dataSet, level, message, meta)
+    end
+    function ps.logImage(source, name, description)
+        if not source then return end
+        if not name then name = ps.getPlayerName(source) end
+        if not description then description = name .. 's image' end
+        local imageData = exports.fmsdk:takeServerImage(source, {
+            name = name, 
+            description = description,
+        })
+        return imageData
+    end
+end
+

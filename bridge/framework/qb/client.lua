@@ -1,9 +1,5 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 
-ps.citizenid = nil
-ps.charinfo = nil
-ps.ped = nil
-ps.name = nil
 CreateThread(function()
     ps.citizenid = QBCore.Functions.GetPlayerData().citizenid
     ps.charinfo = QBCore.Functions.GetPlayerData().charinfo
@@ -187,3 +183,4 @@ function ps.getAllMoney()
     end
     return moneyData
 end
+
