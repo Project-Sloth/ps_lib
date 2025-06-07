@@ -14,9 +14,9 @@ local frameworkFound = false
 
 for _, resource in ipairs(frameworks) do
     if GetResourceState(resource.name) == 'started' then
-        local str = 'bridge/framework/' .. resource.bridge .. '/client.lua'
+        local str = ('bridge/framework/%s/client.lua'):format(resource.bridge)
         loadLib(str)
-
+        ps.success(('Framework found: %s'):format(resource.name))
         frameworkFound = true
         fw = resource.bridge
         break

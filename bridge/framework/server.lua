@@ -15,7 +15,7 @@ local frameworkFound = false
 for _, resource in ipairs(frameworks) do
     if GetResourceState(resource.name) == 'started' then
         lib.load(('bridge.framework.%s.server'):format(resource.bridge))
-        ps.debug(('Framework found: %s'):format(resource.name))
+        ps.success(('Framework found: %s'):format(resource.name))
         frameworkFound = true
         fw = resource.bridge
         break
