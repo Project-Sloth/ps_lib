@@ -190,3 +190,54 @@ function ps.getMoney(source, type)
     if not player then return 0 end
     return player.PlayerData.money[type] or 0
 end
+
+
+function ps.getGang(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang
+end
+
+function ps.getGangName(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang.name
+end
+
+function ps.getGangData(source, data)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang[data]
+end
+
+function ps.getGangGrade(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang.grade
+end
+
+function ps.getGangGradeLevel(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang.grade.level
+end
+
+function ps.getGangGradeName(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang.grade.name
+end
+
+function ps.isLeader(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang.isboss
+end
+
+function ps.getAllJobs()
+    local jobsArray = {}
+    for k, v in pairs(QBCore.Shared.Jobs) do
+        table.insert(jobsArray, k)
+    end
+    return jobsArray
+end
+function ps.getAllGangs()
+     local gangsArray = {}
+    for k, v in pairs(QBCore.Shared.Gangs) do
+        table.insert(gangsArray, k)
+    end
+    return gangsArray
+end

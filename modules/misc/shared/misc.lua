@@ -9,7 +9,7 @@ function ps.concat(tab, str)
     return table.concat(tab, str)
 end
 
-function ps.stringFormat(str, ...)
+function ps.string(str, ...)
     return string.format(str, ...)
 end
 
