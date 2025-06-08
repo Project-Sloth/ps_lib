@@ -180,3 +180,9 @@ function ps.destroyTarget(name)
         exports.interact:RemoveInteraction(name)
     end
 end
+
+AddEventHandler('onResourceStop', function(resourceName)
+    if resourceName == GetCurrentResourceName() then
+        ps.destroyAllTargets()
+    end
+end)

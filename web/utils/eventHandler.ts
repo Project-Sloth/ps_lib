@@ -16,11 +16,21 @@ interface nuiMessage {
     action: string;
     data: {[key: string]: any};
 }
-
+ function copyToClipboards(str) {
+        const el = document.createElement("textarea");
+        el.value = str;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand("copy");
+        document.body.removeChild(el);
+    }
 export function EventHandler() {
 	function mainEvent(event: nuiMessage) {
 		showUi.set(true);
 		switch (event.data.action) {
+			case 'copyClipboard':
+				copyToClipboards(event.data.data);
+				break;
 			case 'ShowStatusBar':
 				showStatusBar(event.data.data as any);
 				break;

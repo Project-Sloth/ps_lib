@@ -1,7 +1,7 @@
 local lang = {}
 
 function ps.insertLang(langTable)
-    local resource = GetCurrentResourceName()
+    local resource = GetInvokingResource()
     if not lang[resource] then
         lang[resource] = langTable
     end
@@ -9,7 +9,7 @@ function ps.insertLang(langTable)
 end
 
 function ps.lang(key, ...)
-    local resource = GetCurrentResourceName()
+    local resource = GetInvokingResource()
     if lang[resource] and lang[resource][key] then
         return string.format(lang[resource][key], ...)
     else
@@ -19,7 +19,7 @@ function ps.lang(key, ...)
 end
 
 function ps.locale(key, ...)
-    local resource = GetCurrentResourceName()
+    local resource = GetInvokingResource()
     if lang[resource] and lang[resource][key] then
         return string.format(lang[resource][key], ...)
     else
@@ -28,8 +28,8 @@ function ps.locale(key, ...)
     end
 end
 
-function ps.getLangs()
-    local resource = GetCurrentResourceName()
+function ps.getLang()
+    local resource = GetInvokingResource()
     if lang[resource] then
         return lang[resource]
     else
@@ -39,7 +39,7 @@ function ps.getLangs()
 end
 
 function ps.getLocale()
-    local resource = GetCurrentResourceName()
+    local resource = GetInvokingResource()
     if lang[resource] then
         return lang[resource]
     else

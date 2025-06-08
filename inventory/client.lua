@@ -17,3 +17,22 @@ for _, v in ipairs(options) do
         break
     end
 end
+
+local fallback = {
+    ['qb-inventory'] = 'qb',
+    ['ox_inventory'] = 'ox',
+    ['lj-inventory'] = 'lj',
+    ['ps-inventory'] = 'ps'
+}
+
+AddEventHandler('onResourceStart', function(resourceName)
+    if fallback[resourceName] then
+        local filePath = ('inventory/%s/client/%s.lua'):format(fallback[resourceName], fallback[resourceName])
+        local content = loadLib(filePath)
+        if content then
+            ps.success('Inventory Module Found: Loaded ' .. resourceName)
+        else
+            ps.error('Inventory Module: Failed to load ' .. resourceName)
+        end
+    end
+end)

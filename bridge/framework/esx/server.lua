@@ -17,7 +17,32 @@ function ps.getPlayerByIdentifier(identifier)
 end
 
 function ps.getOfflinePlayer(identifier)
-  return ESX.GetPlayerFromIdentifier(identifier)
+    local result = MySQL.query.await('SELECT * FROM users WHERE identifier = ?', {identifier})
+    if result[1] then
+        local data = result[1]
+        return {
+            identifier = data.identifier,
+            charinfo = {
+                firstname = data.firstname or "",
+                lastname = data.lastname or "",
+                birthdate = data.dateofbirth or "",
+                gender = data.sex or "",
+                height = data.height or ""
+            },
+            money = {
+                cash = tonumber(data.cash) or 0,
+                bank = tonumber(data.bank) or 0,
+                black_money = tonumber(data.black_money) or 0
+            },
+            job = {
+                name = data.job or "unemployed",
+                label = "Unemployed",
+                grade = tonumber(data.job_grade) or 0,
+                salary = 0
+            }
+        }
+    end
+    return nil
 end
 
 function ps.getIdentifier(source)
