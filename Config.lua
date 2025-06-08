@@ -1,7 +1,7 @@
 Config = {}
 
-Config.Notify = "ox" -- QBCore or ESX or ox
-Config.Progressbar = "ox" -- QBCore or ESX or ox
+Config.Notify = "qb" -- QBCore or ESX or ox
+Config.Progressbar = "qb" -- QBCore or ESX or ox
 Config.Target = "qb" -- QBCore or ESX or ox or interact 
 Config.Inventory = "qb" -- QBCore or ESX or ox
 --TODO #14
