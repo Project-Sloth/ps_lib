@@ -3,6 +3,7 @@ function ps.requestModel(model, timeout)
     timeout = timeout or 15000
     local startTime = GetGameTimer()
     RequestModel(model)
+    ps.info('requestModel', model, timeout, startTime)
     while not HasModelLoaded(model) do
         if GetGameTimer() - startTime > timeout then
             ps.debug('requestModel timed out', model, GetGameTimer() - startTime)
@@ -10,6 +11,7 @@ function ps.requestModel(model, timeout)
         end
         Wait(0)
     end
+    return true
 end
 
 -- TODO:

@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
+    import fetchNui from "../../utils/fetch";
     let canvas;
     let ctx;
     let W, H, degrees = 0, new_degrees = 0, color = "#38D5AF";
@@ -83,11 +84,7 @@
         document.getElementById('circle').style.display = 'none';
         circle_started = false;
         let endResult = status ? true : false;
-        fetch(`https://ps_lib/circle-result`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({endResult})
-        });
+        fetchNui('circle-result', { endResult });
         streak = 0;
         needed = 4;
     }

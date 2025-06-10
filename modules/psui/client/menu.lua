@@ -1,18 +1,12 @@
-local storedData = {}
-
+local storedData = nil
+local count = 0
 ---Creates a menu and registers its events.
 ---@param menuData table: Data for the menu, including items and submenus.
 local function createMenu(menuData)
     for k, item in pairs(menuData) do
-        table.insert(storedData, item)
-        storedData[k].id = k
-        if item.subMenu then
-            for _, subItem in pairs(item.subMenu) do
-                storedData[subItem.id] = subItem
-            end
-        end
+        menuData[k].id = k
     end
-
+    storedData = menuData
     SendNUI("ShowMenu", nil, {
         menuData = menuData
     }, true)
@@ -31,7 +25,7 @@ end)
 --- Closes the current menu.
 local function hideMenu()
     SendNUI("HideMenu", nil, {}, false)
-    storedData = {}
+    storedData = nil
 end
 
 --- NUI callback for closing the menu.
@@ -39,7 +33,7 @@ end
 --- @param cb function: Callback function to signal completion of the NUI callback.
 RegisterNUICallback('menuClose', function(data, cb)
     SetNuiFocus(false, false)
-    storedData = {}
+    storedData = nil
     cb('ok')
 end)
 
@@ -47,22 +41,28 @@ end)
 --- @param data table: Data from the NUI, including event details.
 --- @param cb function: Callback function to signal completion of the NUI callback. The callback should be called with a string status, e.g., 'ok' or an error message.
 RegisterNUICallback('MenuSelect', function(data, cb)
-    local menuData = storedData[data.data.id]
-    if menuData then
-        if menuData.action then
-            menuData.action()
-        end
-        if menuData.server then
-            TriggerServerEvent(menuData.event, table.unpack(menuData.args))
-        end
-        if menuData.event and not menuData.server then
-            TriggerEvent(menuData.event, table.unpack(menuData.args))
-        end
-
-        SetNuiFocus(false, false)
-        storedData = {}
-    end
+    count = count + 1
+    ps.debug('count', count)
+    TriggerEvent("ps-menu:doThings", data)
     cb('ok')
+end)
+
+RegisterNetEvent("ps-menu:doThings", function(data) 
+    SetNuiFocus(false, false)
+    local menuData = storedData[data]
+    storedData = nil
+    ps.debug(menuData)
+    if menuData.action then
+        Wait(100)
+        menuData.action()
+    end
+    if menuData.server then
+        TriggerServerEvent(menuData.event, table.unpack(menuData.args))
+    end
+    if menuData.event and not menuData.server then
+        TriggerEvent(menuData.event, table.unpack(menuData.args))
+    end
+    SetNuiFocus(false, false)
 end)
 
 exports("CreateMenu", createMenu)
