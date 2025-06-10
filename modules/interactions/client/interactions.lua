@@ -104,8 +104,7 @@ end
 
 function ps.minigame(type, values)
     if type == 'ps-circle' then
-        local game = exports['ps-ui']:Circle(false, values.amount, values.speed)
-        return game
+        return  exports['ps-ui']:Circle(false, values.amount, values.speed)
     elseif type == 'ps-maze' then
         return exports['ps-ui']:Maze(false, values.timeLimit)
     elseif type == 'ps-scrambler' then
@@ -122,16 +121,3 @@ function ps.minigame(type, values)
         return success
     end
 end
-
-RegisterCommand("openSignMenu", function()
-    ps.minigame('ps-circle', {amount = 2, speed = 6})
-    Wait(1200)
-    exports['ps-ui']:Circle(function(success)
-        if success then
-            print("Menu opened successfully.")
-        else
-            ps.notify("You failed to open the menu.", "error")
-        end
-    end, 2, 6)
-
-end)
