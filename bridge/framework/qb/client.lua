@@ -143,8 +143,8 @@ end
 --- @DESCRIPTION: Returns if the player is a gang boss.
 --- @example: ps.isLeader()
 function ps.isLeader()
-    local Gang = ps.getGang()
-    return Gang.isboss
+    local Gang = ps.getPlayerData().gang.isboss
+    return Gang
 end
 
 

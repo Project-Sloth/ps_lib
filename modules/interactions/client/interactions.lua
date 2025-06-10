@@ -104,7 +104,7 @@ end
 
 function ps.minigame(type, values)
     if type == 'ps-circle' then
-        return exports['ps-ui']:Circle(false, values.amount, values.speed)
+        return  exports['ps-ui']:Circle(false, values.amount, values.speed)
     elseif type == 'ps-maze' then
         return exports['ps-ui']:Maze(false, values.timeLimit)
     elseif type == 'ps-scrambler' then

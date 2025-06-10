@@ -6,8 +6,6 @@
     import { onMount } from "svelte";
     let menuData:Array<any> = $menuStore;
     let selectedMenuItem = null;
-    let subMenu = null;
-
     let subMenuTextColorOverride = {
         id: null, color: 'black'
     };
@@ -17,7 +15,6 @@
 
     function handleMenuSelection(selectedMenu, index) {
         selectedMenuItem = selectedMenu;
-        console.log(index)
         if(selectedMenuItem) {
             selectedMenuItem.id = index + 1;
         } else {
@@ -26,7 +23,8 @@
         if(selectedMenu) {
             
             if(!selectedMenu.subMenu && !isDevMode) {
-                fetchNui('MenuSelect', {data :selectedMenu});
+                fetchNui('MenuSelect', selectedMenuItem.id);
+                selectedMenuItem = null;
                 closeInteractionMenu();
             } else {
                 subMenu = selectedMenuItem.subMenu;

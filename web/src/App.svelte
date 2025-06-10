@@ -9,7 +9,7 @@
 	// Enums
 	import { UIComponentsEnum } from './enums/UIComponentsEnum';
 
-	// PS-UI components
+	// ps_lib components
 	import GameLauncher from './games/GameLauncher.svelte';
 	import { EventHandler, handleKeyUp } from './../utils/eventHandler';
 	import Image from './components/Image.svelte';
