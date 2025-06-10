@@ -5,7 +5,7 @@ local emotes = {
         dict = "amb@code_human_in_bus_passenger_idles@female@tablet@idle_a",
         anim = "idle_a",
         AnimationOptions = {
-            Prop = "ps-mdt",
+            Prop = "prop_cs_tablet",
             PropBone = 28422,
             PropPlacement = {
                 -0.05,
