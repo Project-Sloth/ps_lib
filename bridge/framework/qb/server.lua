@@ -234,10 +234,19 @@ function ps.getAllJobs()
     end
     return jobsArray
 end
+
 function ps.getAllGangs()
      local gangsArray = {}
     for k, v in pairs(QBCore.Shared.Gangs) do
         table.insert(gangsArray, k)
     end
     return gangsArray
+end
+
+function ps.vehicleOwner(licensePlate)
+    local vehicle = MySQL.query.await('SELECT * FROM player_vehicles WHERE plate = ?', {licensePlate})
+    if not vehicle or #vehicle == 0 then
+        return false
+    end
+    return vehicle[1].citizenid
 end

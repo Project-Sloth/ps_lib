@@ -6,6 +6,7 @@ function ps.insertLang(langTable)
         lang[resource] = langTable
     end
     ps.success('Language loaded for resource: ' .. resource)
+    ps.debug(lang[resource])
 end
 
 function ps.lang(key, ...)
@@ -54,3 +55,27 @@ AddEventHandler('onResourceStop', function(resource)
         ps.success('Language unloaded for resource: ' .. resource)
     end
 end)
+
+function ps.loadLangs(language)
+    local resource = GetInvokingResource()
+    if not resource then
+        ps.error('No invoking resource found.')
+        return false
+    end
+
+    local filePath = 'locales/' .. language .. '.json'
+    local langFile = LoadResourceFile(resource, filePath)
+
+    if not langFile then
+        ps.error('Language file not found: ' .. language .. ' for resource: ' .. resource)
+        return false
+    end
+
+    local decoded = json.decode(langFile, 1, nil)
+    if not decoded then
+        ps.error('Error decoding JSON from ' .. filePath)
+        return false
+    end
+    lang[resource] = decoded
+    return true
+end

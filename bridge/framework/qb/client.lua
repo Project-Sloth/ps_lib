@@ -1,14 +1,18 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 
-CreateThread(function()
+AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
     ps.citizenid = QBCore.Functions.GetPlayerData().citizenid
     ps.charinfo = QBCore.Functions.GetPlayerData().charinfo
     ps.ped = PlayerPedId()
     ps.name = QBCore.Functions.GetPlayerData().charinfo.firstname .. " " .. QBCore.Functions.GetPlayerData().charinfo.lastname
 end)
-
-
-
+CreateThread(function()
+    
+    ps.citizenid = QBCore.Functions.GetPlayerData().citizenid
+    ps.charinfo = QBCore.Functions.GetPlayerData().charinfo
+    ps.ped = PlayerPedId()
+    ps.name = QBCore.Functions.GetPlayerData().charinfo.firstname .. " " .. QBCore.Functions.GetPlayerData().charinfo.lastname
+end)
 ---@return: table
 ---@DESCRIPTION: Returns the player's data, including job, gang, and metadata.
 function ps.getPlayerData()

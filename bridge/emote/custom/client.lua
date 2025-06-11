@@ -85,8 +85,3 @@ function ps.cancelEmote()
     IsInEmote = false
     ClearPedTasks(PlayerPedId())
 end
-
-RegisterCommand('playEmote', function(source, args)
-  
-    ps.playEmote('tablet2')
-end)
