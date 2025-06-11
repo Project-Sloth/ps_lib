@@ -5,7 +5,7 @@ function loadLib(filePath)
         ps.error("Error: Failed to load module '" .. filePath .. "' from resource '" .. resourceName .. "'.")
         return false
     end
-    local chunk, err = load(fullScript, filePath, "t", _ENV)
+    local chunk, err = load(fullScript, filePath, "t")
     if not chunk then
         ps.error("Error loading Lua chunk from '" .. filePath .. "': " .. tostring(err))
         return false
@@ -27,7 +27,7 @@ function ps.loadFile(filePath)
         ps.error("Error: Failed to load module '" .. filePath .. "' from resource '" .. fileName .. "'.")
         return false
     end
-    local chunk, err = load(fullScript, filePath, "t", _ENV)
+    local chunk, err = load(fullScript, filePath, "t")
     if not chunk then
         ps.error("Error loading Lua chunk from '" .. filePath .. "': " .. tostring(err))
         return false
