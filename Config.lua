@@ -6,7 +6,7 @@ Config.Target = "qb" -- QBCore or ESX or ox or interact
 Config.Inventory = "qb" -- QBCore or ESX or ox
 --TODO #14
 Config.Logs = "fivemerr" -- fivemerr or fivemanage 
-
+Config.Language = "en" -- en or de or fr or es or pt or tr
 ps = {}
 
 QBCore, ESX, qbx = nil, nil, nil

@@ -7,7 +7,7 @@ local options = {
 
 for _, v in ipairs(options) do
     if GetResourceState(v.name) == 'started' then
-        local filePath = ('inventory/%s/server/%s.lua'):format(v.module, v.module)
+        local filePath = ('bridge/inventory/%s/server/%s.lua'):format(v.module, v.module)
         local content = loadLib(filePath)
         if content then
             ps.success('Inventory Module Found: Loaded ' .. v.name)
@@ -27,7 +27,7 @@ local fallback = {
 
 AddEventHandler('onResourceStart', function(resourceName)
     if fallback[resourceName] then
-        local filePath = ('inventory/%s/client/%s.lua'):format(fallback[resourceName], fallback[resourceName])
+        local filePath = ('bridge/inventory/%s/server/%s.lua'):format(fallback[resourceName], fallback[resourceName])
         local content = loadLib(filePath)
         if content then
             ps.success('Inventory Module Found: Loaded ' .. resourceName)

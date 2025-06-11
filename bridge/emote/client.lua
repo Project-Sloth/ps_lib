@@ -15,7 +15,7 @@ local emotesFound = false
 for _, resource in ipairs(emotes) do
     if GetResourceState(resource.name) == 'started' then
         loadLib(('bridge/emote/%s/client.lua'):format(resource.bridge))
-        ps.debug(('Emote resource found: %s'):format(resource.name))
+        ps.success(('Emote resource found: %s'):format(resource.name))
         emotesFound = true
         break
     end

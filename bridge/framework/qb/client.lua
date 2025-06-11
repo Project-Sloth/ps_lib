@@ -1,18 +1,6 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 
-AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
-    ps.citizenid = QBCore.Functions.GetPlayerData().citizenid
-    ps.charinfo = QBCore.Functions.GetPlayerData().charinfo
-    ps.ped = PlayerPedId()
-    ps.name = QBCore.Functions.GetPlayerData().charinfo.firstname .. " " .. QBCore.Functions.GetPlayerData().charinfo.lastname
-end)
-CreateThread(function()
-    
-    ps.citizenid = QBCore.Functions.GetPlayerData().citizenid
-    ps.charinfo = QBCore.Functions.GetPlayerData().charinfo
-    ps.ped = PlayerPedId()
-    ps.name = QBCore.Functions.GetPlayerData().charinfo.firstname .. " " .. QBCore.Functions.GetPlayerData().charinfo.lastname
-end)
+
 ---@return: table
 ---@DESCRIPTION: Returns the player's data, including job, gang, and metadata.
 function ps.getPlayerData()
@@ -23,7 +11,7 @@ end
 --- @DESCRIPTION: Returns the player's citizen ID.
 --- @example: ps.getIdentifier()
 function ps.getIdentifier()
-    return ps.citizenid
+    return ps.getPlayerData().citizenid
 end
 
 --- @PARAM: meta: string
@@ -39,19 +27,19 @@ end
 --- @DESCRIPTION: Returns specific character information based on the provided key.
 --- @example: ps.getCharInfo('age')
 function ps.getCharInfo(info)
-    return ps.charinfo[info]
+    return ps.getPlayerData().charinfo[info]
 end
 
 --- @return: string
 --- @DESCRIPTION: Returns the player's full name.
 function ps.getPlayerName()
-    return ps.name
+    return ps.getPlayerData().charinfo.firstname .. " " .. ps.getPlayerData().charinfo.lastname
 end
 
 --- @return: number
 --- @DESCRIPTION: Returns the player's ped ID.
 function ps.getPlayer()
-    return ps.ped
+    return PlayerPedId()
 end
 
 --- @PARAM: model: number | string

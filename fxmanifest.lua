@@ -15,8 +15,9 @@ client_scripts {
     --'@qbx_core/modules/playerdata.lua',
     'startFirst/client/**.lua',
     'bridge/framework/client.lua',
-    'inventory/client.lua',
     'bridge/emote/client.lua',
+    'bridge/target/client.lua',
+    'bridge/inventory/client.lua',
     'modules/**/client/**.lua',
 }
 
@@ -24,7 +25,7 @@ server_scripts {
     '@oxmysql/lib/MySQL.lua',
     'startFirst/server/**.lua',
     'bridge/framework/server.lua',
-    'inventory/server.lua',
+    'bridge/inventory/server.lua',
     'modules/**/server/**.lua',
     'orm.lua',
 }
@@ -42,7 +43,6 @@ files {
   'web/build/index.html',
   'web/build/**/*',
   'bridge/**/*',
-  'inventory/**/*',
 }
 
 ui_page 'web/build/index.html'

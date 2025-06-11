@@ -1,5 +1,4 @@
 local QBCore = exports['qb-core']:GetCoreObject()
-ps.success('qb-core', 'QBCore Framework Loaded')
 function ps.getPlayer(source)
     return QBCore.Functions.GetPlayer(source)
 end

@@ -1,4 +1,4 @@
-ps.success('Loaded PS Inventory Module CLIENT')
+
 function ps.getImage(item)
     local itemData = QBCore.Shared.Items[item].image
     if itemData then

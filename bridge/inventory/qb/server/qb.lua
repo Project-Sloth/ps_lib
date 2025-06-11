@@ -1,4 +1,4 @@
-ps.success('Loaded PS Inventory Module SERVER')
+
 function ps.removeItem(identifier, item, amount, slot, reason)
     if not identifier or not item then return end
     if not amount then amount = 1 end

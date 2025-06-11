@@ -1,0 +1,132 @@
+local zones = {}
+
+function ps.boxTarget(name, location, size, options)
+    if not name then return end
+    local resource = GetInvokingResource()
+    if not zones[resource] then
+        zones[resource] = {}
+    end
+    size = {
+        length = size.length or 1.0,
+        width = size.width or 1.0,
+        height = size.height or 1.0,
+        rotation = size.rotation or 180.0,
+    }
+    local compat = {}
+    for k, v in pairs(options) do
+        table.insert(compat,{
+		    icon = v.icon or "fa-solid fa-eye",
+            label = v.label,
+            event = v.event or nil,
+            action = v.action or nil,
+		    onSelect = v.action or nil,
+            data = v.data,
+            canInteract = v.canInteract or nil,
+            distance = 2.0,
+	    })
+    end
+    zones[resource][name] = name
+    exports['qb-target']:AddBoxZone(name, location, size.length, size.width, {
+        name = name,
+        heading = size.rotation,
+        debugPoly = false,
+        minZ = location.z - size.height,
+        maxZ = location.z + size.height,
+    }, {
+        options = compat,
+        distance = 2.0
+    })
+end
+
+function ps.circleTarget(name, location, size, options)
+    if not name then return end
+    local resource = GetInvokingResource()
+    if not zones[resource] then
+        zones[resource] = {}
+    end
+    local compat = {}
+    for k, v in pairs(options) do
+        table.insert(compat,{
+		    icon = v.icon or "fa-solid fa-eye",
+            label = v.label,
+            event = v.event or nil,
+            action = v.action or nil,
+		    onSelect = v.action or nil,
+            data = v.data,
+            canInteract = v.canInteract or nil,
+            distance = 2.0,
+	    })
+    end
+    zones[resource][name] = name
+    exports['qb-target']:AddCircleZone(name, location, size, {
+        name = name,
+        heading = size.rotation,
+        debugPoly = false,
+        useZ = true,
+    }, {
+        options = compat,
+        distance = 2.0
+    })
+end
+
+function ps.entityTarget(entity, options)
+    local compat = {}
+    for k, v in pairs(options) do
+        table.insert(compat,{
+    	    icon = v.icon or "fa-solid fa-eye",
+            label = v.label,
+            event = v.event or nil,
+            action = v.action or nil,
+    	    onSelect = v.action or nil,
+            data = v.data,
+            canInteract = v.canInteract or nil,
+            distance = 2.0,
+    	})
+    end
+    exports['qb-target']:AddTargetEntity(entity, {options = compat, distance = 3.5})
+end
+
+function ps.targetModel(entity, options)
+    local compat = {}
+    for k, v in pairs(options) do
+        table.insert(compat,{
+    	    icon = v.icon or "fa-solid fa-eye",
+            label = v.label,
+            event = v.event or nil,
+            action = v.action or nil,
+    	    onSelect = v.action or nil,
+            data = v.data,
+            canInteract = v.canInteract or nil,
+            distance = 2.0,
+    	})
+    end
+    exports['qb-target']:AddTargetModel(entity, {options = compat, distance = 3.5})
+end
+
+function ps.destroyAllTargets()
+    for k, v in pairs(zones) do
+        for m, d in pairs (zones[k]) do
+            exports['qb-target']:RemoveZone(d)
+        end
+    end
+    zones = {}
+end
+
+function ps.destroyTarget(name)
+    if not name then return end
+    local resource = GetInvokingResource()
+    exports['qb-target']:RemoveZone(zones[resource][name])
+    zones[resource][name] = nil
+end
+
+AddEventHandler('onResourceStop', function(resourceName)
+    if resourceName == GetCurrentResourceName() then
+        ps.destroyAllTargets()
+    end
+    if zones[resourceName] then
+        for k, v in pairs(zones[resourceName]) do
+            exports['qb-target']:RemoveZone(v)
+        end
+        zones[resourceName] = nil
+    end
+end)
