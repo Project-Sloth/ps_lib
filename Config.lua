@@ -1,10 +1,7 @@
 Config = {}
 
-Config.Notify = "qb" -- QBCore or ESX or ox
-Config.Progressbar = "qb" -- QBCore or ESX or ox
-Config.Target = "qb" -- QBCore or ESX or ox or interact 
-Config.Inventory = "qb" -- QBCore or ESX or ox
---TODO #14
+Config.Notify = "qb" -- qb, ox, ps
+Config.Progressbar = "qb" -- qb, oxcir, oxbar
 Config.Logs = "fivemerr" -- fivemerr or fivemanage 
 Config.Language = "en" -- en or de or fr or es or pt or tr
 ps = {}
