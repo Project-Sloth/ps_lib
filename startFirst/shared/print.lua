@@ -30,62 +30,62 @@ end
 -- TODO: convar for setting print levels
 
 function ps.debug(...)
-    local resource = GetInvokingResource() or 'ps_lib'
-    if not resources[resource] then
-        resources[resource] = {}
-        resources[resource].debug = false
-    end
-    if not resources[resource].debug then
-        return
-    end
+    --local resource = GetInvokingResource() or 'ps_lib'
+    --if not resources[resource] then
+    --    resources[resource] = {}
+    --    resources[resource].debug = true
+    --end
+    --if not resources[resource].debug then
+    --    return
+    --end
     print('^6[DEBUG]^0 ' .. formatArgs(...))
 end
 
 function ps.info(...)
-    local resource = GetInvokingResource() or 'ps_lib'
-    if not resources[resource] then
-        resources[resource] = {}
-        resources[resource].info = false
-    end
-    if not resources[resource].info then
-        return
-    end
+    --local resource = GetInvokingResource() or 'ps_lib'
+    --if not resources[resource] then
+    --    resources[resource] = {}
+    --    resources[resource].info = true
+    --end
+    --if not resources[resource].info then
+    --    return
+    --end
     print('^4[INFO]^0 ' .. formatArgs(...))
 end
 
 function ps.error(...)
-    local resource = GetInvokingResource() or 'ps_lib'
-    if not resources[resource] then
-        resources[resource] = {}
-        resources[resource].error = false
-    end
-    if not resources[resource].error then
-        return
-    end
+    --local resource = GetInvokingResource() or 'ps_lib'
+    --if not resources[resource] then
+    --    resources[resource] = {}
+    --    resources[resource].error = true
+    --end
+    --if not resources[resource].error then
+    --    return
+    --end
     print('^1[ERROR]^0 ' .. formatArgs(...))
 end
 
 function ps.warn(...)
-    local resource = GetInvokingResource() or 'ps_lib'
-    if not resources[resource] then
-        resources[resource] = {}
-        resources[resource].warn = false
-    end
-    if not resources[resource].warn then
-        return
-    end
+    --local resource = GetInvokingResource() or 'ps_lib'
+    --if not resources[resource] then
+    --    resources[resource] = {}
+    --    resources[resource].warn = true
+    --end
+    --if not resources[resource].warn then
+    --    return
+    --end
     print('^3[WARNING]^0 ' .. formatArgs(...))
 end
 
 function ps.success(...)
-    local resource = GetInvokingResource() or 'ps_lib'
-    if not resources[resource] then
-        resources[resource] = {}
-        resources[resource].success = false
-    end
-    if not resources[resource].success then
-        return
-    end
+    --local resource = GetInvokingResource() or 'ps_lib'
+    --if not resources[resource] then
+    --    resources[resource] = {}
+    --    resources[resource].success = true
+    --end
+    --if not resources[resource].success then
+    --    return
+    --end
     print('^2[SUCCESS]^0 ' .. formatArgs(...))
 end
 
@@ -101,7 +101,7 @@ if IsDuplicityVersion() then
         end
         if args[2] == 'debug' then
             if resources[resource].debug then
-                resources[resource].debug = false
+                resources[resource].debug = true
                 print('Debug mode for resource ' .. resource .. ' is now disabled')
             else
                 resources[resource].debug = true
@@ -110,7 +110,7 @@ if IsDuplicityVersion() then
             ps.success('Debug mode for resource ' .. resource .. ' is now ' .. (resources[resource].debug and 'enabled' or 'disabled'))
         elseif args[2] == 'info' then
             if resources[resource].info then
-                resources[resource].info = false
+                resources[resource].info = true
                 print('Info mode for resource ' .. resource .. ' is now disabled')
             else
                 resources[resource].info = true
@@ -118,7 +118,7 @@ if IsDuplicityVersion() then
             end
         elseif args[2] == 'error' then
             if resources[resource].error then
-                resources[resource].error = false
+                resources[resource].error = true
                 print('Error mode for resource ' .. resource .. ' is now disabled')
             else
                 resources[resource].error = true
@@ -126,7 +126,7 @@ if IsDuplicityVersion() then
             end
         elseif args[2] == 'warn' then
             if resources[resource].warn then
-                resources[resource].warn = false
+                resources[resource].warn = true
                 print('Warning mode for resource ' .. resource .. ' is now disabled')
             else
                 resources[resource].warn = true
@@ -134,7 +134,7 @@ if IsDuplicityVersion() then
             end
         elseif args[2] == 'success' then
             if resources[resource].success then
-                resources[resource].success = false
+                resources[resource].success = true
                 print('Success mode for resource ' .. resource .. ' is now disabled')
             else
                 resources[resource].success = true
