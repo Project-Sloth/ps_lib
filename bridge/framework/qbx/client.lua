@@ -1,15 +1,27 @@
-ps.citizenid = nil
-ps.charinfo = nil
-ps.ped = nil
-ps.name = nil
-CreateThread(function()
-ps.citizenid = QBX.PlayerData.citizenid
-ps.charinfo = QBX.PlayerData.charinfo
-ps.ped = PlayerPedId()
-ps.name = QBX.PlayerData.charinfo.firstname .. " " .. QBX.PlayerData.charinfo.lastname
+AddEventHandler('playerSpawned',function()
+    ps.ped = PlayerPedId()
+    ps.charinfo = QBX.PlayerData.charinfo
+    ps.name = ps.charinfo.firstname .. " " .. ps.charinfo.lastname
+    ps.citizenid = QBX.PlayerData.citizenid
 end)
-
-
+AddEventHandler('onResourceStop', function(resourceName)
+    if resourceName == GetCurrentResourceName() then
+        ps.ped = nil
+        ps.charinfo = nil
+        ps.name = nil
+        ps.citizenid = nil
+    end
+end)
+AddEventHandler('onResourceStart', function(resourceName)
+    if resourceName == GetCurrentResourceName() then
+        if PlayerPedId() then
+            ps.ped = PlayerPedId()
+            ps.charinfo = QBX.PlayerData.charinfo
+            ps.name = ps.charinfo.firstname .. " " .. ps.charinfo.lastname
+            ps.citizenid = QBX.PlayerData.citizenid
+        end
+    end
+end)
 function ps.getPlayerData()
     return QBX.PlayerData
 end
@@ -131,3 +143,27 @@ function ps.getAllMoney()
     end
     return moneyData
 end
+
+exports('getPlayerData', ps.getPlayerData)
+exports('getIdentifier', ps.getIdentifier)
+exports('getMetadata', ps.getMetadata)
+exports('getCharInfo', ps.getCharInfo)
+exports('getPlayerName', ps.getPlayerName)
+exports('getPlayer', ps.getPlayer)
+exports('getVehicleLabel', ps.getVehicleLabel)
+exports('isDead', ps.isDead)
+exports('getJob', ps.getJob)
+exports('getJobName', ps.getJobName)
+exports('getJobType', ps.getJobType)
+exports('isBoss', ps.isBoss)
+exports('getJobDuty', ps.getJobDuty)
+exports('getJobData', ps.getJobData)
+exports('getGang', ps.getGang)
+exports('getGangName', ps.getGangName)
+exports('defaultDuty', ps.defaultDuty)
+exports('isLeader', ps.isLeader)
+exports('getGangData', ps.getGangData)
+exports('getCoords', ps.getCoords)
+exports('getMoneyData', ps.getMoneyData)
+exports('getMoney', ps.getMoney)
+exports('getAllMoney', ps.getAllMoney)

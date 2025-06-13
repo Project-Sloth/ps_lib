@@ -1,5 +1,23 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 
+AddEventHandler('playerSpawned',function()
+    ps.ped = PlayerPedId()
+    ps.charinfo = QBCore.Functions.GetPlayerData().charinfo
+end)
+AddEventHandler('onResourceStop', function(resourceName)
+    if resourceName == GetCurrentResourceName() then
+        ps.ped = nil
+        ps.charinfo = nil
+    end
+end)
+AddEventHandler('onResourceStart', function(resourceName)
+    if resourceName == GetCurrentResourceName() then
+        if PlayerPedId() then
+            ps.ped = PlayerPedId()
+            ps.charinfo = QBCore.Functions.GetPlayerData().charinfo
+        end
+    end
+end)
 
 ---@return: table
 ---@DESCRIPTION: Returns the player's data, including job, gang, and metadata.
@@ -131,6 +149,10 @@ function ps.getGangName()
     return job.name
 end
 
+function ps.defaultDuty(job)
+    local job = ps.getJob()
+    return job.duty
+end
 --- @RETURN: string
 --- @DESCRIPTION: Returns if the player is a gang boss.
 --- @example: ps.isLeader()
@@ -176,3 +198,26 @@ function ps.getAllMoney()
     return moneyData
 end
 
+exports('getPlayerData', ps.getPlayerData)
+exports('getIdentifier', ps.getIdentifier)
+exports('getMetadata', ps.getMetadata)
+exports('getCharInfo', ps.getCharInfo)
+exports('getPlayerName', ps.getPlayerName)
+exports('getPlayer', ps.getPlayer)
+exports('getVehicleLabel', ps.getVehicleLabel)
+exports('isDead', ps.isDead)
+exports('getJob', ps.getJob)
+exports('getJobName', ps.getJobName)
+exports('getJobType', ps.getJobType)
+exports('isBoss', ps.isBoss)
+exports('getJobDuty', ps.getJobDuty)
+exports('getJobData', ps.getJobData)
+exports('getGang', ps.getGang)
+exports('getGangName', ps.getGangName)
+exports('defaultDuty', ps.defaultDuty)
+exports('isLeader', ps.isLeader)
+exports('getGangData', ps.getGangData)
+exports('getCoords', ps.getCoords)
+exports('getMoneyData', ps.getMoneyData)
+exports('getMoney', ps.getMoney)
+exports('getAllMoney', ps.getAllMoney)

@@ -1,4 +1,4 @@
-qbx = exports.qbx_core
+
 
 function ps.getPlayer(source)
     return qbx:GetPlayer(source)
@@ -23,6 +23,12 @@ end
 
 function ps.getPlayerName(source)
     local player = ps.getPlayer(source)
+    return player.PlayerData.charinfo.firstname .. " " .. player.PlayerData.charinfo.lastname
+end
+
+function ps.getPlayerNameByIdentifier(identifier)
+    local player = ps.getPlayerByIdentifier(identifier) or ps.getOfflinePlayer(identifier)
+    if not player then return 'Unknown Person' end
     return player.PlayerData.charinfo.firstname .. " " .. player.PlayerData.charinfo.lastname
 end
 
@@ -71,6 +77,11 @@ function ps.getJobGrade(source)
     return player.PlayerData.job.grade
 end
 
+function ps.getJobGradeLevel(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.job.grade.level
+end
+
 function ps.getJobGradeName(source)
     local player = ps.getPlayer(source)
     return player.PlayerData.job.grade.name
@@ -88,6 +99,10 @@ end
 
 function ps.getAllPlayers()
     return qbx:GetPlayers()
+end
+
+function ps.getEntityCoords(source)
+    return GetEntityCoords(GetPlayerPed(source))
 end
 
 function ps.getDistance(source, location)
@@ -171,3 +186,117 @@ end
 function ps.getMoney(source, type)
     return qbx:GetMoney(source, type or 'cash')
 end
+
+function ps.getGang(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang
+end
+
+function ps.getGangName(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang.name
+end
+
+function ps.getGangData(source, data)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang[data]
+end
+
+function ps.getGangGrade(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang.grade
+end
+
+function ps.getGangGradeLevel(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang.grade.level
+end
+
+function ps.getGangGradeName(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang.grade.name
+end
+
+function ps.isLeader(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang.isboss
+end
+
+function ps.getAllJobs()
+    local jobsArray = {}
+    for k, v in pairs(exports.qbx_core:GetJobs()) do
+        table.insert(jobsArray, k)
+    end
+    return jobsArray
+end
+
+function ps.getAllGangs()
+     local gangsArray = {}
+    for k, v in pairs(exports.qbx_core:GetGangs()) do
+        table.insert(gangsArray, k)
+    end
+    return gangsArray
+end
+
+function ps.vehicleOwner(licensePlate)
+    local vehicle = MySQL.query.await('SELECT * FROM player_vehicles WHERE plate = ?', {licensePlate})
+    if not vehicle or #vehicle == 0 then
+        return false
+    end
+    return vehicle[1].citizenid
+end
+
+function ps.jobExists(jobName)
+    return QBCore.Shared.Jobs[jobName] ~= nil
+end
+
+function ps.hasPermission(source, permission)
+    if IsPlayerAceAllowed(source, permission) then
+        return true
+    end
+end
+
+exports('getPlayer', ps.getPlayer)
+exports('getPlayerByIdentifier', ps.getPlayerByIdentifier)
+exports('getOfflinePlayer', ps.getOfflinePlayer)
+exports('getIdentifier', ps.getIdentifier)
+exports('getSource', ps.getSource)
+exports('getPlayerName', ps.getPlayerName)
+exports('getPlayerNameByIdentifier', ps.getPlayerNameByIdentifier)
+exports('getPlayerData', ps.getPlayerData)
+exports('getMetadata', ps.getMetadata)
+exports('getCharInfo', ps.getCharInfo)
+exports('getJob', ps.getJob)
+exports('getJobName', ps.getJobName)
+exports('getJobType', ps.getJobType)
+exports('getJobDuty', ps.getJobDuty)
+exports('getJobData', ps.getJobData)
+exports('getJobGrade', ps.getJobGrade)
+exports('getJobGradeLevel', ps.getJobGradeLevel)
+exports('getJobGradeName', ps.getJobGradeName)
+exports('getJobGradePay', ps.getJobGradePay)
+exports('isBoss', ps.isBoss)
+exports('getAllPlayers', ps.getAllPlayers)
+exports('getEntityCoords', ps.getEntityCoords)
+exports('getDistance', ps.getDistance)
+exports('checkDistance', ps.checkDistance)
+exports('getNearbyPlayers', ps.getNearbyPlayers)
+exports('getJobCount', ps.getJobCount)
+exports('getJobTypeCount', ps.getJobTypeCount)
+exports('createUseable', ps.createUseable)
+exports('setJob', ps.setJob)
+exports('addMoney', ps.addMoney)
+exports('removeMoney', ps.removeMoney)
+exports('getMoney', ps.getMoney)
+exports('getGang', ps.getGang)
+exports('getGangName', ps.getGangName)
+exports('getGangData', ps.getGangData)
+exports('getGangGrade', ps.getGangGrade)
+exports('getGangGradeLevel', ps.getGangGradeLevel)
+exports('getGangGradeName', ps.getGangGradeName)
+exports('isLeader', ps.isLeader)
+exports('getAllJobs', ps.getAllJobs)
+exports('getAllGangs', ps.getAllGangs)
+exports('vehicleOwner', ps.vehicleOwner)
+exports('jobExists', ps.jobExists)
+exports('hasPermission', ps.hasPermission)

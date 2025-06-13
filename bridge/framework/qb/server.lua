@@ -1,10 +1,10 @@
-local QBCore = exports['qb-core']:GetCoreObject()
+
 function ps.getPlayer(source)
     return QBCore.Functions.GetPlayer(source)
 end
 
 function ps.getPlayerByIdentifier(identifier)
-    return QBCore.Functions.GetPlayerByCitizenId(identifier)
+    return QBCore.Functions.GetPlayerByCitizenId(identifier) or QBCore.Functions.GetOfflinePlayerByCitizenId(identifier)
 end
 
 function ps.getOfflinePlayer(identifier)
@@ -100,6 +100,10 @@ end
 
 function ps.getAllPlayers()
     return QBCore.Functions.GetPlayers()
+end
+
+function ps.getEntityCoords(source)
+    return GetEntityCoords(GetPlayerPed(source))
 end
 
 function ps.getDistance(source, location)
@@ -249,3 +253,58 @@ function ps.vehicleOwner(licensePlate)
     end
     return vehicle[1].citizenid
 end
+
+function ps.jobExists(jobName)
+    return QBCore.Shared.Jobs[jobName] ~= nil
+end
+
+function ps.hasPermission(source, permission)
+    if IsPlayerAceAllowed(source, permission) then
+        return true
+    end
+end
+
+exports('getPlayer', ps.getPlayer)
+exports('getPlayerByIdentifier', ps.getPlayerByIdentifier)
+exports('getOfflinePlayer', ps.getOfflinePlayer)
+exports('getIdentifier', ps.getIdentifier)
+exports('getSource', ps.getSource)
+exports('getPlayerName', ps.getPlayerName)
+exports('getPlayerNameByIdentifier', ps.getPlayerNameByIdentifier)
+exports('getPlayerData', ps.getPlayerData)
+exports('getMetadata', ps.getMetadata)
+exports('getCharInfo', ps.getCharInfo)
+exports('getJob', ps.getJob)
+exports('getJobName', ps.getJobName)
+exports('getJobType', ps.getJobType)
+exports('getJobDuty', ps.getJobDuty)
+exports('getJobData', ps.getJobData)
+exports('getJobGrade', ps.getJobGrade)
+exports('getJobGradeLevel', ps.getJobGradeLevel)
+exports('getJobGradeName', ps.getJobGradeName)
+exports('getJobGradePay', ps.getJobGradePay)
+exports('isBoss', ps.isBoss)
+exports('getAllPlayers', ps.getAllPlayers)
+exports('getEntityCoords', ps.getEntityCoords)
+exports('getDistance', ps.getDistance)
+exports('checkDistance', ps.checkDistance)
+exports('getNearbyPlayers', ps.getNearbyPlayers)
+exports('getJobCount', ps.getJobCount)
+exports('getJobTypeCount', ps.getJobTypeCount)
+exports('createUseable', ps.createUseable)
+exports('setJob', ps.setJob)
+exports('addMoney', ps.addMoney)
+exports('removeMoney', ps.removeMoney)
+exports('getMoney', ps.getMoney)
+exports('getGang', ps.getGang)
+exports('getGangName', ps.getGangName)
+exports('getGangData', ps.getGangData)
+exports('getGangGrade', ps.getGangGrade)
+exports('getGangGradeLevel', ps.getGangGradeLevel)
+exports('getGangGradeName', ps.getGangGradeName)
+exports('isLeader', ps.isLeader)
+exports('getAllJobs', ps.getAllJobs)
+exports('getAllGangs', ps.getAllGangs)
+exports('vehicleOwner', ps.vehicleOwner)
+exports('jobExists', ps.jobExists)
+exports('hasPermission', ps.hasPermission)
