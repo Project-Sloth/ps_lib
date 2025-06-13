@@ -1,7 +1,7 @@
 Config = {}
 
-Config.Notify = "qb" -- qb, ox, ps
-Config.Progressbar = "qb" -- qb, oxcir, oxbar
+Config.Notify = "ox" -- qb, ox, ps
+Config.Progressbar = "oxcir" -- qb, oxcir, oxbar
 Config.Logs = "fivemerr" -- fivemerr or fivemanage 
 Config.Language = "en" -- en or de or fr or es or pt or tr
 ps = {}

@@ -69,7 +69,6 @@ RegisterNetEvent('ps_lib:enteredVehicle', function(vehicle, seat, model, netId)
         plate = GetVehicleNumberPlateText(vehicle),
 
     }
-
 end)
 
 

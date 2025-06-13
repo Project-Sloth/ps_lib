@@ -5,11 +5,11 @@ function ps.getPlayer(source)
 end
 
 function ps.getPlayerByIdentifier(identifier)
-    return qbx:GetPlayerByCitizenId(identifier)
+    return qbx:GetPlayerByCitizenId(identifier) or qbx:GetOfflinePlayer(identifier)
 end
 
 function ps.getOfflinePlayer(identifier)
-    return qbx:GetOfflinePlayerByCitizenId(identifier)
+    return qbx:GetOfflinePlayer(identifier)
 end
 
 function ps.getIdentifier(source)
@@ -23,6 +23,12 @@ end
 
 function ps.getPlayerName(source)
     local player = ps.getPlayer(source)
+    return player.PlayerData.charinfo.firstname .. " " .. player.PlayerData.charinfo.lastname
+end
+
+function ps.getPlayerNameByIdentifier(identifier)
+    local player = ps.getPlayerByIdentifier(identifier) or ps.getOfflinePlayer(identifier)
+    if not player then return 'Unknown Person' end
     return player.PlayerData.charinfo.firstname .. " " .. player.PlayerData.charinfo.lastname
 end
 
@@ -87,7 +93,7 @@ function ps.isBoss(source)
 end
 
 function ps.getAllPlayers()
-    return qbx:GetPlayers()
+    return qbx:GetQBPlayers()
 end
 
 function ps.getDistance(source, location)
@@ -151,6 +157,7 @@ function ps.setJob(source, jobName, jobGrade)
     if not source or not jobName or not jobGrade then
         return false
     end
+    ps.debug('Setting job for ' .. source .. ' to ' .. jobName .. ' with grade ' .. jobGrade)
     return qbx:SetJob(source, jobName, jobGrade)
 end
 

@@ -19,7 +19,7 @@ function ps.addItem(identifier, item, amount, meta, slot, reason)
     if not amount then amount = 1 end
     if not slot then slot = false end
     if not reason then reason = 'ps_lib Add Item' end
-    return exports.ox_inventory:AddItem(identifier, item, amount, meta, slot, reason)
+    return exports.ox_inventory:AddItem(identifier, item, amount, meta, slot)
 end
 
 function ps.openStash(source, identifier, data)
@@ -28,7 +28,7 @@ function ps.openStash(source, identifier, data)
     if not data.slots then data.slots = 50 end
     exports.ox_inventory:RegisterStash(identifier, identifier, data.slots, data.maxweight)
     Wait(100)
-    TriggerClientEvent('ox_inventory:openInventory', source, 'stash', identifier, data)
+    TriggerClientEvent('ps_lib:client:openInventory', source, 'stash', identifier, data)
 end
 
 function ps.hasItem(identifier, item, amount)
@@ -39,5 +39,5 @@ end
 
 function ps.openInventoryById(source, playerid)
     if not playerid then playerid = false end
-    TriggerServerEvent('ps_lib:client:openInventoryox', source)
+    TriggerClientEvent('ps_lib:client:openInventoryox', source)
 end

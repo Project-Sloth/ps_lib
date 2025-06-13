@@ -31,7 +31,7 @@ function ps.hasItem(item, amount)
     if not item then return end
     if not amount then amount = 1 end
     ps.debug('Checking for item: ' .. item .. ' amount: ' .. amount, exports.ox_inventory:GetItemCount(item), amount)
-    if exports.ox_inventory:GetItemCount(item) <= amount then
+    if exports.ox_inventory:GetItemCount(item) < amount then
         ps.notify('You need ' ..amount - exports.ox_inventory:GetItemCount(item) .. ' more ' .. ps.getLabel(item), 'error')
         return false
     end

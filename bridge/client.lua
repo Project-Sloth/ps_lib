@@ -7,10 +7,11 @@ local emoteResources = {
     ['scully_emotemenu'] = 'bridge/emote/skully/client.lua',
 }
 local frameworkResources = {
-    ['qb-core'] = 'bridge/framework/qb/client.lua',
-    ['qbx_core'] = 'bridge/framework/qbx/client.lua',
-    ['es_extended'] = 'bridge/framework/esx/client.lua',
+    {name = 'qbx_core', path = 'bridge/framework/qbx/client.lua'},
+    {name = 'qb-core', path = 'bridge/framework/qb/client.lua'},
+    {name = 'es_extended', path = 'bridge/framework/esx/client.lua'},
 }
+
 local inventoryResources = {
     ['qb-inventory'] = 'bridge/inventory/qb/client/qb.lua',
     ['ox_inventory'] = 'bridge/inventory/ox/client/ox.lua',
@@ -50,11 +51,11 @@ AddEventHandler('onResourceStart', function(resourceName)
 end)
 
 local function loadFramework()
-    for script, path in pairs(frameworkResources) do
-        if GetResourceState(script) == 'started' then
-            loadLib(path)
-            framework = script
-            ps.success(('Framework resource found: %s'):format(script))
+    for key, v in ipairs(frameworkResources) do
+        if GetResourceState(v.name) == 'started' then
+            loadLib(v.path)
+            framework = v.name
+            ps.success(('Framework resource found: %s'):format(v.name))
             break
         end
     end

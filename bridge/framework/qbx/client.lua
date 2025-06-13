@@ -1,14 +1,27 @@
-ps.citizenid = nil
-ps.charinfo = nil
-ps.ped = nil
-ps.name = nil
-CreateThread(function()
-ps.citizenid = QBX.PlayerData.citizenid
-ps.charinfo = QBX.PlayerData.charinfo
-ps.ped = PlayerPedId()
-ps.name = QBX.PlayerData.charinfo.firstname .. " " .. QBX.PlayerData.charinfo.lastname
+AddEventHandler('playerSpawned',function()
+    ps.ped = PlayerPedId()
+    ps.charinfo = QBX.PlayerData.charinfo
+    ps.citizenid = QBX.PlayerData.citizenid
+    ps.name = ps.charinfo.firstname .. " " .. ps.charinfo.lastname
 end)
-
+AddEventHandler('onResourceStop', function(resourceName)
+    if resourceName == GetCurrentResourceName() then
+        ps.ped = nil
+        ps.charinfo = nil
+        ps.citizenid = nil
+        ps.name = nil
+    end
+end)
+AddEventHandler('onResourceStart', function(resourceName)
+    if resourceName == GetCurrentResourceName() then
+        if PlayerPedId() then
+               ps.ped = PlayerPedId()
+                ps.charinfo = QBX.PlayerData.charinfo
+                ps.citizenid = QBX.PlayerData.citizenid
+                ps.name = ps.charinfo.firstname .. " " .. ps.charinfo.lastname
+        end
+    end
+end)
 
 function ps.getPlayerData()
     return QBX.PlayerData
@@ -69,7 +82,7 @@ end
 
 function ps.getJobType()
     local job = ps.getJob()
-    return job.type
+    return job.type or false
 end
 
 function ps.isBoss()
