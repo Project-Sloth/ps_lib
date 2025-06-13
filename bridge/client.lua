@@ -18,7 +18,6 @@ local inventoryResources = {
     ['lj-inventory'] = 'bridge/inventory/lj/client/lj.lua',
     ['ps-inventory'] = 'bridge/inventory/ps/client/ps.lua',
 }
-
 local targetResources = {
     ['qb-target'] = 'bridge/target/qb/client.lua',
     ['ox_target'] = 'bridge/target/ox/client.lua',
@@ -112,3 +111,7 @@ AddEventHandler('onResourceStart', function(resourceName)
 end)
 
 ps.debug(emote, framework, inventory, target)
+
+function ps.getFramework()
+    return framework
+end

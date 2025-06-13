@@ -86,16 +86,26 @@ function ps.registerCommand(name, terms, func)
         if not canAccess(source, terms) then return end
         func(source, args, rawCommand)
     end, false)
-    ps.debug(('Command %s registered with terms: %s'):format(name, json.encode(terms)))
+    local suggest = {
+        name = '/'..name,
+        help = terms.help or '',
+        params = terms.description or {}
+    }
+   TriggerClientEvent('chat:addSuggestions', -1,suggest)
 end
-
-ps.registerCommand('ps-testCommand', {
+ps.registerCommand('ps-testCommandp', {
     admin = true,
     job = {'police', 'mechanic'},
     jobRank = 2,
     gangRank = 3,
     gang = 'ballas',
-
+    help = 'This is a test command for the Player Script framework.',
+    description = {
+        {
+            name = 'info',
+            help = 'This is a test command for the Player Script framework.'
+        }
+    }
 }, function(source, args, rawCommand)
     ps.debug(('Player %s executed ps-testCommand with args: %s'):format(source, table.concat(args, ', ')))
     TriggerClientEvent('ps:client:testCommandResponse', source, 'Command executed successfully!')

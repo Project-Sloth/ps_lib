@@ -52,3 +52,6 @@ AddEventHandler('onResourceStart', function(resourceName)
     end
 end)
 
+function ps.getFramework()
+    return framework
+end

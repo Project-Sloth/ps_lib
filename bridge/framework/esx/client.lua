@@ -1,22 +1,70 @@
 
-ps.citizenid = nil
-ps.charinfo = nil
-ps.ped = nil
-ps.name = nil
-CreateThread(function()
-    ps.citizenid = ESX.PlayerData.identifier
-    ps.charinfo = {
-        firstname = ESX.PlayerData.firstname,
-        lastname = ESX.PlayerData.lastname,
-        age = ESX.PlayerData.dateofbirth,
-        genfer = ESX.PlayerData.sex,
-    }
+local esxJOBCompat = {
+    ['police'] = 'leo',
+}
+local health, armor, thirst, hunger,stress = 0, 0, 0, 0,0
+
+local esxMetadata = {
+    health = health,
+    armor = armor,
+    thirst = thirst,
+    hunger = hunger,
+    stress = stress,
+}
+
+AddEventHandler("esx:playerLoaded", function()
+    local playerData = ESX.GetPlayerData()
     ps.ped = PlayerPedId()
-    ps.name = ESX.PlayerData.firstname .. " " .. ESX.PlayerData.lastname
+    ps.charinfo = {
+        firstname = playerData.firstname,
+        lastname = playerData.lastname,
+        age = playerData.dateofbirth,
+        gender = playerData.sex
+    }
+    ps.name = playerData.firstname .. " " .. playerData.lastname
+    ps.identifier = playerData.identifier
 end)
-
-
-
+AddEventHandler('onResourceStart', function(resourceName)
+    if resourceName == GetCurrentResourceName() then
+         local playerData = ESX.GetPlayerData()
+        ps.ped = PlayerPedId()
+        ps.charinfo = {
+            firstname = playerData.firstname,
+            lastname = playerData.lastname,
+            age = playerData.dateofbirth,
+            gender = playerData.sex
+        }
+        ps.name = playerData.firstname .. " " .. playerData.lastname
+        ps.identifier = playerData.identifier
+    end
+end)
+AddEventHandler('onResourceStop', function(resourceName)
+    if resourceName == GetCurrentResourceName() then
+        ps.ped = nil
+        ps.charinfo = nil
+        ps.name = nil
+        ps.identifier = nil
+    end
+end)
+AddEventHandler("esx_status:onTick", function(data)
+    local hunger, thirst, stress 
+    for i = 1, #data do
+        if data[i].name == "thirst" then
+            thirst = math.floor(data[i].percent)
+        end
+        if data[i].name == "hunger" then
+            hunger = math.floor(data[i].percent)
+        end
+        if data[i].name == "stress" then
+            stress = math.floor(data[i].percent)
+        end
+    end
+    esxMetadata.health = math.floor((GetEntityHealth(ESX.PlayerData.ped) - 100) / 100 * 100)
+    esxMetadata.armor = GetPedArmour(ESX.PlayerData.ped)
+    esxMetadata.thirst = thirst
+    esxMetadata.hunger = hunger
+    esxMetadata.stress = stress
+end)
 ---@return: table
 ---@DESCRIPTION: Returns the player's data, including job, gang, and metadata.
 function ps.getPlayerData()
@@ -27,7 +75,7 @@ end
 --- @DESCRIPTION: Returns the player's citizen ID.
 --- @example: ps.getIdentifier()
 function ps.getIdentifier()
-    return ps.citizenid
+    return ps.getPlayerData().identifier
 end
 
 --- @PARAM: meta: string
@@ -35,6 +83,12 @@ end
 --- @DESCRIPTION: Returns specific metadata for the player.
 --- @example: ps.getMetadata('isdead')
 function ps.getMetadata(meta)
+    if esxMetadata[meta] ~= nil then
+        return esxMetadata[meta]
+    end
+    if meta == 'isdead' then
+        return ESX.PlayerData.dead
+    end
     return ps.getPlayerData().metadata[meta]
 end
 
@@ -55,7 +109,7 @@ end
 --- @return: number
 --- @DESCRIPTION: Returns the player's ped ID.
 function ps.getPlayer()
-    return ps.ped
+    return PlayerPedId()
 end
 
 --- @PARAM: model: number | string
@@ -91,7 +145,7 @@ end
 --- @DESCRIPTION: Returns the type of the player's job.
 --- @example: ps.getJobType()
 function ps.getJobType()
-    return ps.getJob().name
+    return esxJOBCompat[ps.getJob().name] or ps.getJob().name
 end
 
 --- @RETURN: boolean
@@ -181,3 +235,27 @@ function ps.getAllMoney()
     end
     return moneyData
 end
+
+exports('getPlayerData', ps.getPlayerData)
+exports('getIdentifier', ps.getIdentifier)
+exports('getMetadata', ps.getMetadata)
+exports('getCharInfo', ps.getCharInfo)
+exports('getPlayerName', ps.getPlayerName)
+exports('getPlayer', ps.getPlayer)
+exports('getVehicleLabel', ps.getVehicleLabel)
+exports('isDead', ps.isDead)
+exports('getJob', ps.getJob)
+exports('getJobName', ps.getJobName)
+exports('getJobType', ps.getJobType)
+exports('isBoss', ps.isBoss)
+exports('getJobDuty', ps.getJobDuty)
+exports('getJobData', ps.getJobData)
+exports('getGang', ps.getGang)
+exports('getGangName', ps.getGangName)
+exports('defaultDuty', ps.defaultDuty)
+exports('isLeader', ps.isLeader)
+exports('getGangData', ps.getGangData)
+exports('getCoords', ps.getCoords)
+exports('getMoneyData', ps.getMoneyData)
+exports('getMoney', ps.getMoney)
+exports('getAllMoney', ps.getAllMoney)

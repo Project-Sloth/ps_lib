@@ -1,4 +1,4 @@
-qbx = exports.qbx_core
+
 
 function ps.getPlayer(source)
     return qbx:GetPlayer(source)
@@ -77,6 +77,11 @@ function ps.getJobGrade(source)
     return player.PlayerData.job.grade
 end
 
+function ps.getJobGradeLevel(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.job.grade.level
+end
+
 function ps.getJobGradeName(source)
     local player = ps.getPlayer(source)
     return player.PlayerData.job.grade.name
@@ -94,6 +99,10 @@ end
 
 function ps.getAllPlayers()
     return qbx:GetQBPlayers()
+end
+
+function ps.getEntityCoords(source)
+    return GetEntityCoords(GetPlayerPed(source))
 end
 
 function ps.getDistance(source, location)
