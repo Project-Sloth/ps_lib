@@ -74,12 +74,12 @@ end
 
 function ps.getMetadata(source, meta)
     local player = ps.getPlayer(source)
-    return player.PlayerData.metadata[meta]
+    return player.metadata[meta]
 end
 
 function ps.getCharInfo(source, info)
     local player = ps.getPlayer(source)
-    return player.PlayerData.charinfo[info]
+    return player.charinfo[info]
 end
 
 function ps.getJob(source)

@@ -14,15 +14,17 @@ author 'Project Sloth'
 client_scripts {
     --'@qbx_core/modules/playerdata.lua',
     'startFirst/client/**.lua',
-    'bridge/client.lua',
     'modules/**/client/**.lua',
+    'bridge/client.lua',
+    
 }
 
 server_scripts {
     '@oxmysql/lib/MySQL.lua',
     'startFirst/server/**.lua',
-    'bridge/server.lua',
     'modules/**/server/**.lua',
+    'bridge/server.lua',
+    
 }
 
 shared_scripts {

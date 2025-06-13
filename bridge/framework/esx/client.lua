@@ -1,6 +1,7 @@
 
 local esxJOBCompat = {
     ['police'] = 'leo',
+    ['unemployed'] = 'loser'
 }
 local health, armor, thirst, hunger,stress = 0, 0, 0, 0,0
 
@@ -21,7 +22,7 @@ AddEventHandler("esx:playerLoaded", function()
         age = playerData.dateofbirth,
         gender = playerData.sex
     }
-    ps.name = playerData.firstname .. " " .. playerData.lastname
+    ps.name = playerData.firstName .. " " .. playerData.lastName
     ps.identifier = playerData.identifier
 end)
 AddEventHandler('onResourceStart', function(resourceName)
@@ -34,7 +35,7 @@ AddEventHandler('onResourceStart', function(resourceName)
             age = playerData.dateofbirth,
             gender = playerData.sex
         }
-        ps.name = playerData.firstname .. " " .. playerData.lastname
+        ps.name = playerData.firstName .. " " .. playerData.lastName
         ps.identifier = playerData.identifier
     end
 end)
@@ -152,14 +153,14 @@ end
 --- @DESCRIPTION: Checks if the player's job is a boss job.
 --- @example: if ps.isBoss() then TriggerEvent('qb-bossmenu:client:openMenu') end
 function ps.isBoss()
-    return ps.getJob().name == 'boss'
+    return ps.getJob().grade_name == 'boss'
 end
 
 --- @RETURN: boolean
 --- @DESCRIPTION: Checks if the player is on duty for their job.
 --- @example: if ps.getJobDuty() then TriggerEvent('qb-phone:client:openJobPhone') end
 function ps.getJobDuty()
-    return true
+    return ps.getJob().onDuty
 end
 
 --- @PARAM: data: string
