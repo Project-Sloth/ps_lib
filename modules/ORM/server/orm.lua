@@ -214,6 +214,39 @@ function ps.ORM.update(table, data, conditions, cb)
     end)
 end
 
+-- Inserts or updates a record in a table.
+---@param table string Table name.
+---@param data table Data to insert or update.
+---@param cb 
+function ps.ORM.upsert(table, data, cb)
+    acquireLock(table)
+    local updateClause = ''
+    local fields, values, params = '', '', {}
+
+    for k, v in pairs(data) do 
+        fields = fields .. k .. ', '
+        values = values .. '?, '
+        params = params .. '?, '
+        updateClause = updateClause .. k .. ' = ' .. '?, ' 
+        table.insert(params, v)
+    end
+
+    fields = fields:sub(1, -3) -- Remove trailing comma and space.
+    values = values:sub(1, -3)
+    updateClause = updateClause:sub(1, -3) 
+
+    local query = 'INSERT INTO ' .. table .. ' (' .. fields .. ') VALUES (' .. values .. ') ON DUPLICATE KEY UPDATE ' .. updateClause
+
+    MySQL.insert(query, params, function(insertId, err)
+        releaseLock(table)
+        if err then 
+            return cb(nil, params, err)
+        end
+        clearCache(table)
+        cb(insertId, params, nil)
+    end)
+end
+
 --- Inserts a new record into a table.
 --- Race condition safe for write operations.
 ---@param table string Table name.
