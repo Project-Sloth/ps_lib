@@ -17,8 +17,8 @@ AddEventHandler("esx:playerLoaded", function()
     local playerData = ESX.GetPlayerData()
     ps.ped = PlayerPedId()
     ps.charinfo = {
-        firstname = playerData.firstname,
-        lastname = playerData.lastname,
+        firstname = playerData.firstName,
+        lastname = playerData.lastName,
         age = playerData.dateofbirth,
         gender = playerData.sex
     }
@@ -30,12 +30,12 @@ AddEventHandler('onResourceStart', function(resourceName)
          local playerData = ESX.GetPlayerData()
         ps.ped = PlayerPedId()
         ps.charinfo = {
-            firstname = playerData.firstname,
-            lastname = playerData.lastname,
+            firstname = playerData.firstName,
+            lastname = playerData.lastName,
             age = playerData.dateofbirth,
             gender = playerData.sex
         }
-        ps.name = playerData.firstName .. " " .. playerData.lastName
+                ps.name = playerData.firstName .. " " .. playerData.lastName
         ps.identifier = playerData.identifier
     end
 end)

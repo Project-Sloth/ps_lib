@@ -1,3 +1,8 @@
+
+local esxJOBCompat = {
+    ['police'] = 'leo',
+    ['unemployed'] = 'loser'
+}
 ps.registerCallback('ps_lib:esx:getVehicleLabel', function(model)
    MySQL.query.await('SELECT name FROM vehicles WHERE model = ?', {model}, function(result)
       if result and result[1] then
@@ -72,14 +77,35 @@ function ps.getPlayerData(source)
     return player.PlayerData
 end
 
+local function getStatus(source, type)
+    local player = ps.getPlayer(source)
+    for k, v in pairs (player.variables.status) do 
+        if v.name == type then 
+            return math.floor(v.percent)
+        end
+    end
+    return 0
+end
 function ps.getMetadata(source, meta)
     local player = ps.getPlayer(source)
-    return player.metadata[meta]
+    local metas = {
+        hunger = getStatus(source, 'hunger'),
+        thirst = getStatus(source, 'thirst'),
+        stress = getStatus(source, 'stress'),
+        isdead = player.isDead,
+    }
+    return metas[meta]
 end
 
 function ps.getCharInfo(source, info)
     local player = ps.getPlayer(source)
-    return player.charinfo[info]
+    local charinfo = {
+        firstname = player.firstName,
+        lastname = player.lastName,
+        birthdate = player.dateofbirth,
+        gender = player.sex
+    }
+    return charinfo[info]
 end
 
 function ps.getJob(source)
@@ -94,7 +120,7 @@ end
 
 function ps.getJobType(source)
     local player = ps.getPlayer(source)
-    return player.job.type or player.job.name
+    return esxJOBCompat[player.job.name] or player.job.name
 end
 
 -- no support for duty ????
