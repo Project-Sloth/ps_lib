@@ -110,3 +110,53 @@ ps.registerCommand('ps-testCommandp', {
     ps.debug(('Player %s executed ps-testCommand with args: %s'):format(source, table.concat(args, ', ')))
     TriggerClientEvent('ps:client:testCommandResponse', source, 'Command executed successfully!')
 end)
+
+function generateCacheKey(length)
+    local charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+|*-=[]{};':,.<>?/"
+    local result = ""
+
+    for i = 1, length do
+        local rand = math.random(#charset)
+        result = result .. charset:sub(rand, rand)
+    end
+
+    return result
+end
+
+math.randomseed(os.time())
+local key = generateCacheKey(16)
+
+
+ps.registerCommand('ps-print',{
+    admin = true,
+    help = 'Turn On Types Of Prints',
+    description = {
+        {
+            name = 'script',
+            help = 'Script Name'
+        },
+        {
+            name = 'type',
+            help = 'Type of print to turn on'
+        }
+    }
+}, function(source, args, rawCommand)
+    local resource = args[1]
+    local type = args[2]
+    TriggerClientEvent('ps_lib:client:print', source, key, resource, type)
+    TriggerEvent('ps_lib:print', resource, type)
+end)
+
+ps.registerCallback('ps_lib:print', function(source, keys)
+    local src = source
+    local keyCheck = keys == key
+    key = generateCacheKey(16)
+    if IsPlayerAceAllowed(src, 'command') then
+        if keyCheck then
+            return true
+        else
+            return false
+        end
+    end
+    return false
+end)

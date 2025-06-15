@@ -12,7 +12,7 @@ author 'Project Sloth'
 
 -- Manifest
 client_scripts {
-    --'@qbx_core/modules/playerdata.lua',
+    '@qbx_core/modules/playerdata.lua',
     'startFirst/client/**.lua',
     'modules/**/client/**.lua',
     'bridge/client.lua',

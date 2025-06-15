@@ -73,5 +73,8 @@ end)
 
 
 function ps.vehicleData()
-   return ps.vehicle
+   if not ps.isInVehicle then
+        return false
+    end
+    return ps.vehicle
 end
