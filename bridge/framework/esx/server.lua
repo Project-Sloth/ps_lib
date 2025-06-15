@@ -1,8 +1,57 @@
-
+ps.Shared = {}
 local esxJOBCompat = {
     ['police'] = 'leo',
-    ['unemployed'] = 'loser'
+    ['unemployed'] = 'loser',
+    ['ambulance'] = 'ems',
+    ['mechanic'] = 'mechanic',
+    ['cardealer'] = 'cardealer',
+
 }
+
+local jobs, vehicles = {}, {}
+local function handleJobGrades(jobName)
+    local result = MySQL.query.await('SELECT * FROM job_grades WHERE job_name = ?', {jobName})
+    local grades = {}
+    for k, v in pairs(result) do
+        grades[tostring(v.grade)] = {
+            name = v.label,
+            payment = v.salary,
+        }
+        if v.label == 'boss' then
+            jobs[jobName].isboss = v.grade
+        end
+    end
+    return grades
+end
+
+local function loadJobsCompat()
+    local result = MySQL.query.await('SELECT * FROM jobs',{})
+    for k, v in pairs(result) do
+        jobs[v.name] = {
+            label = v.label,
+            defaultDuty = false,
+            type = esxJOBCompat[v.name] or 'none',
+            offDutyPay = 0,
+            grades = handleJobGrades(v.name),
+        }
+    end
+end
+
+local function loadVehiclesCompat()
+    local result = MySQL.query.await('SELECT * FROM vehicles')
+    for k, v in pairs(result) do
+        vehicles[v.model] = {
+            name = v.name,
+            price = v.price,
+            category = v.category,
+        }
+    end
+end
+loadJobsCompat()
+loadVehiclesCompat()
+ps.Shared.Vehicles = vehicles
+ps.Shared.Jobs = jobs
+
 ps.registerCallback('ps_lib:esx:getVehicleLabel', function(model)
    MySQL.query.await('SELECT name FROM vehicles WHERE model = ?', {model}, function(result)
       if result and result[1] then
@@ -12,7 +61,9 @@ ps.registerCallback('ps_lib:esx:getVehicleLabel', function(model)
       end
    end)
 end)
-
+function ps.getJobTable()
+    return jobs
+end
 function ps.getPlayer(source)
     return ESX.GetPlayerFromId(source)
 end
@@ -120,13 +171,13 @@ end
 
 function ps.getJobType(source)
     local player = ps.getPlayer(source)
-    return esxJOBCompat[player.job.name] or player.job.name
+    return esxJOBCompat[player.job.name] or 'none'
 end
 
 -- no support for duty ????
 function ps.getJobDuty(source)
     local player = ps.getPlayer(source)
-    return player.job.onduty
+    return player.job.onDuty
 end
 
 
@@ -161,7 +212,7 @@ function ps.isBoss(source)
 end
 
 function ps.getAllPlayers()
-    return ESX.GetPlayers(false, false)
+    return ESX.GetPlayers()
 end
 
 function ps.getDistance(source, location)
@@ -197,8 +248,8 @@ end
 function ps.getJobCount(jobName)
     local count = 0
     for _, player in pairs(ps.getAllPlayers()) do
-        local playerData = ps.getPlayerData(player)
-        if playerData.job and playerData.job.name == jobName and ps.getJobDuty(player) then
+        local p = ps.getPlayer(player)
+        if p.job.name == jobName and p.job['onDuty'] then
             count = count + 1
         end
     end
@@ -223,10 +274,9 @@ end
 
 function ps.setJob(source, jobName, rank)
     local player = ps.getPlayer(source)
-    if not player then return end
-    local job = QBCore.Shared.Jobs[jobName]
-    if not job then return end
-    player.SetJob(job.name, rank or 0, true)
+    local exist = ESX.DoesJobExist(jobName, rank)
+    if not exist then return false end
+    player.setJob(jobName, rank)
     return true
 end
 
@@ -270,4 +320,48 @@ function ps.getMoney(source, type)
     elseif type == 'bank' then
         return player.getAccount('bank').money
     end
+end
+
+local function getGradesFormatted(jobName)
+    local grades = MySQL.query.await('SELECT * FROM job_grades WHERE job_name = ?', {jobName})
+    local formattedGrades = {}
+    for i = 1, #grades do
+        local grade = grades[i]
+        formattedGrades[grade.grade] = {
+            name = grade.label,
+            level = grade.grade,
+            payment = grade.salary,
+        }
+    end
+    return formattedGrades
+end
+
+function ps.getAllJobs()
+    local jobNames = MySQL.query.await('SELECT * FROM jobs',{})
+    local jobs = {}
+    for i = 1, #jobNames do
+        local job = jobNames[i]
+        jobs[job.name] = {
+            label = job.label,
+            defaultDuty = false, 
+            offDutyPay = false,
+            grades = getGradesFormatted(job.name),
+        }
+    end
+    return jobs
+end
+
+function ps.getSharedJob(jobName)
+    if not jobName then return nil end
+    local job = ps.Shared.Jobs[jobName]
+    if not job then return nil end
+    return job
+end
+
+function ps.getSharedJobGrade(jobName, grade)
+    if type(grade) == 'number' then
+        grade = tostring(grade)
+    end
+    local job = ps.Shared.Jobs[jobName].grades[grade]
+    return job
 end

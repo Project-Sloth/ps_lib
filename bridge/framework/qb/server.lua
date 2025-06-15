@@ -264,6 +264,14 @@ function ps.hasPermission(source, permission)
     end
 end
 
+function ps.getSharedJob(jobName)
+    return QBCore.Shared.Jobs[jobName]
+end
+
+function ps.getSharedJobGrade(jobName, grade)
+   return QBCore.Shared.Jobs[jobName].grades[grade]
+end
+
 exports('getPlayer', ps.getPlayer)
 exports('getPlayerByIdentifier', ps.getPlayerByIdentifier)
 exports('getOfflinePlayer', ps.getOfflinePlayer)

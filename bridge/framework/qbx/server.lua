@@ -187,3 +187,17 @@ end
 function ps.getMoney(source, type)
     return qbx:GetMoney(source, type or 'cash')
 end
+
+function ps.getSharedJob(jobName)
+    local jobList = qbx:GetJobs()
+    return jobList[jobName]
+end
+
+function ps.getSharedJobGrade(jobName, grade)
+   local jobList = qbx:GetJobs()
+    if jobList[jobName] and jobList[jobName].grades[grade] then
+        return jobList[jobName].grades[grade]
+    else
+        return nil
+    end
+end

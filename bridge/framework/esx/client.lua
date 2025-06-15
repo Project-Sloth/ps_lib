@@ -139,7 +139,8 @@ end
 --- @DESCRIPTION: Returns the name of the player's job.
 --- @example: ps.getJobName()
 function ps.getJobName()
-    return ps.getJob().name
+    ps.debug(ps.getJob())
+    return ps.getJob()['name']
 end
 
 --- @RETURN: string
