@@ -3,11 +3,15 @@ local QBCore = exports['qb-core']:GetCoreObject()
 AddEventHandler('playerSpawned',function()
     ps.ped = PlayerPedId()
     ps.charinfo = QBCore.Functions.GetPlayerData().charinfo
+    ps.citizenid = QBCore.Functions.GetPlayerData().citizenid
+    ps.name = ps.charinfo.firstname .. " " .. ps.charinfo.lastname
 end)
 AddEventHandler('onResourceStop', function(resourceName)
     if resourceName == GetCurrentResourceName() then
         ps.ped = nil
         ps.charinfo = nil
+        ps.citizenid = nil
+        ps.name = nil
     end
 end)
 AddEventHandler('onResourceStart', function(resourceName)
@@ -15,6 +19,8 @@ AddEventHandler('onResourceStart', function(resourceName)
         if PlayerPedId() then
             ps.ped = PlayerPedId()
             ps.charinfo = QBCore.Functions.GetPlayerData().charinfo
+            ps.citizenid = QBCore.Functions.GetPlayerData().citizenid
+            ps.name = ps.charinfo.firstname .. " " .. ps.charinfo.lastname
         end
     end
 end)

@@ -139,7 +139,6 @@ end
 --- @DESCRIPTION: Returns the name of the player's job.
 --- @example: ps.getJobName()
 function ps.getJobName()
-    ps.debug(ps.getJob())
     return ps.getJob()['name']
 end
 
@@ -147,7 +146,7 @@ end
 --- @DESCRIPTION: Returns the type of the player's job.
 --- @example: ps.getJobType()
 function ps.getJobType()
-    return esxJOBCompat[ps.getJob().name] or ps.getJob().name
+    return esxJOBCompat[ps.getJob().name] or 'none'
 end
 
 --- @RETURN: boolean
