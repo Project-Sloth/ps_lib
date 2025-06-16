@@ -102,17 +102,18 @@ end
 
 function ps.getGang()
     local player = ps.getPlayerData()
-    return player.job
+    return player.gang
 end
 
 function ps.getGangName()
-    local job = ps.getGang()
-    return job.name
+    local gang = ps.getGang()
+    return gang.name
 end
 
 function ps.isLeader()
     local Gang = ps.getGang()
-    return Gang.isboss
+    ps.debug("Gang: ", Gang)
+    return Gang.isboss or false
 end
 
 function ps.getGangData(data)

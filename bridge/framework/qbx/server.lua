@@ -192,7 +192,11 @@ function ps.getMoney(source, type)
 end
 
 function ps.getAllJobs()
-    return qbx:GetJobs()
+    local jobsArray = {}
+    for k, v in pairs(qbx:GetJobs()) do
+        table.insert(jobsArray, k)
+    end
+    return jobsArray
 end
 
 function ps.getSharedJob(jobName)
