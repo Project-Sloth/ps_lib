@@ -1,4 +1,8 @@
 
+function ps.getJobTable()
+    return QBCore.Shared.Jobs
+end
+
 function ps.getPlayer(source)
     return QBCore.Functions.GetPlayer(source)
 end
@@ -173,14 +177,18 @@ end
 
 function ps.addMoney(source,type, amount, reason)
     local player = ps.getPlayer(source)
-    if not player then return end
+    if not type then type = 'cash' end
+    if not amount then amount = 0 end
+    if not reason then reason = 'No reason provided' end
     player.Functions.AddMoney(type, amount, reason or 'Added by script')
     return true
 end
 
 function ps.removeMoney(source, type,  amount, reason)
     local player = ps.getPlayer(source)
-    if not player then return end
+    if not type then type = 'cash' end
+    if not amount then amount = 0 end
+    if not reason then reason = 'No reason provided' end
     if player.Functions.RemoveMoney(type, amount, reason or 'Removed by script') then
         return true
     else
@@ -190,10 +198,16 @@ end
 
 function ps.getMoney(source, type)
     local player = ps.getPlayer(source)
-    if not player then return 0 end
+    if not type then type = 'cash' end
     return player.PlayerData.money[type] or 0
 end
 
+function ps.getSharedJob(jobName)
+    return QBCore.Shared.Jobs[jobName]
+end
+function ps.getSharedJobGrade(jobName, grade)
+   return QBCore.Shared.Jobs[jobName].grades[grade]
+end
 
 function ps.getGang(source)
     local player = ps.getPlayer(source)
@@ -263,56 +277,3 @@ function ps.hasPermission(source, permission)
         return true
     end
 end
-
-function ps.getSharedJob(jobName)
-    return QBCore.Shared.Jobs[jobName]
-end
-
-function ps.getSharedJobGrade(jobName, grade)
-   return QBCore.Shared.Jobs[jobName].grades[grade]
-end
-
-exports('getPlayer', ps.getPlayer)
-exports('getPlayerByIdentifier', ps.getPlayerByIdentifier)
-exports('getOfflinePlayer', ps.getOfflinePlayer)
-exports('getIdentifier', ps.getIdentifier)
-exports('getSource', ps.getSource)
-exports('getPlayerName', ps.getPlayerName)
-exports('getPlayerNameByIdentifier', ps.getPlayerNameByIdentifier)
-exports('getPlayerData', ps.getPlayerData)
-exports('getMetadata', ps.getMetadata)
-exports('getCharInfo', ps.getCharInfo)
-exports('getJob', ps.getJob)
-exports('getJobName', ps.getJobName)
-exports('getJobType', ps.getJobType)
-exports('getJobDuty', ps.getJobDuty)
-exports('getJobData', ps.getJobData)
-exports('getJobGrade', ps.getJobGrade)
-exports('getJobGradeLevel', ps.getJobGradeLevel)
-exports('getJobGradeName', ps.getJobGradeName)
-exports('getJobGradePay', ps.getJobGradePay)
-exports('isBoss', ps.isBoss)
-exports('getAllPlayers', ps.getAllPlayers)
-exports('getEntityCoords', ps.getEntityCoords)
-exports('getDistance', ps.getDistance)
-exports('checkDistance', ps.checkDistance)
-exports('getNearbyPlayers', ps.getNearbyPlayers)
-exports('getJobCount', ps.getJobCount)
-exports('getJobTypeCount', ps.getJobTypeCount)
-exports('createUseable', ps.createUseable)
-exports('setJob', ps.setJob)
-exports('addMoney', ps.addMoney)
-exports('removeMoney', ps.removeMoney)
-exports('getMoney', ps.getMoney)
-exports('getGang', ps.getGang)
-exports('getGangName', ps.getGangName)
-exports('getGangData', ps.getGangData)
-exports('getGangGrade', ps.getGangGrade)
-exports('getGangGradeLevel', ps.getGangGradeLevel)
-exports('getGangGradeName', ps.getGangGradeName)
-exports('isLeader', ps.isLeader)
-exports('getAllJobs', ps.getAllJobs)
-exports('getAllGangs', ps.getAllGangs)
-exports('vehicleOwner', ps.vehicleOwner)
-exports('jobExists', ps.jobExists)
-exports('hasPermission', ps.hasPermission)

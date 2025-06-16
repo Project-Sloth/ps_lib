@@ -61,9 +61,11 @@ ps.registerCallback('ps_lib:esx:getVehicleLabel', function(model)
       end
    end)
 end)
+
 function ps.getJobTable()
     return jobs
 end
+---
 function ps.getPlayer(source)
     return ESX.GetPlayerFromId(source)
 end
@@ -73,32 +75,7 @@ function ps.getPlayerByIdentifier(identifier)
 end
 
 function ps.getOfflinePlayer(identifier)
-    local result = MySQL.query.await('SELECT * FROM users WHERE identifier = ?', {identifier})
-    if result[1] then
-        local data = result[1]
-        return {
-            identifier = data.identifier,
-            charinfo = {
-                firstname = data.firstname or "",
-                lastname = data.lastname or "",
-                birthdate = data.dateofbirth or "",
-                gender = data.sex or "",
-                height = data.height or ""
-            },
-            money = {
-                cash = tonumber(data.cash) or 0,
-                bank = tonumber(data.bank) or 0,
-                black_money = tonumber(data.black_money) or 0
-            },
-            job = {
-                name = data.job or "unemployed",
-                label = "Unemployed",
-                grade = tonumber(data.job_grade) or 0,
-                salary = 0
-            }
-        }
-    end
-    return nil
+    return ESX.GetPlayerFromIdentifier(identifier)
 end
 
 function ps.getIdentifier(source)
@@ -137,6 +114,7 @@ local function getStatus(source, type)
     end
     return 0
 end
+
 function ps.getMetadata(source, meta)
     local player = ps.getPlayer(source)
     local metas = {
@@ -156,7 +134,7 @@ function ps.getCharInfo(source, info)
         birthdate = player.dateofbirth,
         gender = player.sex
     }
-    return charinfo[info]
+    return charinfo[info] or nil
 end
 
 function ps.getJob(source)
@@ -193,7 +171,7 @@ end
 
 function ps.getJobGradeLevel(source)
     local player = ps.getPlayer(source)
-    return player.job.grade
+    return player.job.grade_level
 end
 
 function ps.getJobGradeName(source)
@@ -207,14 +185,17 @@ function ps.getJobGradePay(source)
 end
 
 function ps.isBoss(source)
-    local player = ps.getPlayer(source)
-    return player.job.name == 'boss'
+    local name = ps.getJobGradeName(source)
+    return name == 'boss'
 end
 
 function ps.getAllPlayers()
     return ESX.GetPlayers()
 end
 
+function ps.getEntityCoords(source)
+    return GetEntityCoords(GetPlayerPed(source))
+end
 function ps.getDistance(source, location)
     local pcoords = GetEntityCoords(GetPlayerPed(source))
     local loc = vector3(location.x, location.y, location.z)
@@ -260,7 +241,8 @@ function ps.getJobTypeCount(jobName)
     local count = 0
     for _, player in pairs(ps.getAllPlayers()) do
         local playerData = ps.getPlayerData(player)
-        if playerData.job and playerData.job.type == jobName and ps.getJobDuty(player) then
+        local typeJob = esxJOBCompat[playerData.job.name] or 'none'
+        if playerData.job and typeJob == jobName and ps.getJobDuty(player) then
             count = count + 1
         end
     end
@@ -315,6 +297,7 @@ end
 function ps.getMoney(source, type)
     local player = ps.getPlayer(source)
     if not player then return 0 end
+    if not type then type = 'cash' end
     if type == 'cash' then
         return player.getMoney()
     elseif type == 'bank' then
@@ -365,3 +348,67 @@ function ps.getSharedJobGrade(jobName, grade)
     local job = ps.Shared.Jobs[jobName].grades[grade]
     return job
 end
+-- Someone PR This 
+function ps.getGang(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang
+end
+
+function ps.getGangName(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang.name
+end
+
+function ps.getGangData(source, data)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang[data]
+end
+
+function ps.getGangGrade(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang.grade
+end
+
+function ps.getGangGradeLevel(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang.grade.level
+end
+
+function ps.getGangGradeName(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang.grade.name
+end
+
+function ps.isLeader(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang.isboss
+end
+
+function ps.getAllGangs()
+     local gangsArray = {}
+    for k, v in pairs(qbx:GetGangs()) do
+        table.insert(gangsArray, k)
+    end
+    return gangsArray
+end
+
+-- End PR Plz
+
+function ps.vehicleOwner(licensePlate)
+    local vehicle = MySQL.query.await('SELECT * FROM owned_vehicles WHERE plate = ?', {licensePlate})
+    if not vehicle or #vehicle == 0 then
+        return false
+    end
+    return vehicle[1].owner
+end
+
+function ps.jobExists(jobName)
+    return ps.Shared.Jobs[jobName] ~= nil
+end
+
+function ps.hasPermission(source, permission)
+    if IsPlayerAceAllowed(source, permission) then
+        return true
+    end
+end
+

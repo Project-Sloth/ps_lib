@@ -8,10 +8,10 @@ ps = {}
 
 QBCore, ESX, qbx = nil, nil, nil
 
-if GetResourceState('qb-core') == 'started' then
-    QBCore = exports['qb-core']:GetCoreObject()
+if GetResourceState('qbx_core') then
+    qbx = exports.qbx_core
 elseif GetResourceState('es-extended') then
     ESX = exports['es_extended']:getSharedObject()
-elseif GetResourceState('qbx_core') then
-    qbx = exports.qbx_core
+elseif GetResourceState('qb-core') then
+    QBCore = exports['qb-core']:GetCoreObject()
 end

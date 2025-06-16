@@ -1,8 +1,8 @@
 local framework, inventory = false, false
 local frameworkResources = {
-    ['qb-core'] = 'bridge/framework/qb/server.lua',
-    ['qbx_core'] = 'bridge/framework/qbx/server.lua',
-    ['es_extended'] = 'bridge/framework/esx/server.lua',
+    {name = 'qbx_core', path = 'bridge/framework/qbx/server.lua'},
+    {name = 'qb-core', path = 'bridge/framework/qb/server.lua'},
+    {name = 'es_extended', path = 'bridge/framework/esx/server.lua'},
 }
 local inventoryResources = {
     ['qb-inventory'] = 'bridge/inventory/qb/server/qb.lua',
@@ -12,11 +12,11 @@ local inventoryResources = {
 }
 
 local function loadFramework()
-    for script, path in pairs(frameworkResources) do
-        if GetResourceState(script) == 'started' then
-            loadLib(path)
-            framework = script
-            ps.success(('Framework resource found: %s'):format(script))
+    for key, data in ipairs(frameworkResources) do
+        if GetResourceState(data.name) == 'started' then
+            loadLib(data.path)
+            framework = data.name
+            ps.success(('Framework resource found: %s'):format(data.name))
             break
         end
     end

@@ -1,4 +1,7 @@
 
+function ps.getJobTable()
+    return qbx:GetJobs()
+end
 
 function ps.getPlayer(source)
     return qbx:GetPlayer(source)
@@ -188,6 +191,10 @@ function ps.getMoney(source, type)
     return qbx:GetMoney(source, type or 'cash')
 end
 
+function ps.getAllJobs()
+    return qbx:GetJobs()
+end
+
 function ps.getSharedJob(jobName)
     local jobList = qbx:GetJobs()
     return jobList[jobName]
@@ -201,3 +208,66 @@ function ps.getSharedJobGrade(jobName, grade)
         return nil
     end
 end
+
+
+function ps.getGang(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang
+end
+
+function ps.getGangName(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang.name
+end
+
+function ps.getGangData(source, data)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang[data]
+end
+
+function ps.getGangGrade(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang.grade
+end
+
+function ps.getGangGradeLevel(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang.grade.level
+end
+
+function ps.getGangGradeName(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang.grade.name
+end
+
+function ps.isLeader(source)
+    local player = ps.getPlayer(source)
+    return player.PlayerData.gang.isboss
+end
+
+function ps.getAllGangs()
+     local gangsArray = {}
+    for k, v in pairs(qbx:GetGangs()) do
+        table.insert(gangsArray, k)
+    end
+    return gangsArray
+end
+
+function ps.vehicleOwner(licensePlate)
+    local vehicle = MySQL.query.await('SELECT * FROM player_vehicles WHERE plate = ?', {licensePlate})
+    if not vehicle or #vehicle == 0 then
+        return false
+    end
+    return vehicle[1].citizenid
+end
+
+function ps.jobExists(jobName)
+    return QBCore.Shared.Jobs[jobName] ~= nil
+end
+
+function ps.hasPermission(source, permission)
+    if IsPlayerAceAllowed(source, permission) then
+        return true
+    end
+end
+
