@@ -89,8 +89,15 @@ function ps.success(...)
     print('^2[SUCCESS]^0 ' .. formatArgs(...))
 end
 
-if IsDuplicityVersion() then
-    RegisterNetEvent('ps_lib:print', function(resource, type)
+local function display(script)
+    ps.debug(script .. ' debugs are active')
+    ps.info(script .. ' infos are active')
+    ps.error(script .. ' errors are active')
+    ps.warn(script .. ' warnings are active')
+    ps.success(script .. ' success are active')
+end
+
+local function adjustPrint(resource, type)
         if not resources[resource] then
             resources[resource] = {}
             resources[resource].debug = false
@@ -105,29 +112,13 @@ if IsDuplicityVersion() then
             resources[resource].error = not resources[resource].error
             resources[resource].warn = not resources[resource].warn
             resources[resource].success = not resources[resource].success
-            print('^6[DEBUG]^0 ' .. resource .. ' debug is now ' .. tostring(resources[resource].debug))
-            print('^4[INFO]^0 ' .. resource .. ' info is now ' .. tostring(resources[resource].info))
-            print('^1[ERROR]^0 ' .. resource .. ' error is now ' .. tostring(resources[resource].error))
-            print('^3[WARNING]^0 ' .. resource .. ' warn is now ' .. tostring(resources[resource].warn))
-            print('^2[SUCCESS]^0 ' .. resource .. ' success is now ' .. tostring(resources[resource].success))
-            return
         end
-        if type == 'debug' then
-            resources[resource].debug = not resources[resource].debug
-            print('^6[DEBUG]^0 ' .. resource .. ' debug is now ' .. tostring(resources[resource].debug))
-        elseif type == 'info' then
-            resources[resource].info = not resources[resource].info
-            print('^4[INFO]^0 ' .. resource .. ' info is now ' .. tostring(resources[resource].info))
-        elseif type == 'error' then
-            resources[resource].error = not resources[resource].error
-            print('^1[ERROR]^0 ' .. resource .. ' error is now ' .. tostring(resources[resource].error))
-        elseif type == 'warn' then
-            resources[resource].warn = not resources[resource].warn
-            print('^3[WARNING]^0 ' .. resource .. ' warn is now ' .. tostring(resources[resource].warn))
-        elseif type == 'success' then
-            resources[resource].success = not resources[resource].success
-            print('^2[SUCCESS]^0 ' .. resource .. ' success is now ' .. tostring(resources[resource].success))
-        end
+        resources[resource][type] = not resources[resource][type]
+    end
+if IsDuplicityVersion() then
+    RegisterNetEvent('ps_lib:print', function(resource, type)
+       adjustPrint(resource, type)
+       display(resource)
     end)
 else
     RegisterNetEvent('ps_lib:client:print', function(key, resource, type)
@@ -135,42 +126,7 @@ else
         if not can then
             return
         end
-        if not resources[resource] then
-            resources[resource] = {}
-            resources[resource].debug = false
-            resources[resource].info = false
-            resources[resource].error = false
-            resources[resource].warn = false
-            resources[resource].success = false
-        end
-        if type == 'all' then
-            resources[resource].debug = not resources[resource].debug
-            resources[resource].info = not resources[resource].info
-            resources[resource].error = not resources[resource].error
-            resources[resource].warn = not resources[resource].warn
-            resources[resource].success = not resources[resource].success
-            print('^6[DEBUG]^0 ' .. resource .. ' debug is now ' .. tostring(resources[resource].debug))
-            print('^4[INFO]^0 ' .. resource .. ' info is now ' .. tostring(resources[resource].info))
-            print('^1[ERROR]^0 ' .. resource .. ' error is now ' .. tostring(resources[resource].error))
-            print('^3[WARNING]^0 ' .. resource .. ' warn is now ' .. tostring(resources[resource].warn))
-            print('^2[SUCCESS]^0 ' .. resource .. ' success is now ' .. tostring(resources[resource].success))
-            return
-        end
-        if type == 'debug' then
-            resources[resource].debug = not resources[resource].debug
-            print('^6[DEBUG]^0 ' .. resource .. ' debug is now ' .. tostring(resources[resource].debug))
-        elseif type == 'info' then
-            resources[resource].info = not resources[resource].info
-            print('^4[INFO]^0 ' .. resource .. ' info is now ' .. tostring(resources[resource].info))
-        elseif type == 'error' then
-            resources[resource].error = not resources[resource].error
-            print('^1[ERROR]^0 ' .. resource .. ' error is now ' .. tostring(resources[resource].error))
-        elseif type == 'warn' then
-            resources[resource].warn = not resources[resource].warn
-            print('^3[WARNING]^0 ' .. resource .. ' warn is now ' .. tostring(resources[resource].warn))
-        elseif type == 'success' then
-            resources[resource].success = not resources[resource].success
-            print('^2[SUCCESS]^0 ' .. resource .. ' success is now ' .. tostring(resources[resource].success))
-        end
+        adjustPrint(resource, type)
+        display(resource)
     end)
 end
