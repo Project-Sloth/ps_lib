@@ -193,10 +193,10 @@ end
 --- @RETURN: string
 --- @DESCRIPTION: Returns if the player is a gang boss.
 --- @example: ps.isLeader()
---function ps.isLeader()
---    local Gang = ps.getGang()
---    return Gang.isboss
---end
+function ps.isLeader()
+    local Gang = ps.getGang()
+    return false
+end
 
 
 --- @PARAM: data: string
@@ -217,7 +217,7 @@ end
 function ps.getMoneyData()
     local money = {
         cash = ESX.PlayerData.money,
-        bank = ESX.GetAccount('bank'),
+        bank = ESX.GetAccount('bank').money,
     }
     return money
 end

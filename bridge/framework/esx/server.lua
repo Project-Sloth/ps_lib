@@ -276,6 +276,7 @@ function ps.addMoney(source,type, amount, reason)
 end
 
 function ps.removeMoney(source, type,  amount, reason)
+
     local player = ps.getPlayer(source)
     if not player then return end
     if type == 'cash' then
@@ -285,7 +286,9 @@ function ps.removeMoney(source, type,  amount, reason)
             return false
         end
     elseif type == 'bank' then
-        if player.removeAccountMoney('bank', amount, reason or 'Removed by script') then
+        local balance = player.getAccount('bank').money
+        if balance - amount >= 0 then 
+            player.removeAccountMoney('bank', amount, reason or 'Removed by script')
             return true
         else
             return false
@@ -320,18 +323,11 @@ local function getGradesFormatted(jobName)
 end
 
 function ps.getAllJobs()
-    local jobNames = MySQL.query.await('SELECT * FROM jobs',{})
-    local jobs = {}
-    for i = 1, #jobNames do
-        local job = jobNames[i]
-        jobs[job.name] = {
-            label = job.label,
-            defaultDuty = false, 
-            offDutyPay = false,
-            grades = getGradesFormatted(job.name),
-        }
+    local jobSend = {}
+    for k, v in pairs (jobs) do
+        table.insert(jobSend, k)
     end
-    return jobs
+    return jobSend
 end
 
 function ps.getSharedJob(jobName)
@@ -350,46 +346,46 @@ function ps.getSharedJobGrade(jobName, grade)
 end
 -- Someone PR This 
 function ps.getGang(source)
-    local player = ps.getPlayer(source)
-    return player.PlayerData.gang
+   -- local player = ps.getPlayer(source)
+   -- return player.PlayerData.gang
 end
 
 function ps.getGangName(source)
-    local player = ps.getPlayer(source)
-    return player.PlayerData.gang.name
+   -- local player = ps.getPlayer(source)
+   -- return player.PlayerData.gang.name
 end
 
 function ps.getGangData(source, data)
-    local player = ps.getPlayer(source)
-    return player.PlayerData.gang[data]
+   -- local player = ps.getPlayer(source)
+   -- return player.PlayerData.gang[data]
 end
 
 function ps.getGangGrade(source)
-    local player = ps.getPlayer(source)
-    return player.PlayerData.gang.grade
+   -- local player = ps.getPlayer(source)
+   -- return player.PlayerData.gang.grade
 end
 
 function ps.getGangGradeLevel(source)
-    local player = ps.getPlayer(source)
-    return player.PlayerData.gang.grade.level
+   -- local player = ps.getPlayer(source)
+   -- return player.PlayerData.gang.grade.level
 end
 
 function ps.getGangGradeName(source)
-    local player = ps.getPlayer(source)
-    return player.PlayerData.gang.grade.name
+   -- local player = ps.getPlayer(source)
+   -- return player.PlayerData.gang.grade.name
 end
 
 function ps.isLeader(source)
-    local player = ps.getPlayer(source)
-    return player.PlayerData.gang.isboss
+    --local player = ps.getPlayer(source)
+    --return player.PlayerData.gang.isboss
 end
 
 function ps.getAllGangs()
-     local gangsArray = {}
-    for k, v in pairs(qbx:GetGangs()) do
-        table.insert(gangsArray, k)
-    end
-    return gangsArray
+    --local gangsArray = {}
+    --for k, v in pairs(qbx:GetGangs()) do
+    --    table.insert(gangsArray, k)
+    --end
+    --return gangsArray
 end
 
 -- End PR Plz
