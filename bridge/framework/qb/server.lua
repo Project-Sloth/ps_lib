@@ -175,6 +175,12 @@ function ps.setJob(source, jobName, rank)
     player.Functions.SetJob(job.name, rank or 0)
 end
 
+function ps.setDuty(source, duty)
+    local player = ps.getPlayer(source)
+    if not player then return end
+    player.Functions.SetJobDuty(duty)
+end
+
 function ps.addMoney(source,type, amount, reason)
     local player = ps.getPlayer(source)
     if not type then type = 'cash' end

@@ -262,6 +262,13 @@ function ps.setJob(source, jobName, rank)
     return true
 end
 
+function ps.setJobDuty(source, duty)
+    local player = ps.getPlayer(source)
+    if not player then return false end
+    player.setJob(player.job.name, player.job.grade, duty)
+    return false
+end
+
 function ps.addMoney(source,type, amount, reason)
     local player = ps.getPlayer(source)
     if not player then return end

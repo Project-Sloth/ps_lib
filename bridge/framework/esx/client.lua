@@ -66,6 +66,11 @@ AddEventHandler("esx_status:onTick", function(data)
     esxMetadata.hunger = hunger
     esxMetadata.stress = stress
 end)
+
+RegisterNetEvent('esx:setJob', function(job)
+    ESX.PlayerData.job = job
+end)
+
 ---@return: table
 ---@DESCRIPTION: Returns the player's data, including job, gang, and metadata.
 function ps.getPlayerData()
@@ -132,16 +137,22 @@ end
 --- @return: table
 --- @DESCRIPTION: Returns the player's job information, including name, type, and duty status.
 function ps.getJob()
-   return ESX.PlayerData.job
+    return ESX.PlayerData.job
 end
 
 --- @RETURN: string
 --- @DESCRIPTION: Returns the name of the player's job.
 --- @example: ps.getJobName()
 function ps.getJobName()
-    return ps.getJob()['name']
+    return ps.getJob().name
 end
 
+function ps.getJobDuty()
+    return ps.getJob().onDuty
+end
+function ps.getJobLabel()
+    return ps.getJob().label
+end
 --- @RETURN: string
 --- @DESCRIPTION: Returns the type of the player's job.
 --- @example: ps.getJobType()
@@ -156,12 +167,19 @@ function ps.isBoss()
     return ps.getJob().grade_name == 'boss'
 end
 
+function ps.defaultDuty()
+    local job = ps.getJob()
+    if job.name == 'police' or job.name == 'ambulance' or job.name == 'mechanic' then
+        return false
+    end
+    return true
+end
+
+
 --- @RETURN: boolean
 --- @DESCRIPTION: Checks if the player is on duty for their job.
 --- @example: if ps.getJobDuty() then TriggerEvent('qb-phone:client:openJobPhone') end
-function ps.getJobDuty()
-    return ps.getJob().onDuty
-end
+
 
 --- @PARAM: data: string
 --- @RETURN: any
@@ -260,3 +278,8 @@ exports('getCoords', ps.getCoords)
 exports('getMoneyData', ps.getMoneyData)
 exports('getMoney', ps.getMoney)
 exports('getAllMoney', ps.getAllMoney)
+
+ps.registerCallback('ps:esx:jobDuty', function(job)
+    ESX.PlayerData.job = job
+    return true
+end)
