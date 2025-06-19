@@ -80,6 +80,7 @@ end
 
 function ps.getIdentifier(source)
     local Player = ps.getPlayer(source)
+    if not Player then return nil end
     return Player.getIdentifier()
 end
 
