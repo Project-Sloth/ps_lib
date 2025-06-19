@@ -275,3 +275,33 @@ end
 --[[ ps.ORM.cleanCache(function(removedCount)
     print("Expired cache entries removed:", removedCount)
 end) ]]
+
+--- Fetch rows with pagination support (LIMIT + OFFSET), optionally with conditions and ordering.
+---@param table string Table name.
+---@param conditions table|nil Optional WHERE conditions.
+---@param orderBy string|nil Optional column to order by.
+---@param orderDirection string|nil 'ASC' or 'DESC'. Default: 'ASC'
+---@param limit number Number of rows per page.
+---@param offset number Number of rows to skip (i.e. (page - 1) * limit).
+---@param cb fun(results: table, params: table, err: any) Callback.
+function ps.ORM.paginate(table, conditions, orderBy, orderDirection, limit, offset, cb)
+    local query = 'SELECT * FROM ' .. table
+    local whereClause, params = buildWhereClause(conditions)
+
+    query = query .. whereClause
+
+    if orderBy then
+        query = query .. ' ORDER BY ' .. orderBy .. ' ' .. (orderDirection or 'ASC')
+    end
+
+    query = query .. ' LIMIT ? OFFSET ?'
+    table.insert(params, limit)
+    table.insert(params, offset)
+
+    MySQL.query(query, params, function(result, err)
+        if err then 
+            return cb(nil, params, err)
+        end
+        cb(result, params, nil)
+    end)
+end
