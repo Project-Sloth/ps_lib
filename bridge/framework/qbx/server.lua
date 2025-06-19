@@ -16,12 +16,13 @@ function ps.getOfflinePlayer(identifier)
 end
 
 function ps.getIdentifier(source)
-    local player = ps.getPlayer(source)
+    local player = ps.getPlayer(tonumber(source))
     return player.PlayerData.citizenid
 end
 
 function ps.getSource(identifier)
-    return qbx:GetSource(identifier)
+    local src = ps.getPlayerByIdentifier(identifier).PlayerData.source
+    return src
 end
 
 function ps.getPlayerName(source)
@@ -141,8 +142,7 @@ end
 function ps.getJobCount(jobName)
     local count = 0
     for _, player in pairs(ps.getAllPlayers()) do
-        local playerData = ps.getPlayerData(player)
-        if playerData.job and playerData.job.name == jobName and ps.getJobDuty(player) then
+        if player.job and player.job.name == jobName and ps.getJobDuty(player.source) then
             count = count + 1
         end
     end
@@ -169,8 +169,23 @@ function ps.setJob(source, jobName, jobGrade)
     if not source or not jobName or not jobGrade then
         return false
     end
-    ps.debug('Setting job for ' .. source .. ' to ' .. jobName .. ' with grade ' .. jobGrade)
-    return qbx:SetJob(source, jobName, jobGrade)
+    local player = ps.getPlayer(source)
+    local job = qbx:GetJobs()[jobName]
+    player.PlayerData.job = {
+        name = jobName,
+        label = job.label,
+        isboss = job.grades[jobGrade].isboss or false,
+        onduty = job.defaultDuty or false,
+        payment = job.grades[jobGrade].payment or 0,
+        type = job.type,
+        grade = {
+            name = job.grades[jobGrade].name,
+            level = jobGrade
+        }
+    }
+    TriggerEvent('QBCore:Server:OnJobUpdate', player.PlayerData.source, player.PlayerData.job)
+    TriggerClientEvent('QBCore:Client:OnJobUpdate', player.PlayerData.source, player.PlayerData.job)
+    exports.qbx_core:SetPlayerData(player.PlayerData.citizenid, 'job', player.PlayerData.job)
 end
 
 function ps.addMoney(source, type, amount, reason)
@@ -266,7 +281,7 @@ function ps.vehicleOwner(licensePlate)
 end
 
 function ps.jobExists(jobName)
-    return QBCore.Shared.Jobs[jobName] ~= nil
+    return exports.qbx_core:GetJobs()[jobName] ~= nil
 end
 
 function ps.hasPermission(source, permission)
@@ -275,3 +290,7 @@ function ps.hasPermission(source, permission)
     end
 end
 
+function ps.setJobDuty(source, duty)
+    local identifier = ps.getIdentifier(source)
+    exports.qbx_core:SetJobDuty(identifier, duty)
+end
