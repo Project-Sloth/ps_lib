@@ -172,10 +172,10 @@ function ps.setJob(source, jobName, rank)
     if not player then return end
     local job = QBCore.Shared.Jobs[jobName]
     if not job then return end
-    player.Functions.SetJob(job.name, rank or 0)
+    player.Functions.SetJob(jobName, rank or 0)
 end
 
-function ps.setDuty(source, duty)
+function ps.setJobDuty(source, duty)
     local player = ps.getPlayer(source)
     if not player then return end
     player.Functions.SetJobDuty(duty)
@@ -212,7 +212,7 @@ function ps.getSharedJob(jobName)
     return QBCore.Shared.Jobs[jobName]
 end
 function ps.getSharedJobGrade(jobName, grade)
-   return QBCore.Shared.Jobs[jobName].grades[grade]
+   return QBCore.Shared.Jobs[jobName].grades[tostring(grade)]
 end
 
 function ps.getGang(source)
