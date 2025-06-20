@@ -3,7 +3,6 @@ Config = {}
 Config.Notify = "ox" -- qb, ox, ps
 Config.Progressbar = "oxcir" -- qb, oxcir, oxbar
 Config.Logs = "fivemerr" -- fivemerr or fivemanage 
-Config.Language = "en" -- en or de or fr or es or pt or tr
 ps = {}
 
 QBCore, ESX, qbx, langs = nil, nil, nil
