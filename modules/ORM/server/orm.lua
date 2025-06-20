@@ -214,35 +214,40 @@ function ps.ORM.update(table, data, conditions, cb)
     end)
 end
 
---- Inserts a new record into a table.
---- Race condition safe for write operations.
----@param table string Table name.
----@param data table Data to insert.
----@param cb fun(insertId: number, params: table) Callback function.
-function ps.ORM.create(table, data, cb)
-    acquireLock(table)
-    local fields, values, params = '', '', {}
+-- Create a record in a table
+-- @param tableName string
+-- @param data table (key-value pairs for columns)
+-- @param callback function(insertId)
+function ps.ORM.create(tableName, data, callback)
+    acquireLock(tableName)
+
+    local columns = {}
+    local placeholders = {}
+    local values = {}
 
     for k, v in pairs(data) do
-        fields = fields .. k .. ', '
-        values = values .. '?, '
-        table.insert(params, v)
+        table.insert(columns, k)
+        table.insert(placeholders, "?")
+        table.insert(values, v)
     end
 
-    fields = fields:sub(1, -3) -- Remove trailing comma and space.
-    values = values:sub(1, -3)
+    local query = string.format(
+        "INSERT INTO %s (%s) VALUES (%s)",
+        tableName,
+        table.concat(columns, ", "),
+        table.concat(placeholders, ", ")
+    )
 
-    local query = 'INSERT INTO ' .. table .. ' (' .. fields .. ') VALUES (' .. values .. ')'
+    MySQL.insert(query, values, function(insertId, err)
+        clearCache(tableName)
+        releaseLock(tableName)
 
-    MySQL.insert(query, params, function(insertId, err)
-        releaseLock(table)
-        if err then 
-            return cb(nil, params, err)
+        if callback then
+            callback(insertId, err)
         end
-        clearCache(table)
-        cb(insertId, params, nil)
     end)
 end
+
 
 --- Deletes records matching conditions.
 --- Race condition safe for write operations.
