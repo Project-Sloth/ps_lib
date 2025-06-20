@@ -132,6 +132,6 @@ local psScripts = {
 }
 AddEventHandler('onResourceStart', function(resourceName)
     if psScripts[resourceName] then
-        loadLangsInternal(resourceName, Config.Language)
+        loadLangsInternal(resourceName, langs)
     end
 end)
