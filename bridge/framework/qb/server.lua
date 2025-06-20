@@ -209,10 +209,13 @@ function ps.getMoney(source, type)
 end
 
 function ps.getSharedJob(jobName)
-    return QBCore.Shared.Jobs[jobName]
+    return QBCore.Shared.Jobs[jobName] or nil
 end
+
 function ps.getSharedJobGrade(jobName, grade)
-   return QBCore.Shared.Jobs[jobName].grades[tostring(grade)]
+    local job = QBCore.Shared.Jobs[jobName]
+    if not job then return nil end
+   return job.grades[tostring(grade)] or nil
 end
 
 function ps.getGang(source)
