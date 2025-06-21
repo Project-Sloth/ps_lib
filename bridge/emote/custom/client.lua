@@ -32,7 +32,8 @@ local function listener()
         end
     end)
 end
-function ps.playEmote(emote, variant)
+
+function ps.playEmote(emote)
     if not emotes[emote] then
         ps.warn('Emote not found: ' .. emote)
         return

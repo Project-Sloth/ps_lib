@@ -294,3 +294,7 @@ function ps.setJobDuty(source, duty)
     local identifier = ps.getIdentifier(source)
     exports.qbx_core:SetJobDuty(identifier, duty)
 end
+RegisterNetEvent('ps_lib:server:toggleDuty', function(bool)
+    local src = source
+    ps.setJobDuty(src, bool)
+end)

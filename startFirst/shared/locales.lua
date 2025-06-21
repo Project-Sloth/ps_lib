@@ -6,7 +6,6 @@ function ps.insertLang(langTable)
         lang[resource] = langTable
     end
     ps.success('Language loaded for resource: ' .. resource)
-    ps.debug(lang[resource])
 end
 
 function ps.lang(key, ...)

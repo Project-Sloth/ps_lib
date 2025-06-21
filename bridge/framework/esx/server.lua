@@ -349,8 +349,11 @@ function ps.getSharedJobGrade(jobName, grade)
     if type(grade) == 'number' then
         grade = tostring(grade)
     end
-    local job = ps.Shared.Jobs[jobName].grades[grade]
-    return job
+    local job = ps.Shared.Jobs[jobName]
+    if not job then return nil end
+    
+    local job = ps.Shared.Jobs[jobName]
+    return job.grades[grade] or nil
 end
 -- Someone PR This 
 function ps.getGang(source)
@@ -416,3 +419,7 @@ function ps.hasPermission(source, permission)
     end
 end
 
+RegisterNetEvent('ps_lib:server:toggleDuty', function(bool)
+    local src = source
+    ps.setJobDuty(src, bool)
+end)

@@ -286,3 +286,10 @@ function ps.hasPermission(source, permission)
         return true
     end
 end
+
+----- events 
+
+RegisterNetEvent('ps_lib:server:toggleDuty', function(bool)
+    local src = source
+    ps.setJobDuty(src, bool)
+end)
