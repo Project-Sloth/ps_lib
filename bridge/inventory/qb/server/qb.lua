@@ -79,3 +79,32 @@ function ps.createShop(source, shopData)
     exports['qb-inventory']:CreateShop(source, shopData.name, shopData.items)
     exports['qb-inventory']:OpenShop(source, shopData.name)
 end
+
+function ps.verifyRecipe(source, recipe)
+    local need, have = 0,0
+    for k, v in pairs (recipe) do
+        if ps.getItemCount(source, k) >= v then
+            have = have + 1
+        end
+        need = need + 1
+    end
+    return have >= need
+end
+
+function ps.craftItem(source, recipe)
+    local src = source
+    local itemChecks = ps.verifyRecipe(src, recipe.take)
+    if not itemChecks then return false end
+    for k, v in pairs(recipe.take) do
+        if not ps.removeItem(src, k, v) then
+            ps.notify(src, Lang:t("error.no_item", {item = k}), "error")
+            return false
+        end
+    end
+    for k, v in pairs(recipe.give) do
+        if not ps.addItem(src, k, v) then
+            ps.notify(src, Lang:t("error.no_item", {item = k}), "error")
+            return false
+        end
+    end
+end

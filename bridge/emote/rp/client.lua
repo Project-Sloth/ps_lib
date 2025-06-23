@@ -20,6 +20,16 @@ local emotes = {
             EmoteMoving = true
         }
     },
+    ['openDoor'] = {
+        dict = "anim@heists@keycard@",
+        anim = 'exit',
+    },
+    ['uncuff'] = {
+        dict = "mp_arresting",
+        anim = "a_uncuff",
+        
+    },
+   
 }
 
 
@@ -28,7 +38,8 @@ local emotes = {
 ---@param variant string? Optional variant for the emote
 
 function ps.playEmote(emote, variant)
-    if emotes[emote] then 
+    ps.debug(emote, emotes[emote])
+    if emotes[emote] then
         ps.playAnim(emote)
         IsInEmote = true
         return
@@ -38,10 +49,18 @@ end
 
 -- Cancel an emote
 function ps.cancelEmote()
-    for emote, prop in pairs(props) do
-        if DoesEntityExist(prop) then
-            DeleteEntity(prop)
-            props[emote] = nil
+    if IsInEmote then
+        if #props > 0 then
+            for emote, prop in pairs(props) do
+                if DoesEntityExist(prop) then
+                    DeleteEntity(prop)
+                    props[emote] = nil
+                    IsInEmote = false
+                    ClearPedTasks(PlayerPedId())
+                    return
+                end
+            end
+        else
             IsInEmote = false
             ClearPedTasks(PlayerPedId())
             return
@@ -55,8 +74,8 @@ local function listener()
     CreateThread(function()
         while IsInEmote do
             local ped = PlayerPedId()
-            if not IsEntityPlayingAnim(ped, emotes['tablet2'].dict, emotes['tablet2'].anim, 3) then
-                ps.cancelEmote(true)
+            if IsControlPressed(0, 73) or IsControlPressed(0, 177) then
+                ps.cancelEmote()
             end
             Wait(0)
         end
@@ -95,6 +114,15 @@ function ps.playAnim(emote)
             anim.AnimationOptions.PropPlacement[6] or 0.0,
             true, true, false, true, 1, true
         )
+        listener()
+        TaskPlayAnim(
+            PlayerPedId(),
+            anim.dict,
+            anim.anim,
+            8.0, -8.0, -1, 49, 0, false, false, false
+        )
+    else
+        IsInEmote = true
         listener()
         TaskPlayAnim(
             PlayerPedId(),

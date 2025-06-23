@@ -18,5 +18,6 @@ end
 function ps.hasItem(item, amount)
     if not item then return false end
     if not amount then amount = 1 end
+
     return exports['qb-inventory']:HasItem(item, amount)
 end

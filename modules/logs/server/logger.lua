@@ -22,10 +22,12 @@ if Config.Logs == 'fivemerr' then
     end
 end
 
-if Config.Logs == 'fivemanage' then 
+if Config.Logs == 'fivemanage' then
+    
     function ps.log(dataSet, level, message, meta)
         exports.fmsdk:Log(dataSet, level, message, meta)
     end
+
     function ps.logImage(source, name, description)
         if not source then return end
         if not name then name = ps.getPlayerName(source) end

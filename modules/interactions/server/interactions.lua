@@ -16,24 +16,3 @@ function ps.notify(source, text, type, time)
     end
     return {source, text, type, time}
 end
-
-RegisterCommand('testServer', function(source, args, rawCommand)
-    local src = source
-    local id = ps.getIdentifier(src)
-    local table = {
-        --player = ps.getPlayer(src),
-        --Id = ps.getIdentifier(src),
-        --pbyId = ps.getPlayerByIdentifier(id),
-        --offline = ps.getOfflinePlayer(id),
-        --sour = ps.getSource(id),
-        --name = ps.getPlayerName(src),
-        --nameByID = ps.getPlayerNameByIdentifier(id),
-        --data = ps.getPlayerData(src),
-        meta = ps.getMetadata(src, 'hunger'),
-        char = ps.getCharInfo(src, 'birthdate'),
-        job = ps.getJob(src),
-        jobName = ps.getJobName(src),
-        jobDuty = ps.getJob(src).onDuty,
-    }
-    ps.debug('Server Command', table)
-end, false)

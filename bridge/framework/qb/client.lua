@@ -144,7 +144,7 @@ end
 
 function ps.getGang()
     local player = ps.getPlayerData()
-    return player.job
+    return player.gang
 end
 
 --- @RETURN: string
@@ -155,10 +155,6 @@ function ps.getGangName()
     return job.name
 end
 
-function ps.defaultDuty(job)
-    local job = ps.getJob()
-    return job.duty
-end
 --- @RETURN: string
 --- @DESCRIPTION: Returns if the player is a gang boss.
 --- @example: ps.isLeader()
@@ -179,6 +175,7 @@ end
 --- @RETURN: boolean
 --- @DESCRIPTION: Checks the coords of the player.
 --- @example: if ps.getCoords() then  end
+
 function ps.getCoords()
     return GetEntityCoords(ps.ped)
 end

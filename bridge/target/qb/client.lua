@@ -40,6 +40,7 @@ end
 
 function ps.circleTarget(name, location, size, options)
     if not name then return end
+    if not size then size = 1.5 end
     local resource = GetInvokingResource()
     if not zones[resource] then
         zones[resource] = {}
@@ -60,7 +61,7 @@ function ps.circleTarget(name, location, size, options)
     zones[resource][name] = name
     exports['qb-target']:AddCircleZone(name, location, size, {
         name = name,
-        heading = size.rotation,
+        heading = size or 180.0,
         debugPoly = false,
         useZ = true,
     }, {

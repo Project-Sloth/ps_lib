@@ -121,15 +121,3 @@ function ps.minigame(type, values)
         return success
     end
 end
-
-RegisterCommand('testClient', function()
-    ps.debug(ps.ped, ps.charinfo, ps.name, ps.identifier)
-    ps.debug('Loaded static client data properly')
-    local data1 = {
-        vehicle = ps.vehicleData(),
-        dead = ps.isDead(),
-        job = ps.getJob(),
-        jobType = ps.getJobType(),
-    }
-    ps.debug(data1)
-end, false)

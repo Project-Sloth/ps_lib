@@ -19,6 +19,14 @@ local emotes = {
             EmoteMoving = true
         }
     },
+    ['openDoor'] = {
+        dict = "anim@heists@keycard@",
+        anim = 'exit',
+        AnimationOptions = {
+            EmoteMoving = false,
+            EmoteLoop = false
+        }
+    }
 }
 
 local function listener()

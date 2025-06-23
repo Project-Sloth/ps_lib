@@ -1,6 +1,5 @@
 
 local function canAccess(source, terms)
-    ps.debug(('Checking access for player %s with terms: %s'):format(source, json.encode(terms)))
     if terms.admin then
         if not IsPlayerAceAllowed(source, 'command') then
             ps.debug(('Player %s does not have permission to use admin commands'):format(source))
@@ -82,10 +81,12 @@ function ps.registerCommand(name, terms, func)
         ps.debug('ps.registerCommand: name is required')
         return
     end
+
     RegisterCommand(name, function(source, args, rawCommand)
         if not canAccess(source, terms) then return end
         func(source, args, rawCommand)
     end, false)
+
     local suggest = {
         name = '/'..name,
         help = terms.help or '',
@@ -93,23 +94,8 @@ function ps.registerCommand(name, terms, func)
     }
    TriggerClientEvent('chat:addSuggestions', -1,suggest)
 end
-ps.registerCommand('ps-testCommandp', {
-    admin = true,
-    job = {'police', 'mechanic'},
-    jobRank = 2,
-    gangRank = 3,
-    gang = 'ballas',
-    help = 'This is a test command for the Player Script framework.',
-    description = {
-        {
-            name = 'info',
-            help = 'This is a test command for the Player Script framework.'
-        }
-    }
-}, function(source, args, rawCommand)
-    ps.debug(('Player %s executed ps-testCommand with args: %s'):format(source, table.concat(args, ', ')))
-    TriggerClientEvent('ps:client:testCommandResponse', source, 'Command executed successfully!')
-end)
+
+
 
 function generateCacheKey(length)
     local charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+|*-=[]{};':,.<>?/"
