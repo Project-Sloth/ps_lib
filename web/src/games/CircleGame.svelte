@@ -135,5 +135,14 @@
 </script>
 
 <div class="absolute inset-0 flex items-center justify-center" style="pointer-events: none; z-index: 100;">
-    <canvas id="circle" class="w-auto h-auto" style="display: none;"></canvas>
+    <div class="circle-shadow">
+        <canvas id="circle" class="w-auto h-auto" style="display: none;"></canvas>
+    </div>
 </div>
+
+<style>
+    .circle-shadow {
+        filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.8));
+        border-radius: 50%;
+    }
+</style>
