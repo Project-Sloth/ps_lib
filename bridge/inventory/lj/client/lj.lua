@@ -36,3 +36,10 @@ function ps.hasItem(item, amount)
     if not amount then amount = 1 end
     return QBCore.Functions.HasItem(item, amount)
 end
+
+RegisterNetEvent('ps_lib:client:createShop', function(shopData)
+    if not shopData.name then shopData.name = 'Shop' end
+    if not shopData.slots then shopData.slots = 50 end
+    if not shopData.maxweight then shopData.maxweight = 100000 end
+     TriggerServerEvent("inventory:server:OpenInventory", "shop", "Shop"..math.random(1, 99), shopData)
+end)

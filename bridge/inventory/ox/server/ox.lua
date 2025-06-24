@@ -41,3 +41,77 @@ function ps.openInventoryById(source, playerid)
     if not playerid then playerid = false end
     TriggerClientEvent('ps_lib:client:openInventoryox', source)
 end
+
+function ps.clearInventory(source, identifier)
+    if not identifier then return end
+    exports.ox_inventory:ClearInventory(identifier, '')
+end
+
+function ps.clearStash(source, identifier)
+    if not identifier then return end
+    exports.ox_inventory:ClearInventory(identifier, '')
+end
+
+function ps.getItemCount(source, item)
+    if not source or not item then return end
+    return exports.ox_inventory:GetItemCount(source, item)
+end
+
+function ps.getItemByName(source, item)
+    if not source or not item then return end
+    return exports.ox_inventory:GetItem(source, item)
+end
+
+function ps.getItemsByNames(source, items)
+    if not source or not items then return end
+    local itemList = {}
+    for _, item in ipairs(items) do
+        local itemData = exports.ox_inventory:GetItem(source, item)
+        if itemData then
+            itemList[item] = itemData
+        end
+    end
+    return itemList
+end
+
+function ps.createShop(source, shopData)
+    if not shopData.name then shopData.name = 'Shop' end
+    if not shopData.slots then shopData.slots = 50 end
+    if not shopData.maxweight then shopData.maxweight = 100000 end
+    exports.ox_inventory:RegisterShop(shopData.name, {
+        name = shopData.name,
+        inventory = shopData.items or {},
+    })
+    TriggerClientEvent('ps_lib:client:createShop', source, shopData.name)
+end
+
+function ps.verifyRecipe(source, recipe)
+    if not source or not recipe then return false end
+    local requiredItems = recipe.requiredItems or {}
+    for item, amount in pairs(requiredItems) do
+        if not ps.hasItem(source, item, amount) then
+            ps.notify(source, 'You need ' .. amount .. ' ' .. ps.getLabel(item) .. ' to craft this.', 'error')
+            return false
+        end
+    end
+    return true
+end
+
+function ps.craftItem(source, recipe)
+    if not source or not recipe then return false end
+    local itemChecks = ps.verifyRecipe(source, recipe.take)
+
+    if not itemChecks then return false end
+
+    for item, amount in pairs(recipe.take) do
+        ps.removeItem(source, item, amount)
+    end
+
+    for k, v in pairs(recipe.give) do
+        if not ps.addItem(source, k, v) then
+            ps.notify(source, 'Failed to add ' .. v .. ' ' .. ps.getLabel(k), 'error')
+            return false
+        end
+    end
+    return true
+end

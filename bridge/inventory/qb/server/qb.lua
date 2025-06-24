@@ -65,7 +65,7 @@ function ps.getItemsByNames(identifier, items)
     for _, item in ipairs(items) do
         local itemData = exports['qb-inventory']:GetItemByName(identifier, item)
         if itemData then
-            table.insert(itemList, itemData)
+            itemList[item] = itemData
         end
     end
     return itemList
