@@ -6,7 +6,8 @@
     let txtcolor = "#ffffff", bgcolor = "#2B312B", bgcolor2 = "#068f6d", bgcolor3 = "#00ff00";
     let key_to_press, g_start, g_end, animation_loop;
     let needed = 4, streak = 0, circle_started = false, time = 2;
-
+    let direction;
+    let current_round = 0;
     function getRandomInt(min, max) {
         min = Math.ceil(min);
         max = Math.floor(max);
@@ -38,27 +39,50 @@
     }
 
     function draw() {
-        if (typeof animation_loop !== undefined) clearInterval(animation_loop);
-        g_start = getRandomInt(20, 40) / 10;
-        g_end = getRandomInt(5, 10) / 10;
-        g_end = g_start + g_end;
-        degrees = 0;
-        new_degrees = 360;
-        key_to_press = '' + getRandomInt(1, 4);
-        animation_loop = setInterval(animate_to, time);
+            if (typeof animation_loop !== "undefined") clearInterval(animation_loop);
+
+            g_start = getRandomInt(20, 40) / 10;
+            g_end = getRandomInt(5, 10) / 10;
+            g_end = g_start + g_end;
+
+            key_to_press = '' + getRandomInt(1, 4);
+
+            // Randomly choose direction
+            direction = Math.random() > 0.5 ? "clockwise" : "counter-clockwise";
+
+            if (direction === "clockwise") {
+                degrees = 0;
+                new_degrees = 360;
+            } else {
+                degrees = 360;
+                new_degrees = 0;
+            }
+
+            animation_loop = setInterval(() => animate_to(direction), time);
     }
 
-    function animate_to() {
-        if (degrees >= new_degrees) {
-            CircleFail();
-            return;
+    function animate_to(dir) {
+        if (dir === "clockwise") {
+            if (degrees >= new_degrees) {
+                CircleFail();
+                return;
+            }
+            degrees += 2;
+        } else {
+            if (degrees <= new_degrees) {
+                CircleFail();
+                return;
+            }
+            degrees -= 2;
         }
-        degrees += 2;
+
         StartCircle();
     }
 
     function correct() {
         streak += 1;
+        current_round += 1;
+
         if (streak == needed) {
             clearInterval(animation_loop);
             endGame(true);

@@ -1,9 +1,11 @@
-AddEventHandler('playerSpawned',function()
+
+AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
     ps.ped = PlayerPedId()
     ps.charinfo = QBX.PlayerData.charinfo
     ps.citizenid = QBX.PlayerData.citizenid
     ps.name = ps.charinfo.firstname .. " " .. ps.charinfo.lastname
 end)
+
 AddEventHandler('onResourceStop', function(resourceName)
     if resourceName == GetCurrentResourceName() then
         ps.ped = nil
@@ -15,10 +17,10 @@ end)
 AddEventHandler('onResourceStart', function(resourceName)
     if resourceName == GetCurrentResourceName() then
         if PlayerPedId() then
-               ps.ped = PlayerPedId()
-                ps.charinfo = QBX.PlayerData.charinfo
-                ps.citizenid = QBX.PlayerData.citizenid
-                ps.name = ps.charinfo.firstname .. " " .. ps.charinfo.lastname
+            ps.ped = PlayerPedId()
+            ps.charinfo = QBX.PlayerData.charinfo
+            ps.citizenid = QBX.PlayerData.citizenid
+            ps.name = ps.charinfo.firstname .. " " .. ps.charinfo.lastname
         end
     end
 end)

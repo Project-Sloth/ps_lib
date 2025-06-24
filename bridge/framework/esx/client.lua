@@ -35,7 +35,7 @@ AddEventHandler('onResourceStart', function(resourceName)
             age = playerData.dateofbirth,
             gender = playerData.sex
         }
-                ps.name = playerData.firstName .. " " .. playerData.lastName
+        ps.name = playerData.firstName .. " " .. playerData.lastName
         ps.identifier = playerData.identifier
     end
 end)

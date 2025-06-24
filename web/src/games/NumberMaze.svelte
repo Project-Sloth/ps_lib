@@ -214,25 +214,28 @@
 <svelte:window on:keydown|preventDefault={handleKeyEvent} />
 <div class="maze-game-base">
     <div class="time-left">
-        <i class="fa-solid fa-clock ps-text-lightgrey clock-icon"></i>
-        <p class="{gameTimeRemaining !== 0 ? 'game-timer-var' : 'mr-1'}">{gameTimeRemaining} </p> time remaining
+        <i class="fa-solid fa-clock clock-icon"></i>
+        <p class="{gameTimeRemaining !== 0 ? 'game-timer-var' : 'mr-1'}">{gameTimeRemaining}</p>
+        time remaining
     </div>
+
     <div id="maze-game-container" class="maze-game-container">
         {#each allCubes as cube}
             <div 
-                id={'each-cube-'+cube.cubeIndex} on:click={() => handleCubeClick(cube)}
+                id={'each-cube-'+cube.cubeIndex} 
+                on:click={() => handleCubeClick(cube)}
                 class="each-cube {cube.classList}
                     {[0, numberOfCubes - 1].includes(cube.cubeIndex) ? 'start-dest-cube' : ''} 
                     {!stopBlinking && [blinkingIndex, blinkingIndex * 7].includes(cube.cubeIndex) ? 'blinking-cube' : ''}
                 "
             >
                 {#if cube.cubeIndex === 0}
-                    <i class="fa-solid fa-ethernet"></i>
+                    <i class="fa-solid fa-ethernet icon-start"></i>
                 {:else if cube.cubeIndex === numberOfCubes - 1}
-                    <i class="fa-solid fa-network-wired"></i>
+                    <i class="fa-solid fa-network-wired icon-end"></i>
                 {:else}
                     {#if !stopBlinking || displayCubeNumbers}
-                        <p>{ cube.cubeValue }</p>
+                        <span class="cube-number">{ cube.cubeValue }</span>
                     {/if}
                 {/if}
             </div>

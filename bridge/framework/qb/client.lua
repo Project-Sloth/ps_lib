@@ -1,11 +1,12 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 
-AddEventHandler('playerSpawned',function()
+AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
     ps.ped = PlayerPedId()
     ps.charinfo = QBCore.Functions.GetPlayerData().charinfo
     ps.citizenid = QBCore.Functions.GetPlayerData().citizenid
     ps.name = ps.charinfo.firstname .. " " .. ps.charinfo.lastname
 end)
+
 AddEventHandler('onResourceStop', function(resourceName)
     if resourceName == GetCurrentResourceName() then
         ps.ped = nil
