@@ -3,24 +3,24 @@ local zones = {}
 function ps.boxTarget(name, location, size, options)
     if not name then return end
     local resource = GetInvokingResource()
+    size = {
+        length = size and size.length or 1.5,
+        width = size and size.width or 1.5,
+        height = size and size.height or 1.5,
+        rotation = size and size.rotation or 180.0
+    }
     if not zones[resource] then
         zones[resource] = {}
     end
-    size = {
-        length = size.length or 1.0,
-        width = size.width or 1.0,
-        height = size.height or 1.0,
-        rotation = size.rotation or 180.0,
-    }
     local compat = {}
     for k, v in pairs(options) do
         table.insert(compat,{
 		    icon = v.icon or "fa-solid fa-eye",
-            label = v.label,
+            label = v.label or "Interact",
             event = v.event or nil,
             action = v.action or nil,
 		    onSelect = v.action or nil,
-            data = v.data,
+            data = v.data or nil,
             canInteract = v.canInteract or nil,
             distance = 2.0,
 	    })
