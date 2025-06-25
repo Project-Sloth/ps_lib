@@ -40,6 +40,7 @@ files {
   'web/build/index.html',
   'web/build/**/*',
   'bridge/**/*',
+  'locales/*.json',
 }
 
 ui_page 'web/build/index.html'

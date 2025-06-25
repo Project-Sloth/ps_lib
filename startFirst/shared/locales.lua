@@ -8,41 +8,89 @@ function ps.insertLang(langTable)
     ps.success('Language loaded for resource: ' .. resource)
 end
 
+local function check(tbl, key)
+    local keys = {}
+    for k in string.gmatch(key, "[^.]+") do
+        table.insert(keys, k)
+    end
+
+    local current = tbl
+    for _, k in ipairs(keys) do
+        if type(current) ~= "table" or current[k] == nil then
+            return nil
+        end
+        current = current[k]
+    end
+    return current
+end
+
 function ps.lang(key, ...)
     local resource = GetInvokingResource()
-    if lang[resource] and lang[resource][key] then
-        return string.format(lang[resource][key], ...)
+    local value = nil
+
+    if lang[resource] then
+        value = check(lang[resource], key)
+    end
+
+    if value then
+        local args = {...}
+        if #args > 0 then
+            return string.format(value, table.unpack(args))
+        end
+        return value
     else
-        -- Wait for the language to load
-        -- This is a blocking call, so it will wait until the language is loaded or timeout after 60 seconds
         local time = 60
         repeat
             Wait(1000)
             time = time - 1
-        until time == 0 or lang[resource] and lang[resource][key]
-        if time > 0 then
-            return string.format(lang[resource][key], ...)
+            if lang[resource] then
+                value = check(lang[resource], key)
+                if value then
+                    return string.format(value, ...)
+                end
+            end
+        until time <= 0
+
+        if value then
+            return string.format(value, ...)
+        else
+            return '[Missing translation: '..key..']'
         end
-        return 'Need to load language first: ' .. key
     end
 end
 
 function ps.locale(key, ...)
-    local resource = GetInvokingResource()
-    if lang[resource] and lang[resource][key] then
-        return string.format(lang[resource][key], ...)
+     local resource = GetInvokingResource()
+    local value = nil
+
+    if lang[resource] then
+        value = check(lang[resource], key)
+    end
+
+    if value then
+        local args = {...}
+        if #args > 0 then
+            return string.format(value, table.unpack(args))
+        end
+        return value
     else
-        -- Wait for the language to load
-        -- This is a blocking call, so it will wait until the language is loaded or timeout after 60 seconds
         local time = 60
         repeat
             Wait(1000)
             time = time - 1
-        until time == 0 or lang[resource] and lang[resource][key]
-        if time > 0 then
-            return string.format(lang[resource][key], ...)
+            if lang[resource] then
+                value = check(lang[resource], key)
+                if value then
+                    return string.format(value, ...)
+                end
+            end
+        until time <= 0
+
+        if value then
+            return string.format(value, ...)
+        else
+            return '[Missing translation: '..key..']'
         end
-        return 'Need to load language first: ' .. key
     end
 end
 
@@ -118,7 +166,7 @@ local function loadLangsInternal(script, language)
         return false
     end
     lang[resource] = decoded
-    ps.success('Language loaded for resource: ' .. resource)
+    ps.success('Language loaded for resource: ' .. resource .. ' Language: ' ..  language)
     return true
 end
 
@@ -128,9 +176,13 @@ local psScripts = {
     ['ps-mdt'] = true,
     ['ps-dispatch'] = true,
     ['ps-multijob'] = true,
+    ['ps-drugprocessing'] = true,
+   
 }
 AddEventHandler('onResourceStart', function(resourceName)
     if psScripts[resourceName] then
         loadLangsInternal(resourceName, langs)
     end
 end)
+
+loadLangsInternal('ps_lib', langs)

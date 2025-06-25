@@ -4,8 +4,16 @@ local function handleException(reason, value)
     return reason
 end
 local resources = {}
+resources['ps_lib'] = {
+    debug = true,
+    info = true,
+    error = true,
+    warn = true,
+    success = true
+}
 ---@param ... any
 ---@return string
+
 local function formatArgs(...)
     local args = {...}
     local formatted = {}

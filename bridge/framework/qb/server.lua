@@ -291,5 +291,10 @@ end
 
 RegisterNetEvent('ps_lib:server:toggleDuty', function(bool)
     local src = source
-    ps.setJobDuty(src, bool)
+    local duty = ps.getJobDuty(src)
+    if duty then 
+        ps.setJobDuty(src, false)
+    else
+        ps.setJobDuty(src, true)
+    end
 end)
