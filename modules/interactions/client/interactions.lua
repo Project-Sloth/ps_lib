@@ -35,18 +35,26 @@ function ps.notify(text, type, time)
         })
     end
 end
-function ps.progressbar(text, time, emote)
+function ps.progressbar(text, time, emote, disabled)
+    if not disabled then
+        disabled = {
+            movement = Config.Progressbar.Movement,
+            car = Config.Progressbar.CarMovement,
+            mouse = Config.Progressbar.Mouse,
+            combat = Config.Progressbar.Combat,
+        }
+    end
     if emote then
         ps.playEmote(emote)
     end
-    if Config.Progressbar == 'qb' then
+    if Config.Progressbar.style == 'qb' then
         local completed = false
         local cancelled = false
         QBCore.Functions.Progressbar('testasd', text, time, false, true, {
-            disableMovement = true,
-            disableCarMovement = true,
-            disableMouse = false,
-            disableCombat = true,
+            disableMovement = disabled.movement,
+            disableCarMovement = disabled.car,
+            disableMouse = disabled.mouse,
+            disableCombat = disabled.combat,
         }, {}, {}, {}, function()
             completed = true
             ps.cancelEmote()
@@ -62,15 +70,17 @@ function ps.progressbar(text, time, emote)
         elseif cancelled then
             return false
         end
-    elseif Config.Progressbar == 'oxbar' then
+    elseif Config.Progressbar.style == 'oxbar' then
         local data = {
             duration = time,
             label = text,
             useWhileDead = false,
             canCancel = true,
             disable = {
-                car = true,
-                 move = true
+                car = disabled.car,
+                move = disabled.movement,
+                mouse = disabled.mouse,
+                combat = disabled.combat,
             },
         }
         if lib.progressBar(data) then
@@ -80,7 +90,7 @@ function ps.progressbar(text, time, emote)
             ps.cancelEmote()
             return false
         end
-    elseif Config.Progressbar == 'oxcir' then
+    elseif Config.Progressbar.style == 'oxcir' then
         local data = {
             duration = time,
             label = text,
@@ -88,8 +98,10 @@ function ps.progressbar(text, time, emote)
             canCancel = true,
             position = 'bottom',
             disable = {
-                car = true,
-                move = true
+                car = disabled.car,
+                move = disabled.movement,
+                mouse = disabled.mouse,
+                combat = disabled.combat,
             },
         }
         if lib.progressCircle(data) then
