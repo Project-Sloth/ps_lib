@@ -1,7 +1,14 @@
 Config = {}
 
 Config.Notify = "ox" -- qb, ox, ps
-Config.Progressbar = "oxcir" -- qb, oxcir, oxbar
+Config.Progressbar = { -- these are DEFAULT values, you can override them in the progressbar function
+    style = "oxbar", -- qb, oxbar, ps
+    Movement = true, -- Disable movement
+    CarMovement = true, -- Disable car movement
+    Mouse = true, -- Disable mouse
+    Combat = true, -- Disable combat
+}
+Config.DrawText = "ox" -- qb, ox, ps
 Config.Logs = "fivemerr" -- fivemerr or fivemanage 
 ps = {}
 
