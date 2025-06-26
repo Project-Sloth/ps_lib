@@ -39,23 +39,7 @@ function ps.lang(key, ...)
         end
         return value
     else
-        local time = 60
-        repeat
-            Wait(1000)
-            time = time - 1
-            if lang[resource] then
-                value = check(lang[resource], key)
-                if value then
-                    return string.format(value, ...)
-                end
-            end
-        until time <= 0
-
-        if value then
-            return string.format(value, ...)
-        else
-            return '[Missing translation: '..key..']'
-        end
+        return '[Missing translation: '..key..']'
     end
 end
 
@@ -74,23 +58,7 @@ function ps.locale(key, ...)
         end
         return value
     else
-        local time = 60
-        repeat
-            Wait(1000)
-            time = time - 1
-            if lang[resource] then
-                value = check(lang[resource], key)
-                if value then
-                    return string.format(value, ...)
-                end
-            end
-        until time <= 0
-
-        if value then
-            return string.format(value, ...)
-        else
-            return '[Missing translation: '..key..']'
-        end
+        return '[Missing translation: '..key..']'
     end
 end
 
@@ -167,6 +135,7 @@ local function loadLangsInternal(script, language)
     end
     lang[resource] = decoded
     ps.success('Language loaded for resource: ' .. resource .. ' Language: ' ..  language)
+    ps.success(lang[resource])
     return true
 end
 
@@ -177,7 +146,6 @@ local psScripts = {
     ['ps-dispatch'] = true,
     ['ps-multijob'] = true,
     ['ps-drugprocessing'] = true,
-   
 }
 AddEventHandler('onResourceStart', function(resourceName)
     if psScripts[resourceName] then
@@ -186,3 +154,16 @@ AddEventHandler('onResourceStart', function(resourceName)
 end)
 
 loadLangsInternal('ps_lib', langs)
+
+-- TODO: #21 find a better solution when im not tired
+if IsDuplicityVersion() then 
+    RegisterNetEvent('ps_lib:loadLangs', function()
+        TriggerClientEvent('ps_lib:loadLangs', source, lang)
+    end)
+else
+    TriggerServerEvent('ps_lib:loadLangs')
+    RegisterNetEvent('ps_lib:loadLangs', function(langData)
+        lang = langData
+        ps.success('Language loaded on client side.')
+    end)
+end
