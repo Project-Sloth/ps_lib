@@ -151,8 +151,7 @@ end
 
 function ps.getJobTypeCount(jobName)
     local count = 0
-    for _, player in pairs(ps.getAllPlayers()) do
-        local playerData = ps.getPlayerData(player)
+    for _, playerData in pairs(ps.getAllPlayers()) do
         if playerData.job and playerData.job.type == jobName and ps.getJobDuty(player) then
             count = count + 1
         end
