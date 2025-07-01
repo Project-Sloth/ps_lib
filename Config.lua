@@ -8,6 +8,7 @@ Config.Progressbar = { -- these are DEFAULT values, you can override them in the
     Mouse = true, -- Disable mouse
     Combat = true, -- Disable combat
 }
+
 Config.DrawText = "ox" -- qb, ox, ps
 Config.Logs = "fivemerr" -- fivemerr or fivemanage 
 ps = {}

@@ -35,15 +35,24 @@ function ps.notify(text, type, time)
         })
     end
 end
-function ps.progressbar(text, time, emote, disabled)
-    if not disabled then
-        disabled = {
-            movement = Config.Progressbar.Movement,
-            car = Config.Progressbar.CarMovement,
-            mouse = Config.Progressbar.Mouse,
-            combat = Config.Progressbar.Combat,
-        }
+local function handleDisable(disabled)
+    if disabled.movement == nil then
+        disabled.movement = Config.Progressbar.Movement
     end
+    if disabled.car == nil then
+        disabled.car = Config.Progressbar.CarMovement
+    end
+    if disabled.mouse == nil then
+        disabled.mouse = Config.Progressbar.Mouse
+    end
+    if disabled.combat == nil then
+        disabled.combat = Config.Progressbar.Combat
+    end
+    return disabled
+end
+
+function ps.progressbar(text, time, emote, disabled)
+    disabled = handleDisable(disabled or {})
     if emote then
         ps.playEmote(emote)
     end
