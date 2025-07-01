@@ -106,23 +106,25 @@ local function display(script)
 end
 
 local function adjustPrint(resource, type)
-        if not resources[resource] then
-            resources[resource] = {}
-            resources[resource].debug = false
-            resources[resource].info = false
-            resources[resource].error = false
-            resources[resource].warn = false
-            resources[resource].success = false
-        end
-        if type == 'all' then
-            resources[resource].debug = not resources[resource].debug
-            resources[resource].info = not resources[resource].info
-            resources[resource].error = not resources[resource].error
-            resources[resource].warn = not resources[resource].warn
-            resources[resource].success = not resources[resource].success
-        end
-        resources[resource][type] = not resources[resource][type]
+    if not resources[resource] then
+        resources[resource] = {}
+        resources[resource].debug = false
+        resources[resource].info = false
+        resources[resource].error = false
+        resources[resource].warn = false
+        resources[resource].success = false
     end
+    if type == 'all' then
+        resources[resource].debug = not resources[resource].debug
+        resources[resource].info = not resources[resource].info
+        resources[resource].error = not resources[resource].error
+        resources[resource].warn = not resources[resource].warn
+        resources[resource].success = not resources[resource].success
+        return
+    end
+    resources[resource][type] = not resources[resource][type]
+end
+
 if IsDuplicityVersion() then
     RegisterNetEvent('ps_lib:print', function(resource, type)
        adjustPrint(resource, type)

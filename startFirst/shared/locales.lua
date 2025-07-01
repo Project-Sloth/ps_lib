@@ -110,6 +110,7 @@ function ps.loadLangs(language)
         return false
     end
     lang[resource] = decoded
+    ps.success('Language loaded for resource: ' .. resource .. ' Language: ' ..  language)
     return true
 end
 
@@ -135,7 +136,6 @@ local function loadLangsInternal(script, language)
     end
     lang[resource] = decoded
     ps.success('Language loaded for resource: ' .. resource .. ' Language: ' ..  language)
-    ps.success(lang[resource])
     return true
 end
 
