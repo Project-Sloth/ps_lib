@@ -1,28 +1,32 @@
 <script lang="ts">
-    import { gameSettings, currentActiveGameDetails, closeGame } from "../stores/GameLauncherStore";
-    import { createEventDispatcher, onMount } from "svelte";
+
+    import {varActive, varSettings} from "../store/VarGame";
+    import { onMount } from "svelte";
     import fetchNui from "../../utils/fetch";
     import mojs from '@mojs/core';
-    import { convertVwToPx, getRandomArbitrary, isDevMode } from "../stores/GeneralStores";
 
-    const dispatch = createEventDispatcher();
-
+    function convertVwToPx(vw) {
+	    return (document.documentElement.clientWidth * vw) / 100;
+    }
+    function getRandomArbitrary(min, max) {
+	    return Math.floor(Math.random() * (max - min) + min);
+    }
     let gameTimeRemaining = 0;
 
-    let blocksInput = $gameSettings.amountOfAnswers; // how many cubes to remember for game - increment number based on difficulty level
-    let gameTime = $gameSettings.gameTime * 100;
-    let numberOfWrongClicksAllowed = $gameSettings.maxAnswersIncorrect;
-    let displayNumbersOnCubesFor = $currentActiveGameDetails.timeForNumberDisplay * 100;
-
+    let blocksInput = $varSettings.amountOfAnswers; // how many cubes to remember for game - increment number based on difficulty level
+    
+    let numberOfWrongClicksAllowed = $varSettings.maxAnswersIncorrect;
+    let displayNumbersOnCubesFor = $varSettings.timeForNumberDisplay * 100;
+    let gameTime = $varSettings.gameTime * 100 + displayNumbersOnCubesFor;
     let counter, gameStarted = false, gameEnded = false;
     let allCubes = [];
     let order = 0, wrongClicks = 0;
-    let cubeBgColors = ['var(--color-green)', 'var(--color-palegreen)', 'var(--color-blue)'];
+    let cubeBgColors = ['#FFA726', '#FFEB3B', '#FFC107'];
 
     // let topLowerBound = 290, topHigherBound = 660; px
     // let leftLowerBound = 77, leftHigherBound = 459;
-    let topLowerBound = 18, topHigherBound = 40; //vw
-    let leftLowerBound = 2, leftHigherBound = 28;
+    let topLowerBound = 1, topHigherBound = 24; //vw (adjusted to keep cubes inside container)
+    let leftLowerBound = 1, leftHigherBound = 26; //vw (adjusted to keep cubes inside container)
 
     onMount(() => {
         //generate shuffled cubes indices
@@ -64,6 +68,9 @@
 
         let new_top_vw = getRandomArbitrary(topLowerBound,topHigherBound);
         let new_left_vw = getRandomArbitrary(leftLowerBound,leftHigherBound);
+
+        // Bump the top position 30% higher
+        new_top_vw = new_top_vw * 0.7; // Move 30% higher (multiply by 0.7)
 
         let new_top = convertVwToPx(new_top_vw);
         let new_left = convertVwToPx(new_left_vw);
@@ -117,7 +124,7 @@
             //correct click
             if(order === clickedCube.cubeIndex) {
                 let clickedCubeDom = document.getElementById('each-cube-'+clickedCube.cubeIndex);
-                clickedCubeDom.style.backgroundColor = 'var(--color-darkgrey)';
+                clickedCubeDom.style.backgroundColor = '#2d2d2d;';
                 order = order + 1;
             } else {
                 wrongClicks = wrongClicks + 1;
@@ -158,7 +165,7 @@
         if(gameStarted && valid_keys.includes(key_pressed) && !gameEnded) {
             switch(key_pressed){
                 case 'Escape':
-                    closeGame(false);
+                    endGame(false);
                     return;
             }
         }
@@ -187,55 +194,126 @@
         {/each}
     </div>
 </div>
-
 <style>
     .var-game-base {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        
         display: flex;
         flex-direction: column;
 
         height: 28vw;
-
         justify-content: center;
         align-items: center;
-        color: var(--color-lightgrey);
+        color: #E0E0E0;
+        z-index: 9999;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        border-radius: 1vw;
+        padding: 2vw;
+        box-shadow: 0 1vw 3vw rgba(0, 0, 0, 0.5);
     }
 
     .var-game-base > .time-left {
         display: flex;
         flex-direction: row;
         justify-content: center;
+        align-items: center;
         font-size: 0.85vw;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 0.5vw;
+        padding: 0.5vw 1vw;
+        margin-bottom: 1vw;
+        border: 1px solid rgba(255, 255, 255, 0.2);
     }
+
     .var-game-base > .time-left > .clock-icon {
-       padding-top: 0.17vw;
-       margin-right: 0.3vw;
+        padding-top: 0.17vw;
+        margin-right: 0.3vw;
+        color: #D4A574;
+        font-size: 1vw;
     }
+
     .var-game-base > .time-left > .game-timer-var {
         width: 2.5vw;
+        color: #D4A574;
+        font-weight: bold;
     }
 
     .var-game-base > .var-game-container {
-        border: 2px solid var(--color-green);
-        background-color: var(--cube-bg-darkgreen);
-        
+        border: 2px solid #B8860B;
+        background: linear-gradient(145deg, #8B4513 0%, #A0522D 50%, #CD853F 100%);
         margin-top: 1vw;
         width: 30vw;
         height: 28vw;
+        border-radius: 0.5vw;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 
+            inset 0 0 2vw rgba(0, 0, 0, 0.3),
+            0 0.5vw 1vw rgba(0, 0, 0, 0.2);
     }
+
+    .var-game-base > .var-game-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+            radial-gradient(circle at 20% 20%, rgba(212, 165, 116, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(205, 133, 63, 0.1) 0%, transparent 50%);
+        pointer-events: none;
+    }
+
     .var-game-base > .var-game-container > .each-cube {
         width: 3vw;
         height: 3vw;
-
-        border: 2px solid var(--color-lightgrey);
+        border: 2px solid #444;
         position: absolute;
-
         text-align: center;
-        cursor: default;
+        cursor: pointer;
+        border-radius: 0.3vw;
+        transition: all 0.2s ease;
+        box-shadow: 
+            0 0.2vw 0.5vw rgba(0, 0, 0, 0.3),
+            inset 0 0.1vw 0.2vw rgba(255, 255, 255, 0.2);
     }
+
+    .var-game-base > .var-game-container > .each-cube:hover {
+        transform: scale(1.05);
+        box-shadow: 
+            0 0.3vw 1vw rgba(0, 0, 0, 0.4),
+            inset 0 0.1vw 0.2vw rgba(255, 255, 255, 0.3),
+            0 0 1vw rgba(212, 165, 116, 0.5);
+    }
+
     .var-game-base > .var-game-container > .each-cube > p {
         font-size: 1.5vw;
         font-weight: bold;
         margin-top: 0.2vw;
-        color: var(--color-black);
+        color: #1a1a1a
+        text-shadow: 0 0.1vw 0.2vw rgba(255, 255, 255, 0.3);
+    }
+
+    @keyframes pulse {
+        0%, 100% { 
+            box-shadow: 
+                0 0.2vw 0.5vw rgba(0, 0, 0, 0.3),
+                inset 0 0.1vw 0.2vw rgba(255, 255, 255, 0.2);
+        }
+        50% { 
+            box-shadow: 
+                0 0.3vw 1vw rgba(0, 0, 0, 0.4),
+                inset 0 0.1vw 0.2vw rgba(255, 255, 255, 0.3),
+                0 0 1.5vw rgba(212, 165, 116, 0.6);
+        }
+    }
+
+    .var-game-base > .var-game-container > .each-cube:active {
+        animation: pulse 0.3s ease-in-out;
     }
 </style>

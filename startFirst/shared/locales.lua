@@ -1,7 +1,7 @@
 local lang = {}
 
 function ps.insertLang(langTable)
-    local resource = GetInvokingResource()
+    local resource = GetInvokingResource() or 'ps_lib'
     if not lang[resource] then
         lang[resource] = langTable
     end
@@ -21,32 +21,15 @@ local function check(tbl, key)
         end
         current = current[k]
     end
+    ps.success(current)
     return current
 end
 
 function ps.lang(key, ...)
-    local resource = GetInvokingResource()
+    local resource = GetInvokingResource() or 'ps_lib'
     local value = nil
-
-    if lang[resource] then
-        value = check(lang[resource], key)
-    end
-
-    if value then
-        local args = {...}
-        if #args > 0 then
-            return string.format(value, table.unpack(args))
-        end
-        return value
-    else
-        return '[Missing translation: '..key..']'
-    end
-end
-
-function ps.locale(key, ...)
-     local resource = GetInvokingResource()
-    local value = nil
-
+    ps.success('ps.lang called for resource: ' .. resource .. ' with key: ' .. tostring(key))
+    ps.success(lang[resource])
     if lang[resource] then
         value = check(lang[resource], key)
     end
@@ -63,7 +46,7 @@ function ps.locale(key, ...)
 end
 
 function ps.getLang()
-    local resource = GetInvokingResource()
+    local resource = GetInvokingResource() or 'ps_lib'
     if lang[resource] then
         return lang[resource]
     else
@@ -72,15 +55,8 @@ function ps.getLang()
     end
 end
 
-function ps.getLocale()
-    local resource = GetInvokingResource()
-    if lang[resource] then
-        return lang[resource]
-    else
-        ps.error('No locale loaded for resource: ' .. resource)
-        return {}
-    end
-end
+ps.getLocale = ps.getLang
+ps.locale = ps.lang
 
 AddEventHandler('onResourceStop', function(resource)
     if lang[resource] then
@@ -100,8 +76,26 @@ function ps.loadLangs(language)
     local langFile = LoadResourceFile(resource, filePath)
 
     if not langFile then
-        ps.error('Language file not found: ' .. language .. ' for resource: ' .. resource)
-        return false
+        filePath = 'locales/' .. language .. '.lua'
+        langFile = LoadResourceFile(resource, filePath)
+        if not langFile then
+            return false
+        end
+        local success, result = pcall(function()
+            local chunk = load(langFile, filePath, 't')
+            if chunk then
+                local data = chunk()
+                if type(data) == 'table' then
+                    lang[resource] = data
+                    return true
+                else
+                    return false
+                end
+            else
+                return false
+            end
+        end)
+        return true
     end
 
     local decoded = json.decode(langFile, 1, nil)
@@ -125,8 +119,26 @@ local function loadLangsInternal(script, language)
     local langFile = LoadResourceFile(resource, filePath)
 
     if not langFile then
-        ps.error('Language file not found: ' .. language .. ' for resource: ' .. resource)
-        return false
+        filePath = 'locales/' .. language .. '.lua'
+        langFile = LoadResourceFile(resource, filePath)
+        if not langFile then
+            return false
+        end
+        local success, result = pcall(function()
+            local chunk = load(langFile, filePath, 't')
+            if chunk then
+                local data = chunk()
+                if type(data) == 'table' then
+                    lang[resource] = data
+                    return true
+                else
+                    return false
+                end
+            else
+                return false
+            end
+        end)
+        return true
     end
 
     local decoded = json.decode(langFile, 1, nil)

@@ -105,12 +105,20 @@ function ps.targetModel(entity, options)
 end
 
 function ps.destroyAllTargets()
-    for k, v in pairs(zones) do
-        for m, d in pairs (zones[k]) do
-            exports['qb-target']:RemoveZone(d)
+    local resource = GetInvokingResource() or GetCurrentResourceName()
+    if zones[resource] then
+        for k, v in pairs(zones[resource]) do
+            exports['qb-target']:RemoveZone(v)
         end
+        zones[resource] = nil
     end
-    zones = {}
+--
+--for k, v in pairs(zones) do
+--    for m, d in pairs (zones[k]) do
+--        exports['qb-target']:RemoveZone(d)
+--    end
+--end
+--zones = {}
 end
 
 function ps.destroyTarget(name)

@@ -50,35 +50,29 @@ local function handleDisable(disabled)
     end
     return disabled
 end
-
+local p = nil
 function ps.progressbar(text, time, emote, disabled)
     disabled = handleDisable(disabled or {})
     if emote then
         ps.playEmote(emote)
     end
     if Config.Progressbar.style == 'qb' then
-        local completed = false
-        local cancelled = false
+        p = promise.new()
         QBCore.Functions.Progressbar('testasd', text, time, false, true, {
             disableMovement = disabled.movement,
             disableCarMovement = disabled.car,
             disableMouse = disabled.mouse,
             disableCombat = disabled.combat,
         }, {}, {}, {}, function()
-            completed = true
+            p:resolve(true)
+            p = nil
             ps.cancelEmote()
         end, function()
-            cancelled = true
+            p:resolve(false)
+            p = nil
             ps.cancelEmote()
         end)
-        repeat
-            Wait(1)
-        until completed or cancelled
-        if completed then
-            return true
-        elseif cancelled then
-            return false
-        end
+        return Citizen.Await(p)
     elseif Config.Progressbar.style == 'oxbar' then
         local data = {
             duration = time,
