@@ -10,15 +10,17 @@ local function scrambler(callback, type, time, mirrored)
     if time == nil then time = 10 end  -- Default to 10 seconds if time is nil
     if mirrored == nil then mirrored = 0 end  -- Default to 0 if mirrored is nil
     p = promise:new()
-    SendNUI("GameLauncher", callback, {  -- Use SendNUI with nil callback
-        game = "Scramber",  -- Internal name of the game
-        gameName = "Scrambler",  -- Display name of the game
-        gameDescription = "Challenge your brain with the Scrambler game! Depending on your choice, you'll either unscramble letters or numbers, with an option for mirrored text. Can you solve the puzzles before time runs out?",  -- Description of the game
+    local data = {
         amountOfAnswers = 4,  -- Number of answers to provide in the game
         gameTime = time,  -- Time duration of the game
         sets = type,  -- Type of the game
         changeBoardAfter = 1,  -- Specifies if the board should change after a certain condition
-    }, true)
+    }
+    SetNuiFocus(true, true)
+    SendNUIMessage({
+         action = 'Scrambler',
+         data = data
+    })
     local result = Citizen.Await(p)
      if callback ~= false then
         callback(result)  -- Call the callback with the result
@@ -36,3 +38,15 @@ end)
 
 exports("Scrambler", scrambler)
 ps.exportChange('ps-ui', "Scrambler", scrambler)
+
+RegisterCommand("testScrambler", function(source, args, rawCommand)
+    local type = args[1] or "numeric"  -- Get the type from command arguments or default to "alphabet"
+    local time = tonumber(args[2]) or 30  -- Get the time from command arguments or default to 10 seconds
+    local mirrored = tonumber(args[3]) or 0  -- Get the mirrored option from command arguments or default to 0
+    local result = scrambler(false, type, time, mirrored)  -- Start the scrambler game without a callback
+    if result then
+        print("Scrambler completed successfully with result:", result)
+    else
+        print("Scrambler failed or was cancelled.")
+    end
+end, false)

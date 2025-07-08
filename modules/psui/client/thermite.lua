@@ -20,17 +20,17 @@ local function thermite(cb, time, gridsize, wrong, correctBlocks)
     if wrong == nil then wrong = 3 end
     local correctBlockCount = correctBlocks or correctBlocksBasedOnGrid[gridsize]
     p = promise:new()  -- Create a new promise for the game result
-    
-    SendNUI("GameLauncher", cb, {  -- Use SendNUI with nil callback
-        game = "MemoryGame",  -- Name of the game
-        gameName = "Memory Game",  -- Display name of the game
-        gameDescription = "Test your memory with Thermite! Match blocks on a grid before time runs out. Adjust grid size and incorrect answers for added challenge!",  -- Description of the game
-        amountOfAnswers = correctBlockCount,  -- Number of correct blocks to display
-        gameTime = time,  -- Time duration for the game
-        maxAnswersIncorrect = wrong,  -- Maximum number of incorrect answers allowed
-        displayInitialAnswersFor = 3,  -- Time to display initial answers (seconds)
-        gridSize = gridsize,  -- Size of the game grid
-    }, true)
+    SetNuiFocus(true, true)  -- Set focus to the NUI
+    SendNUIMessage({
+        action = "ThermiteGame",
+        data = {
+            amountOfAnswers = correctBlockCount,  -- Number of correct blocks to display
+            gameTime = time,  -- Time duration for the game
+            maxAnswersIncorrect = wrong,  -- Maximum number of incorrect answers allowed
+            displayInitialAnswersFor = 3,  -- Time to display initial answers (seconds)
+            gridSize = gridsize,  -- Size of the game grid
+        }
+    })
     local result = Citizen.Await(p)  -- Wait for the game result
     if cb ~= false then
         cb(result)  -- Call the callback with the result
@@ -47,3 +47,19 @@ end)
 
 exports("Thermite", thermite)
 ps.exportChange('ps-ui', "Thermite", thermite)
+
+RegisterCommand('testThermite', function(source, args, rawCommand)
+    -- Example command to test the Thermite function
+    local time = tonumber(args[1]) or 150
+    local gridsize = tonumber(args[2]) or 5
+    local wrong = tonumber(args[3]) or 3
+    local correctBlocks = 14
+
+    thermite(function(success)
+        if success then
+            print("Thermite game completed successfully!")
+        else
+            print("Thermite game failed.")
+        end
+    end, time, gridsize, wrong, correctBlocks)
+end, false)  -- false means this command is not restricted to server-side only

@@ -1,6 +1,6 @@
 
 local run = false
-function ps.coordGrab()
+local function coordGrab()
     run = true
     repeat
         Wait(1)
@@ -26,10 +26,15 @@ function ps.coordGrab()
     until not run
 end
 
-RegisterCommand('coordGrabber', function()
+RegisterCommand('coordGrab', function()
+    if run then
+        SendNUIMessage({action = 'copyCoords', data = { type = 'stop'}})
+        run = false
+        return
+    end
     SendNUIMessage({
-        action = 'ShowStatusBar',
+        action = 'coordGrabber',
         data = true
     })
-    ps.coordGrab()
+    coordGrab()
 end, false)

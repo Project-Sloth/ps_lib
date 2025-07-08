@@ -1,29 +1,17 @@
---- Sets the display state for the NUI with an optional image.
---- @param bool boolean: Determines whether to show or hide the NUI. `true` to show, `false` to hide.
---- @param img string|nil: URL of the image to display. Ignored if `bool` is `false`.
-local function setDisplay(bool, img)
-    ps.debug("ShowImage called with " .. tostring(bool) .. " bool and " .. img .. " img")
-    SendNUI("ShowImage", nil, {
-        url = bool and img or nil,
-        show = bool,
-    }, true)
+local function showImage(imageUrl)
+    SendNUIMessage({
+        action = 'showImage',
+        data = imageUrl
+    })
+    SetNuiFocus(true, true)
 end
 
---- Shows an image by setting the display state to `true`.
---- @param img string: URL of the image to display.
-local function showImage(img)
-    setDisplay(true, img)
-end
-
---- NUI callback for handling the image display state change.
---- @param data table: Data received from the NUI callback.
---- @field data.show boolean: Indicates whether the image was shown or hidden.
---- @param cb function: Callback function to signal completion of the NUI callback.
-RegisterNUICallback("showItemImage-callback", function(data, cb)
-    setDisplay(false)
-    SetNuiFocus(false, false)
-    cb('ok')
-end)
-
-exports("ShowImage", showImage)
-ps.exportChange('ps-ui', "ShowImage", showImage)
+exports('showImage', showImage)
+ps.exportChange('ps-ui', 'showImage', showImage)
+RegisterCommand('testShowImage', function(source, args, rawCommand)
+   exports['ps-ui']:showImage('https://i.ytimg.com/vi/ZyI7bOqaldg/maxresdefault.jpg')
+   Wait(2000)
+   exports['ps-ui']:showImage('https://media.tenor.com/nYAbPZ6Im4YAAAAM/uwu-cute.gif')
+   Wait(2000)
+   exports['ps-ui']:showImage('https://wallpapers-clan.com/wp-content/uploads/2022/11/meme-gif-pfp-20.gif')
+end, false)

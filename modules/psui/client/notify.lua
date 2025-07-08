@@ -1,20 +1,29 @@
---- Sends a notification to the user.
---- @param text string: The text content of the notification.
---- @param type string|nil: The type of notification (e.g., 'primary', 'success', 'error'). Defaults to 'primary' if nil.
---- @param length number|nil: Duration of the notification in milliseconds. Defaults to 5000 milliseconds (5 seconds) if nil.
-local function notify(text, type, length)
-    type = type or 'primary'  -- Default to 'primary' if type is nil
-    length = length or 5000  -- Default to 5000 milliseconds if length is nil
-    ps.debug("Notify called with " .. text .. " text and " .. type .. " type")
-    SendNUI("ShowNotification", nil, {
-        text = text,       -- Notification text
-        type = type,       -- Notification type
-        length = length    -- Duration of the notification
-    }, false)
+
+
+RegisterNUICallback('hideUI', function(_, cb)
+    cb({})
+    SetNuiFocus(false, false)
+end)
+
+function sendNotification(message, type, duration)
+    if not message then return end
+    if not type then type = 'info' end
+    if not duration then duration = 5000 end
+    SendNUIMessage({
+        action = 'notify',
+        data = {
+            message = message,
+            type = type,
+            duration = duration
+        }
+    })
 end
-
---- Network event handler for sending a notification.
-RegisterNetEvent('ps-ui:Notify', notify)
-
-exports('Notify', notify)
-ps.exportChange('ps-ui', "Notify", notify)
+exports('notify', sendNotification)
+ps.exportChange('ps-ui', 'notify', sendNotification)
+RegisterCommand('testNotify', function()
+    exports['ps-ui']:notify('This is a test notification!', 'success', 3000)
+    exports['ps-ui']:notify('This is a test notification!', 'error', 3000)
+    exports['ps-ui']:notify('This is a test notification!', 'info', 3000)
+    exports['ps-ui']:notify('C\nH\nE\nE\nS\nE\nB\nU\nR\nG\nE\nR \n \n A\nP\nO\nC\nA\nL\nY\nP\nS\nE', 'warning', 3000)
+    
+end)
