@@ -19,6 +19,7 @@ local function circle(cb, circles, seconds)
     if cb ~= false then
         cb(result)
     end
+
     return result
 
 end
@@ -26,12 +27,17 @@ end
 --- @param data any: Data sent from the NUI (not used in this function)
 --- @param cb function: Callback function to signal completion of the NUI callback (must be called to complete the NUI callback)
 RegisterNuiCallback('circle-result', function(data, cb)
-    local result = data.endResult
-    p:resolve(result)
+    p:resolve(data)
     p = nil
     SetNuiFocus(false, false)
     cb('ok')
 end)
 
 exports("Circle", circle)
-ps.exportChange('ps-ui', 'Circle', circle)
+ps.exportChange('ps-ui', "Circle", circle)
+
+RegisterCommand("testCircle", function(source, args, rawCommand)
+    local circles = tonumber(args[1]) or 1
+    local seconds = tonumber(args[2]) or 10
+    local c = circle(false, circles, seconds)
+end, false)

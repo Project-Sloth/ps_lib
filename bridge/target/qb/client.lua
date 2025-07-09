@@ -2,7 +2,7 @@ local zones = {}
 
 function ps.boxTarget(name, location, size, options)
     if not name then return end
-    local resource = GetInvokingResource()
+    local resource = GetInvokingResource() or GetCurrentResourceName()
     size = {
         length = size and size.length or 1.5,
         width = size and size.width or 1.5,
@@ -41,7 +41,7 @@ end
 function ps.circleTarget(name, location, size, options)
     if not name then return end
     if not size then size = 1.5 end
-    local resource = GetInvokingResource()
+    local resource = GetInvokingResource() or GetCurrentResourceName()
     if not zones[resource] then
         zones[resource] = {}
     end
@@ -105,17 +105,25 @@ function ps.targetModel(entity, options)
 end
 
 function ps.destroyAllTargets()
-    for k, v in pairs(zones) do
-        for m, d in pairs (zones[k]) do
-            exports['qb-target']:RemoveZone(d)
+    local resource = GetInvokingResource() or GetCurrentResourceName()
+    if zones[resource] then
+        for k, v in pairs(zones[resource]) do
+            exports['qb-target']:RemoveZone(v)
         end
+        zones[resource] = nil
     end
-    zones = {}
+--
+--for k, v in pairs(zones) do
+--    for m, d in pairs (zones[k]) do
+--        exports['qb-target']:RemoveZone(d)
+--    end
+--end
+--zones = {}
 end
 
 function ps.destroyTarget(name)
     if not name then return end
-    local resource = GetInvokingResource()
+    local resource = GetInvokingResource() or GetCurrentResourceName()
     exports['qb-target']:RemoveZone(zones[resource][name])
     zones[resource][name] = nil
 end

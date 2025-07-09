@@ -152,7 +152,7 @@ end
 function ps.getJobTypeCount(jobName)
     local count = 0
     for _, playerData in pairs(ps.getAllPlayers()) do
-        if playerData.job and playerData.job.type == jobName and ps.getJobDuty(player) then
+        if playerData.job and playerData.job.type == jobName and ps.getJobDuty(playerData.source) then
             count = count + 1
         end
     end
@@ -293,7 +293,10 @@ function ps.setJobDuty(source, duty)
     local identifier = ps.getIdentifier(source)
     exports.qbx_core:SetJobDuty(identifier, duty)
 end
-RegisterNetEvent('ps_lib:server:toggleDuty', function(bool)
+
+RegisterNetEvent('ps_lib:server:toggleDuty', function()
     local src = source
-    ps.setJobDuty(src, bool)
+    local jobDuty = ps.getJobDuty(src)
+    ps.setJobDuty(src, not jobDuty)
 end)
+

@@ -19,10 +19,10 @@ importers:
         version: 1.7.1
     devDependencies:
       '@eslint/compat':
-        specifier: ^1.2.5
+        specifier: ^1.2.9
         version: 1.2.9(eslint@9.28.0(jiti@1.21.0))
       '@eslint/js':
-        specifier: ^9.18.0
+        specifier: ^9.28.0
         version: 9.28.0
       '@sveltejs/vite-plugin-svelte':
         specifier: ^3.0.1
@@ -34,13 +34,13 @@ importers:
         specifier: ^10.4.16
         version: 10.4.16(postcss@8.4.33)
       eslint:
-        specifier: ^9.18.0
+        specifier: ^9.28.0
         version: 9.28.0(jiti@1.21.0)
       eslint-plugin-svelte:
-        specifier: ^3.0.0
+        specifier: ^3.9.1
         version: 3.9.1(eslint@9.28.0(jiti@1.21.0))(svelte@4.2.8)
       globals:
-        specifier: ^16.0.0
+        specifier: ^16.2.0
         version: 16.2.0
       html-minifier:
         specifier: ^4.0.0
@@ -67,7 +67,7 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
       typescript-eslint:
-        specifier: ^8.20.0
+        specifier: ^8.33.0
         version: 8.33.0(eslint@9.28.0(jiti@1.21.0))(typescript@5.3.3)
       vite:
         specifier: ^5.0.11
@@ -603,8 +603,8 @@ packages:
     resolution: {integrity: sha512-QOSvevhslijgYwRx6Rv7zKdMF8lbRmx+uQGx2+vDc+KI/eBnsy9kit5aj23AgGu3pa4t9AgwbnXWqS+iOY+2aA==}
     engines: {node: '>= 6'}
 
-  caniuse-lite@1.0.30001574:
-    resolution: {integrity: sha512-BtYEK4r/iHt/txm81KBudCUcTy7t+s9emrIaHqjYurQ10x71zJ5VQ9x1dYPcz/b+pKSp4y/v1xSI67A+LzpNyg==}
+  caniuse-lite@1.0.30001726:
+    resolution: {integrity: sha512-VQAUIUzBiZ/UnlM28fSp2CRF3ivUn1BWEvxMcVTNwpw91Py1pGbPIyIKtd+tzct9C3ouceCVdGAXxZOpZAsgdw==}
 
   chalk@4.1.2:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}
@@ -1933,7 +1933,7 @@ snapshots:
   autoprefixer@10.4.16(postcss@8.4.33):
     dependencies:
       browserslist: 4.22.2
-      caniuse-lite: 1.0.30001574
+      caniuse-lite: 1.0.30001726
       fraction.js: 4.3.7
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -1963,7 +1963,7 @@ snapshots:
 
   browserslist@4.22.2:
     dependencies:
-      caniuse-lite: 1.0.30001574
+      caniuse-lite: 1.0.30001726
       electron-to-chromium: 1.4.623
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.22.2)
@@ -1979,7 +1979,7 @@ snapshots:
 
   camelcase-css@2.0.1: {}
 
-  caniuse-lite@1.0.30001574: {}
+  caniuse-lite@1.0.30001726: {}
 
   chalk@4.1.2:
     dependencies:
