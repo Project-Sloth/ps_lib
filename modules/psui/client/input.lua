@@ -41,7 +41,7 @@ end
 exports('input', input)
 ps.exportChange('ps-ui', 'input', input)
 
-RegisterCommand('testInput', function(source, args, rawCommand)
+RegisterCommand('testanput', function(source, args, rawCommand)
     local options = {
         {
             type = 'text',

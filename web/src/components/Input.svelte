@@ -50,205 +50,253 @@
     }
 </script>
 
-
 {#if $isInputting}
-    <div class="form-container">
-        <div class="form-header">
-            <h2 class="form-title">{$inputFormName}</h2>
-        </div>
-        <form on:submit|preventDefault={handleSubmit}>
-            <div class="input-scroll-container">
-                {#each $inputData as item, index}
-                    <div class="form-group">
-                        <label class="form-label" for="field_{index}">
-                            {item.title}
-                            {#if item.required}
-                                <span class="required">*</span>
+    <div class="form-overlay">
+        <div class="form-container">
+            <div class="form-header">
+                <h2 class="form-title">{$inputFormName}</h2>
+                <div class="form-title-accent"></div>
+            </div>
+            <form on:submit|preventDefault={handleSubmit}>
+                <div class="input-scroll-container">
+                    {#each $inputData as item, index}
+                        <div class="form-group">
+                            <label class="form-label" for="field_{index}">
+                                {item.title}
+                                {#if item.required}
+                                    <span class="required">*</span>
+                                {/if}
+                            </label>
+                            {#if item.description}
+                                <p class="form-description">{item.description}</p>
                             {/if}
-                        </label>
-                        {#if item.description}
-                            <p class="form-description">{item.description}</p>
-                        {/if}
 
-                        {#if item.type === 'text'}
-                            <input
-                                id="field_{index}"
-                                type="text"
-                                class="form-input"
-                                placeholder={item.placeholder || ''}
-                                bind:value={formData[`field_${index}`]}
-                                required={item.required}
-                            />
-                        {:else if item.type === 'number'}
-                            <input
-                                id="field_{index}"
-                                type="number"
-                                class="form-input"
-                                placeholder={item.placeholder || ''}
-                                bind:value={formData[`field_${index}`]}
-                                required={item.required}
-                            />
-                        {:else if item.type === 'longtext'}
-                            <input
-                                id="field_{index}"
-                                type="text"
-                                class="form-input"
-                                placeholder={item.placeholder || ''}
-                                bind:value={formData[`field_${index}`]}
-                                required={item.required}
-                            />
-                        {:else if item.type === 'textarea'}
-                            <textarea
-                                id="field_{index}"
-                                class="form-input"
-                                placeholder={item.placeholder || ''}
-                                bind:value={formData[`field_${index}`]}
-                                required={item.required}
-                            />
-                        {:else if item.type === 'password'}
-                            <input
-                                id="field_{index}"
-                                type="password"
-                                class="form-input"
-                                placeholder={item.placeholder || ''}
-                                bind:value={formData[`field_${index}`]}
-                                required={item.required}
-                            />
-                        {:else if item.type === 'select'}
-                            <select
-                                id="field_{index}"
-                                class="form-select"
-                                bind:value={formData[`field_${index}`]}
-                                required={item.required}
-                            >
-                                <option value="">Choose an option...</option>
-                                {#each item.options || [] as option}
-                                    <option value={option.value}>{option.label}</option>
-                                {/each}
-                            </select>
-                        {:else if item.type === 'checkbox'}
-                            <label class="checkbox-container">
+                            {#if item.type === 'text'}
                                 <input
                                     id="field_{index}"
-                                    type="checkbox"
-                                    class="form-checkbox"
-                                    bind:checked={formData[`field_${index}`]}
+                                    type="text"
+                                    class="form-input"
+                                    placeholder={item.placeholder || ''}
+                                    bind:value={formData[`field_${index}`]}
+                                    required={item.required}
                                 />
-                                <span class="checkmark"></span>
-                                <span class="checkbox-label">{item.title}</span>
-                            </label>
-                        {/if}
-                    </div>
-                {/each}
-            </div>
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary" on:click={handleSubmit}>
-                    Submit
-                </button>
-            </div>
-        </form>
+                            {:else if item.type === 'number'}
+                                <input
+                                    id="field_{index}"
+                                    type="number"
+                                    class="form-input"
+                                    placeholder={item.placeholder || ''}
+                                    bind:value={formData[`field_${index}`]}
+                                    required={item.required}
+                                />
+                            {:else if item.type === 'longtext'}
+                                <input
+                                    id="field_{index}"
+                                    type="text"
+                                    class="form-input"
+                                    placeholder={item.placeholder || ''}
+                                    bind:value={formData[`field_${index}`]}
+                                    required={item.required}
+                                />
+                            {:else if item.type === 'textarea'}
+                                <textarea
+                                    id="field_{index}"
+                                    class="form-input form-textarea"
+                                    rows="4"
+                                    placeholder={item.placeholder || ''}
+                                    bind:value={formData[`field_${index}`]}
+                                    required={item.required}
+                                />
+                            {:else if item.type === 'password'}
+                                <input
+                                    id="field_{index}"
+                                    type="password"
+                                    class="form-input"
+                                    placeholder={item.placeholder || ''}
+                                    bind:value={formData[`field_${index}`]}
+                                    required={item.required}
+                                />
+                            {:else if item.type === 'select'}
+                                <select
+                                    id="field_{index}"
+                                    class="form-select"
+                                    bind:value={formData[`field_${index}`]}
+                                    required={item.required}
+                                >
+                                    <option value="">Choose an option...</option>
+                                    {#each item.options || [] as option}
+                                        <option value={option.value}>{option.label}</option>
+                                    {/each}
+                                </select>
+                            {:else if item.type === 'checkbox'}
+                                <label class="checkbox-container">
+                                    <input
+                                        id="field_{index}"
+                                        type="checkbox"
+                                        class="form-checkbox"
+                                        bind:checked={formData[`field_${index}`]}
+                                    />
+                                    <span class="checkmark"></span>
+                                    <span class="checkbox-label">{item.title}</span>
+                                </label>
+                            {/if}
+                        </div>
+                    {/each}
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" on:click={handleSubmit}>
+                        Submit
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 {/if}
 
 <style>
-    .form-container {
-        background: rgba(22, 22, 22, 1.0);
-        border: 2px solid #FBBF24;
-        border-radius: 12px;
-        padding: 30px;
-        width: 25%;
-        overflow-y: auto;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+    .form-overlay {
         position: fixed;
-    }
-    .form-header {
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
-        margin-bottom: 30px;
+        z-index: 1000;
     }
+
+    .form-container {
+        background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 32px;
+        width: min(450px, 90vw);
+        max-height: 80vh;
+        overflow: hidden;
+        box-shadow: 
+            0 10px 30px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        position: relative;
+    }
+
+    .form-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.3), transparent);
+    }
+
+    .form-header {
+        margin-bottom: 32px;
+    }
+
     .form-title {
         font-size: 24px;
-        font-weight: bold;
-        color: #FBBF24;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-        margin: 0;
+        font-weight: 600;
+        color: #e5e5e5;
+        text-align: center;
+        margin: 0 0 8px 0;
+        letter-spacing: -0.5px;
     }
-    .close-btn {
-        background: none;
-        border: none;
-        color: #FBBF24;
-        font-size: 24px;
-        cursor: pointer;
-        padding: 5px 10px;
-        border-radius: 4px;
-        transition: all 0.2s ease;
+
+    .form-title-accent {
+        width: 40px;
+        height: 2px;
+        background: linear-gradient(90deg, #FBBF24, #f59e0b);
+        margin: 0 auto;
+        border-radius: 2px;
     }
-    .close-btn:hover {
-        background: rgba(251, 191, 36, 0.1);
-        transform: scale(1.1);
-    }
+
     .form-group {
-        margin-bottom: 20px;
+        margin-bottom: 24px;
     }
+
     .form-label {
         display: block;
-        font-size: 16px;
-        font-weight: 600;
-        color: #FBBF24;
+        font-size: 14px;
+        font-weight: 500;
+        color: #d1d1d1;
         margin-bottom: 8px;
+        letter-spacing: 0.1px;
     }
+
     .required {
         color: #ff6b6b;
+        margin-left: 2px;
     }
+
     .form-description {
         font-size: 12px;
-        color: #cccccc;
+        color: #a5a5a5;
         margin-bottom: 10px;
-        opacity: 0.9;
+        line-height: 1.4;
     }
-    .form-input {
-        width: 80%;
-        padding: 12px 16px;
-        background: rgba(20, 20, 20, 0.8);
-        border: 1px solid rgba(251, 191, 36, 0.3);
-        border-radius: 8px;
-        color: white;
+
+    .form-input, .form-select {
+        width: 100%;
+        padding: 14px 16px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        color: #e5e5e5;
         font-size: 14px;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
+        box-sizing: border-box;
     }
+
     .form-select {
-        width: 87%;
-        padding: 12px 16px;
-        background: rgba(20, 20, 20, 0.8);
-        border: 1px solid rgba(251, 191, 36, 0.3);
-        border-radius: 8px;
-        color: white;
-        font-size: 14px;
-        transition: all 0.3s ease;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a5a5a5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 16px;
+        padding-right: 40px;
     }
-    .form-input:focus,
+
+    .form-select option {
+        background: #2a2a2a;
+        color: #e5e5e5;
+        padding: 8px 12px;
+        border: none;
+    }
+
     .form-select:focus {
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FBBF24' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+    }
+
+    .form-textarea {
+        resize: vertical;
+        min-height: 80px;
+        font-family: inherit;
+    }
+
+    .form-input:focus, .form-select:focus {
         outline: none;
-        border-color: #FBBF24;
-        box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.2);
-        background: rgba(30, 30, 30, 0.9);
+        border-color: rgba(251, 191, 36, 0.5);
+        box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
+        background: rgba(255, 255, 255, 0.08);
     }
+
     .form-input::placeholder {
-        color: rgba(255, 255, 255, 0.5);
+        color: rgba(255, 255, 255, 0.4);
     }
+
     .checkbox-container {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         cursor: pointer;
         position: relative;
-        padding-left: 35px;
+        padding-left: 28px;
         margin-bottom: 12px;
         font-size: 14px;
         user-select: none;
+        line-height: 1.4;
     }
+
     .form-checkbox {
         position: absolute;
         opacity: 0;
@@ -256,103 +304,131 @@
         height: 0;
         width: 0;
     }
+
     .checkmark {
         position: absolute;
-        top: 0;
+        top: 2px;
         left: 0;
-        height: 20px;
-        width: 20px;
-        background-color: rgba(20, 20, 20, 0.8);
-        border: 1px solid rgba(251, 191, 36, 0.3);
+        height: 18px;
+        width: 18px;
+        background-color: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 4px;
         transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
+
     .checkbox-container:hover .checkmark {
-        border-color: #FBBF24;
+        border-color: rgba(251, 191, 36, 0.5);
+        background-color: rgba(251, 191, 36, 0.05);
     }
+
     .form-checkbox:checked ~ .checkmark {
         background-color: #FBBF24;
         border-color: #FBBF24;
     }
+
     .checkmark:after {
         content: "";
         position: absolute;
         display: none;
+        width: 5px;
+        height: 8px;
+        border: solid #1f1f1f;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+        top: 1px;
     }
+
     .form-checkbox:checked ~ .checkmark:after {
         display: block;
     }
-    .checkbox-container .checkmark:after {
-        left: 7px;
-        top: 3px;
-        width: 5px;
-        height: 10px;
-        border: solid black;
-        border-width: 0 3px 3px 0;
-        transform: rotate(45deg);
-    }
+
     .checkbox-label {
-        color: white;
-        margin-left: 10px;
+        color: #d1d1d1;
+        margin-left: 4px;
+        flex: 1;
     }
+
     .form-actions {
         display: flex;
-        gap: 15px;
-        justify-content: flex-end;
-        margin-top: 30px;
+        justify-content: center;
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
+
     .btn {
-        padding: 12px 24px;
+        padding: 14px 32px;
         border: none;
-        border-radius: 8px;
+        border-radius: 12px;
         font-size: 14px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.2s ease;
-        min-width: 100px;
-    }
-    .btn-primary {
-        background: #FBBF24;
-        color: black;
-    }
-    .btn-primary:hover {
-        background: #f59e0b;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
-    }
-    .btn-secondary {
-        background: rgba(60, 60, 60, 0.8);
-        color: white;
-        border: 1px solid rgba(251, 191, 36, 0.3);
-    }
-    .btn-secondary:hover {
-        background: rgba(80, 80, 80, 0.9);
-        border-color: #FBBF24;
-        transform: translateY(-1px);
+        min-width: 120px;
+        letter-spacing: 0.5px;
     }
 
-    /* Scrollable container */
+    .btn-primary {
+        background: linear-gradient(135deg, #FBBF24 0%, #f59e0b 100%);
+        color: #1f1f1f;
+        box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(251, 191, 36, 0.4);
+    }
+
+    .btn-primary:active {
+        transform: translateY(0);
+    }
     .input-scroll-container {
         max-height: 400px;
         overflow-y: auto;
-        padding-right: 10px;
+        padding-right: 8px;
+        margin-right: -8px;
     }
 
     .input-scroll-container::-webkit-scrollbar {
-        width: 8px;
+        width: 6px;
     }
 
     .input-scroll-container::-webkit-scrollbar-track {
-        background: rgba(0, 0, 0, 0.3);
-        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 3px;
     }
 
     .input-scroll-container::-webkit-scrollbar-thumb {
-        background: rgba(251, 191, 36, 0.5);
-        border-radius: 4px;
+        background: rgba(251, 191, 36, 0.3);
+        border-radius: 3px;
     }
 
     .input-scroll-container::-webkit-scrollbar-thumb:hover {
-        background: rgba(251, 191, 36, 0.7);
+        background: rgba(251, 191, 36, 0.5);
+    }
+
+    /* Responsive design */
+    @media (max-width: 600px) {
+        .form-container {
+            padding: 24px;
+            width: 90vw;
+        }
+
+        .form-title {
+            font-size: 20px;
+        }
+
+        .form-input, .form-select {
+            padding: 12px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            min-width: 100px;
+        }
     }
 </style>
