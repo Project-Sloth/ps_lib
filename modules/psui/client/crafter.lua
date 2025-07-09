@@ -59,8 +59,8 @@ exports('openCrafter', openCrafter)
 
 RegisterNUICallback('craftItem', function(data, cb)
    if data.minigame then
-      if data.minigame.type == 'circle' then
-         if not exports['ps-ui']:Circle(false, data.minigame.data.circles, data.minigame.data.time) then return end
+      if not ps.minigame(data.minigame.type, data.minigame.data) then
+         return
       end
    end
    if not ps.progressbar('Crafting ' .. ps.getLabel(data.item), data.time, data.anim) then return end

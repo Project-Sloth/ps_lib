@@ -118,15 +118,19 @@ registerCrafter({
             amount = 1,
             time = 5000,
             anim = 'uncuff',
-            recipe = {
-                steel = 2,
-                iron = 1
+            minigame = {
+                type = 'ps-thermite',
+                data = {
+                    timeLimit = 20,
+                    gridsize = 4,
+                    wrong = 2
+                }
             }
         },
         tosti = {
             minigame = {
-                type = 'circle',
-                data = {circles = 4, time = 8}
+                type = 'ps-circle',
+                data = {amount = 4, speed = 8}
             }
         },
         advancedlockpick = {
