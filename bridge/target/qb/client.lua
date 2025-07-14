@@ -112,13 +112,7 @@ function ps.destroyAllTargets()
         end
         zones[resource] = nil
     end
---
---for k, v in pairs(zones) do
---    for m, d in pairs (zones[k]) do
---        exports['qb-target']:RemoveZone(d)
---    end
---end
---zones = {}
+
 end
 
 function ps.destroyTarget(name)

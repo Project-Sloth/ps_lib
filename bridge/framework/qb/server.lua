@@ -1,8 +1,4 @@
-
-function ps.getJobTable()
-    return QBCore.Shared.Jobs
-end
-
+--- Player Getters
 function ps.getPlayer(source)
     return QBCore.Functions.GetPlayer(source)
 end
@@ -27,7 +23,7 @@ function ps.getSource(identifier)
 end
 
 function ps.getPlayerName(source)
-    local player = ps.getPlayer(source)
+    local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData.charinfo.firstname .. " " .. player.PlayerData.charinfo.lastname
 end
 
@@ -38,67 +34,67 @@ function ps.getPlayerNameByIdentifier(identifier)
 end
 
 function ps.getPlayerData(source)
-    local player = ps.getPlayer(source)
+    local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData
 end
 
 function ps.getMetadata(source, meta)
-    local player = ps.getPlayer(source)
+    local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData.metadata[meta]
 end
 
 function ps.getCharInfo(source, info)
-    local player = ps.getPlayer(source)
+    local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData.charinfo[info]
 end
 
 function ps.getJob(source)
-    local player = ps.getPlayer(source)
+    local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData.job
 end
 
 function ps.getJobName(source)
-    local player = ps.getPlayer(source)
+    local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData.job.name
 end
 
 function ps.getJobType(source)
-    local player = ps.getPlayer(source)
+    local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData.job.type
 end
 
 function ps.getJobDuty(source)
-    local player = ps.getPlayer(source)
+    local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData.job.onduty
 end
 
 function ps.getJobData(source, data)
-    local player = ps.getPlayer(source)
+    local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData.job[data]
 end
 
 function ps.getJobGrade(source)
-    local player = ps.getPlayer(source)
+    local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData.job.grade
 end
 
 function ps.getJobGradeLevel(source)
-    local player = ps.getPlayer(source)
+    local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData.job.grade.level
 end
 
 function ps.getJobGradeName(source)
-    local player = ps.getPlayer(source)
+    local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData.job.grade.name
 end
 
 function ps.getJobGradePay(source)
-    local player = ps.getPlayer(source)
+    local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData.job.grade.payment
 end
 
 function ps.isBoss(source)
-    local player = ps.getPlayer(source)
+    local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData.job.isboss
 end
 
@@ -208,49 +204,136 @@ function ps.getMoney(source, type)
     return player.PlayerData.money[type] or 0
 end
 
-function ps.getSharedJob(jobName)
-    return QBCore.Shared.Jobs[jobName] or nil
-end
-
-function ps.getSharedJobGrade(jobName, grade)
-    local job = QBCore.Shared.Jobs[jobName]
-    if not job then return nil end
-   return job.grades[tostring(grade)] or nil
-end
 
 function ps.getGang(source)
-    local player = ps.getPlayer(source)
+    local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData.gang
 end
 
 function ps.getGangName(source)
-    local player = ps.getPlayer(source)
+    local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData.gang.name
 end
 
 function ps.getGangData(source, data)
-    local player = ps.getPlayer(source)
+    local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData.gang[data]
 end
 
 function ps.getGangGrade(source)
-    local player = ps.getPlayer(source)
+    local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData.gang.grade
 end
 
 function ps.getGangGradeLevel(source)
-    local player = ps.getPlayer(source)
+    local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData.gang.grade.level
 end
 
 function ps.getGangGradeName(source)
-    local player = ps.getPlayer(source)
+    local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData.gang.grade.name
 end
 
 function ps.isLeader(source)
-    local player = ps.getPlayer(source)
+    local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData.gang.isboss
+end
+
+
+function ps.vehicleOwner(licensePlate)
+    local vehicle = MySQL.query.await('SELECT * FROM player_vehicles WHERE plate = ?', {licensePlate})
+    if not vehicle or #vehicle == 0 then
+        return false
+    end
+    return vehicle[1].citizenid
+end
+
+
+function ps.hasPermission(source, permission)
+    if IsPlayerAceAllowed(source, permission) then
+        return true
+    end
+end
+
+function ps.isOnline(identifier)
+    local player = ps.getPlayerByIdentifier(identifier)
+    if player then return true end
+    return false
+end
+
+----- Shared Functions -----
+function ps.getSharedVehicle(model)
+    local vehicleData = QBCore.Shared.Vehicles[model]
+    if not vehicleData then return nil end
+    return vehicleData
+end
+
+function ps.getSharedVehicleData(model, dataType)
+    local vehicleData = ps.getSharedVehicle(model)
+    if not vehicleData then return nil end
+    return vehicleData[dataType] or nil
+end
+
+function ps.getSharedWeapons(model)
+    if type(model) == 'string' then model = GetHashKey(model) end
+    local weaponData = QBCore.Shared.Weapons[model]
+    if not weaponData then return nil end
+    return weaponData
+end
+
+function ps.getSharedWeaponData(model, dataType)
+    local weaponData = ps.getSharedWeapons(model)
+    if not weaponData then return nil end
+    return weaponData[dataType] or nil
+end
+
+function ps.getJobTable()
+    return QBCore.Shared.Jobs
+end
+
+function ps.jobExists(jobName)
+    return QBCore.Shared.Jobs[jobName] ~= nil
+end
+
+function ps.getSharedJob(job)
+    local jobData = QBCore.Shared.Jobs[job]
+    if not jobData then return nil end
+    return jobData
+end
+
+function ps.getSharedJobData(job, data)
+    local jobData = ps.getSharedJob(job)
+    if not jobData then return nil end
+    return jobData[data] or nil
+end
+
+function ps.getSharedJobRankData(job, rank, data)
+    local jobData = ps.getSharedJob(job)
+    if not jobData then return nil end
+    local gradeData = jobData.grades[tostring(rank)]
+    if not gradeData then return nil end
+    return gradeData[data] or nil
+end
+
+function ps.getSharedGang(gang)
+    local gangData = QBCore.Shared.Gangs[gang]
+    if not gangData then return nil end
+    return gangData
+end
+
+function ps.getSharedGangData(gang, data)
+    local gangData = ps.getSharedGang(gang)
+    if not gangData then return nil end
+    return gangData[data] or nil
+end
+
+function ps.getSharedGangRankData(gang, rank, data)
+    local gangData = QBCore.Shared.Gangs[gang]
+    if not gangData then return nil end
+    local gradeData = gangData.grades[tostring(rank)]
+    if not gradeData then return nil end
+    return gradeData[data] or nil
 end
 
 function ps.getAllJobs()
@@ -269,26 +352,7 @@ function ps.getAllGangs()
     return gangsArray
 end
 
-function ps.vehicleOwner(licensePlate)
-    local vehicle = MySQL.query.await('SELECT * FROM player_vehicles WHERE plate = ?', {licensePlate})
-    if not vehicle or #vehicle == 0 then
-        return false
-    end
-    return vehicle[1].citizenid
-end
-
-function ps.jobExists(jobName)
-    return QBCore.Shared.Jobs[jobName] ~= nil
-end
-
-function ps.hasPermission(source, permission)
-    if IsPlayerAceAllowed(source, permission) then
-        return true
-    end
-end
-
------ events 
-
+-- end shared functions
 RegisterNetEvent('ps_lib:server:toggleDuty', function(bool)
     local src = source
     local duty = ps.getJobDuty(src)

@@ -1,6 +1,6 @@
 Config = {}
 
-Config.Notify = "ox" -- qb, ox, ps
+Config.Notify = "ps" -- qb, ox, ps
 Config.Progressbar = { -- these are DEFAULT values, you can override them in the progressbar function
     style = "oxbar", -- qb, oxbar, ps
     Movement = true, -- Disable movement
@@ -11,6 +11,7 @@ Config.Progressbar = { -- these are DEFAULT values, you can override them in the
 
 Config.DrawText = "ox" -- qb, ox, ps
 Config.Logs = "fivemerr" -- fivemerr or fivemanage 
+Config.QBMenuOverride = true -- if you want to override qb-menu/input with ps_lib context menu, set to true || you must delete qb-menu and qb-input
 ps = {}
 
 QBCore, ESX, qbx, langs = nil, nil, nil

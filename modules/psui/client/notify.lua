@@ -20,6 +20,7 @@ function sendNotification(message, type, duration)
 end
 exports('notify', sendNotification)
 ps.exportChange('ps-ui', 'notify', sendNotification)
+
 RegisterCommand('testNotify', function()
     exports['ps-ui']:notify('This is a test notification!', 'success', 3000)
     exports['ps-ui']:notify('This is a test notification!', 'error', 3000)

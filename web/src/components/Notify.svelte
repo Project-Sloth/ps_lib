@@ -8,7 +8,7 @@
     warning: { img: 'fa-solid fa-triangle-exclamation', color: '#f59e0b' }
   };
   function breakDown(text: string): string {
-    return text.replace(/\n/g, '<br>');
+    return text.replace(/\n/g, '<br>') || text;
     }
 </script>
 

@@ -15,6 +15,7 @@ AddEventHandler('onResourceStop', function(resourceName)
         ps.name = nil
     end
 end)
+
 AddEventHandler('onResourceStart', function(resourceName)
     if resourceName == GetCurrentResourceName() then
         if PlayerPedId() then

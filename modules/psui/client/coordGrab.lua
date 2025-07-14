@@ -5,7 +5,7 @@ local function coordGrab()
     repeat
         Wait(1)
         local hit, coords, surface, entity = ps.raycast()
-        DrawMarker(28, coords.x, coords.y, coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5,  0.5,  0.5, 17, 233, 196, 100)
+        DrawMarker(28, coords.x, coords.y, coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2,  0.2,  0.2, 17, 233, 196, 100)
         SendNUIMessage({
             action = 'updateCoords',
             data = { x = math.floor(coords.x * 100) / 100, y = math.floor(coords.y * 100) / 100, z = math.floor(coords.z * 100) / 100, w = GetEntityHeading(PlayerPedId()) }

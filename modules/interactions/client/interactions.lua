@@ -33,6 +33,8 @@ function ps.notify(text, type, time)
             type = type,
             duration = time,
         })
+    elseif Config.Notify == 'ps' then
+        exports['ps_lib']:notify(text, type, time)
     end
 end
 local function handleDisable(disabled)

@@ -9,8 +9,9 @@ RegisterNUICallback('contextMenuItemClicked', function(datas, cb)
         if option.type == 'server' then
             TriggerServerEvent(option.event, table.unpack(option.args or {}))
         else
-            ps.debug('ps-contextmenu:showContext', 'Triggering event:', option.event, 'with args:', option.args)
-            TriggerEvent(option.event, table.unpack(option.args or {}))
+            local arg = {option.args or {}}
+            ps.debug('ps-contextmenu:showContext', 'Triggering event:', option.event, 'with args:', arg)
+            TriggerEvent(option.event, table.unpack(arg))
         end
     end
     HoldData = {}
@@ -40,7 +41,6 @@ local function showContext(menuData)
     end
 
     local dataToSend = handleData(menuData)
-    ps.debug('Context Menu', 'Showing context menu with data:', dataToSend)
     SetNuiFocus(true, true)
     SendNUIMessage({
         action = 'openContextMenu',
@@ -50,6 +50,7 @@ end
 
 exports('showContext', showContext)
 ps.exportChange('ps-ui', 'showContext', showContext)
+
 RegisterCommand('testContext', function(source, args, rawCommand)
     local testMenu = {
         name = 'Test Context Menu',
@@ -59,7 +60,7 @@ RegisterCommand('testContext', function(source, args, rawCommand)
                 icon = ps.getImage('lockpick'),
                 description = 'This is option 1',
                 action = function()
-                    ps.notify(source, 'You selected Option 1!', 'success')
+                    ps.notify('You selected Option 1!', 'success')
                 end,
                 
             },
@@ -68,7 +69,7 @@ RegisterCommand('testContext', function(source, args, rawCommand)
                 icon = 'https://i.ytimg.com/vi/ZyI7bOqaldg/maxresdefault.jpg',
                 description = 'This is option 2',
                 action = function()
-                    ps.notify(source, 'You selected Option 2!', 'success')
+                    ps.notify('You selected Option 2!', 'success')
                 end,
                 
             },
