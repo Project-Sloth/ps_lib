@@ -112,6 +112,10 @@
   useNuiEvent('copyClipboard', (data) => {
       copyToClipboards(data);
   });
+  useNuiEvent('hideContext', () => {
+    contextMenuShown.set(false);
+    contextMenuItems.set([]);
+  });
   function hideUI() {
     fetchNui('hideUI');
     craftingRecipes.set([]);

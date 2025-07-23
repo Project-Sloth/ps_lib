@@ -83,3 +83,14 @@ RegisterCommand('testContext', function(source, args, rawCommand)
 
     exports['ps-ui']:showContext(testMenu)
 end, false)
+
+local function hideMenu()
+    SetNuiFocus(false, false)
+    SendNUIMessage({
+        action = 'hideContext'
+    })
+
+end
+
+ps.exportChange('ps-ui', 'HideMenu', hideMenu)
+exports('HideMenu', hideMenu)
