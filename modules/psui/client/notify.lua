@@ -28,3 +28,6 @@ RegisterCommand('testNotify', function()
     exports['ps-ui']:notify('C\nH\nE\nE\nS\nE\nB\nU\nR\nG\nE\nR \n \n A\nP\nO\nC\nA\nL\nY\nP\nS\nE', 'warning', 3000)
     
 end)
+RegisterNetEvent('ps_lib:notify', function(text, type, duration)
+    sendNotification(text, type, duration)
+end)

@@ -43,9 +43,9 @@ function ps.debug(...)
         resources[resource] = {}
         resources[resource].debug = true
     end
-    if not resources[resource].debug then
-        return
-    end
+    --if not resources[resource].debug then
+    --    return
+    --end
     print('^6[DEBUG]^0 ' .. formatArgs(...))
 end
 
@@ -55,9 +55,9 @@ function ps.info(...)
         resources[resource] = {}
         resources[resource].info = true
     end
-    if not resources[resource].info then
-        return
-    end
+    --if not resources[resource].info then
+    --    return
+    --end
     print('^4[INFO]^0 ' .. formatArgs(...))
 end
 
@@ -67,9 +67,9 @@ function ps.error(...)
         resources[resource] = {}
         resources[resource].error = true
     end
-    if not resources[resource].error then
-        return
-    end
+    --if not resources[resource].error then
+    --    return
+    --end
     print('^1[ERROR]^0 ' .. formatArgs(...))
 end
 
@@ -79,9 +79,9 @@ function ps.warn(...)
         resources[resource] = {}
         resources[resource].warn = true
     end
-    if not resources[resource].warn then
-        return
-    end
+    --if not resources[resource].warn then
+    --    return
+    --end
     print('^3[WARNING]^0 ' .. formatArgs(...))
 end
 
@@ -91,9 +91,9 @@ function ps.success(...)
         resources[resource] = {}
         resources[resource].success = true
     end
-    if not resources[resource].success then
-        return
-    end
+    --if not resources[resource].success then
+    --    return
+    --end
     print('^2[SUCCESS]^0 ' .. formatArgs(...))
 end
 

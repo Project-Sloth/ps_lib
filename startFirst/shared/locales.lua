@@ -21,7 +21,6 @@ local function check(tbl, key)
         end
         current = current[k]
     end
-    ps.success(current)
     return current
 end
 
@@ -29,7 +28,6 @@ function ps.lang(key, ...)
     local resource = GetInvokingResource() or 'ps_lib'
     local value = nil
     ps.success('ps.lang called for resource: ' .. resource .. ' with key: ' .. tostring(key))
-    ps.success(lang[resource])
     if lang[resource] then
         value = check(lang[resource], key)
     end

@@ -5,7 +5,7 @@ function ps.drawText(text)
     elseif Config.DrawText == 'ox' then
         lib.showTextUI(text)
     elseif Config.DrawText == 'ps' then
-        exports['ps-ui']:DisplayText(text, "yellow")
+        exports['ps-ui']:drawText(text, "yellow")
     end
 end
 
@@ -15,7 +15,7 @@ function ps.hideText()
     elseif Config.DrawText == 'ox' then
         lib.hideTextUI()
     elseif Config.DrawText == 'ps' then
-        exports['ps-ui']:HideText()
+        exports['ps-ui']:hideDrawText()
     end
 end
 
