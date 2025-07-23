@@ -1,5 +1,5 @@
 local zoned = nil
-
+local location = nil
 local function can(taker)
     for item, amount in pairs(taker) do
         if not ps.hasItem(item, amount) then
@@ -64,7 +64,9 @@ RegisterNUICallback('craftItem', function(data, cb)
       end
    end
    if not ps.progressbar('Crafting ' .. ps.getLabel(data.item), data.time, data.anim) then return end
-   TriggerServerEvent('ps_lib:craftItem', zoned, data)
+   TriggerServerEvent('ps_lib:craftItem', zoned, data, location)
+   zoned = nil
+   location = nil
 end)
 
 local function canInteract(checkData)
@@ -139,21 +141,25 @@ local function canInteract(checkData)
 end
 local function initTargets()
     local locations = ps.callback('ps-crafting:getCraftingLocations')
-    for k, v in pairs(locations) do
-        for _, loc in pairs(v.loc) do
-            ps.boxTarget(k .. 'Crafting' .. _, loc, v.targetData.size, {
-                {
-                    label = v.targetData.label,
-                    icon = v.targetData.icon,
-                    action = function()
-                        zoned = k
-                        openCrafter(v.recipes)
-                    end,
-                    canInteract = function()
-                        return canInteract(v.checks)
-                    end,
-                }
-            })
+    for scriptName, values in pairs (locations) do
+        for k, v in pairs (values) do
+            for locKey, locData in pairs(v.loc) do
+                ps.debug(locData.loc)
+                ps.boxTarget(k .. 'Crafting' .. locKey, locData.loc, v.targetData.size, {
+                    {
+                        label = v.targetData.label,
+                        icon = v.targetData.icon,
+                        action = function()
+                            zoned = k
+                            location = locKey
+                            openCrafter(v.recipes)
+                        end,
+                        canInteract = function()
+                            return canInteract(locData.checks)
+                        end,
+                    }
+                })
+            end
         end
     end
 end
@@ -163,4 +169,3 @@ RegisterNetEvent('ps_lib:registerCraftingLocation', function()
     ps.destroyAllTargets()
     initTargets()
 end)
-

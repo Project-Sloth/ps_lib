@@ -7,6 +7,8 @@ function ps.notify(source, text, type, time)
         TriggerClientEvent('QBCore:Notify', source, text, type, time)
     elseif Config.Notify == 'esx' then
         TriggerClientEvent('esx:showNotification', source, text, type, time)
+    elseif Config.Notify == 'ps' then
+        TriggerClientEvent('ps_lib:notify', source, text, type, time)
     elseif Config.Notify == 'ox' then
         TriggerClientEvent('ox_lib:notify', source, {
             description = text,

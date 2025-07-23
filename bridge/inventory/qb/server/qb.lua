@@ -107,4 +107,5 @@ function ps.craftItem(source, recipe)
             return false
         end
     end
+    return true
 end

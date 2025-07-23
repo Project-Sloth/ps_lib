@@ -126,8 +126,8 @@ function ps.getNearbyPlayers(source, distance)
         local dist = #(GetEntityCoords(GetPlayerPed(v)) - GetEntityCoords(GetPlayerPed(source)))
         if dist < 5.0 then
             table.insert(players, {
-                id = ps.getIdentifier(v),
-                name = ps.getPlayerName(v),
+                value = ps.getIdentifier(v),
+                label = ps.getPlayerName(v),
                 source = v,
                 distance = dist,
             })

@@ -9,7 +9,7 @@ Config.Progressbar = { -- these are DEFAULT values, you can override them in the
     Combat = true, -- Disable combat
 }
 
-Config.DrawText = "ox" -- qb, ox, ps
+Config.DrawText = "ps" -- qb, ox, ps
 Config.Logs = "fivemerr" -- fivemerr or fivemanage 
 Config.QBMenuOverride = true -- if you want to override qb-menu/input with ps_lib context menu, set to true || you must delete qb-menu and qb-input
 ps = {}
