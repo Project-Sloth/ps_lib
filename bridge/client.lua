@@ -17,6 +17,7 @@ local inventoryResources = {
     ['ox_inventory'] = 'bridge/inventory/ox/client/ox.lua',
     ['lj-inventory'] = 'bridge/inventory/lj/client/lj.lua',
     ['ps-inventory'] = 'bridge/inventory/ps/client/ps.lua',
+    ['jpr-inventory'] = 'bridge/inventory/jpr/client/jpr.lua',
 }
 local targetResources = {
     ['qb-target'] = 'bridge/target/qb/client.lua',
@@ -77,6 +78,7 @@ local function loadInventory()
     end
 
     if not inventory then
+        loadLib('bridge/inventory/custom/client/custom.lua')
         ps.warn('No inventory resource found: falling back to custom')
     end
 end

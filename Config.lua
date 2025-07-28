@@ -1,6 +1,7 @@
 Config = {}
 
 Config.Notify = "ps" -- qb, ox, ps
+
 Config.Progressbar = { -- these are DEFAULT values, you can override them in the progressbar function
     style = "oxbar", -- qb, oxbar, ps
     Movement = true, -- Disable movement
