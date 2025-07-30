@@ -11,6 +11,11 @@ function ps.getOfflinePlayer(identifier)
     return QBCore.Functions.GetOfflinePlayerByCitizenId(identifier)
 end
 
+function ps.getLicense(source)
+    if GetConvarInt('sv_fxdkMode', 0) == 1 then return 'license:fxdk' end
+    return GetPlayerIdentifierByType(source, 'license')
+end
+
 function ps.getIdentifier(source)
     local player = ps.getPlayer(source)
     return player.PlayerData.citizenid

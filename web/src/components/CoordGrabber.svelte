@@ -57,7 +57,7 @@
     </div>
 {/if}
 
-<style>/* Modern Dark Mode Coordinate Grabber Styles */
+<style>
 
 .coord-grabber {
     position: fixed;
@@ -223,7 +223,6 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
-/* Success message styling */
 .instructions span[style*="color: green"] {
     color: #22c55e !important;
     font-weight: 600;
@@ -246,7 +245,6 @@
     }
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
     .coord-grabber {
         top: 15px;

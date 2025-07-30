@@ -1,5 +1,4 @@
 --[[
---- ZONES:
     This file and module was made by Linden and all overextended contributors.
     You can find the ox_lib repository here:
     https://github.com/overextended/ox_lib
@@ -7,8 +6,11 @@
     This file is licensed under LGPL-3.0 or higher <https://www.gnu.org/licenses/lgpl-3.0.en.html>
 
     Copyright © 2025 Linden <https://github.com/thelindat>
-
-  
+    
+    Major Thank you to them for providing an amazing zoning and grid system system.
+    The only changes made to this file will be to make the structure work in line with our library and will comment out the original code to show what has been changed.
+    all lib. calls will be ps. calls.
+    some instances where where table:push() was used have been changed to table.insert() to work with the current library structure.
     ]]
 
 --- GRID:
@@ -36,12 +38,6 @@
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
-
-    Credits:
-       Major Thank you to them for providing an amazing zoning and grid system system.
-        The only changes made to this file will be to make the structure work in line with our library and will comment out the original code to show what has been changed.
-        all lib. calls will be ps. calls.
-        some instances where where table:push() was used have been changed to table.insert() to work with the current library structure.
 ]]
 
 local mapMinX = -3700
@@ -543,6 +539,7 @@ local function setZone(data)
 
     if data.debug then
         data.debug = nil
+
         data:setDebug(true, data.debugColour)
     end
     
@@ -555,20 +552,6 @@ end
 
 ps.zones = {}
 
--- from https://github.com/overextended/ox_lib/blob/b4e3bcdad75f91eaa6d4e75063de4a281ebd36d9/imports/array/shared.lua#L258
-ps.array = {}
-
-function ps.array.reduce(array, reducer, initialValue, reverse)
-    local length = #array
-    local accumulator = initialValue or array[1]
-    local initialIndex = initialValue and 1 or 2
-
-    for i = initialIndex, length do
-        accumulator = reducer(accumulator, array[i], i)
-    end
-
-    return accumulator
-end
 ---@class PolyZone : ZoneProperties
 ---@field points vector3[]
 ---@field thickness? number
@@ -642,7 +625,7 @@ function ps.zones.poly(data)
 
     data.coords = data.polygon:centroid()
     data.__type = 'poly'
-    data.radius = ps.array.reduce(data.polygon, function(acc, point)
+    data.radius = lib.array.reduce(data.polygon, function(acc, point)
         local distance = #(point - data.coords)
         return distance > acc and distance or acc
     end, 0)
