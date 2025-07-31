@@ -34,11 +34,11 @@
 
     let gameTimeRemaining = 0;
 
-    let amountOfAnswers = $scramblerSettings.amountOfAnswers; // how many numbers for game
-    let gameTime = $scramblerSettings.gameTime * 100; // seconds
+    let amountOfAnswers = $scramblerSettings.amountOfAnswers; 
+    let gameTime = $scramblerSettings.gameTime * 100;
 
     let correctIndices = [], correctAnswers = [];
-    let changeBoardAfter = $scramblerSettings.changeBoardAfter * 100; //3 seconds
+    let changeBoardAfter = $scramblerSettings.changeBoardAfter * 100;
     let originalChangeBoardAfter = changeBoardAfter;
     let counter, gameStarted = false, gameEnded = false;
     let hackSuccess = false;
@@ -48,7 +48,6 @@
     let cursorIndices = [], cursorStartIndex = 43;
 
     onMount(() => {
-        //generating an array to maintain each cube data by index
         for(let i = 0; i < numberOfCubes; i++) {
             const cubeData = {
                 cubeIndex: i,
@@ -57,10 +56,7 @@
             allCubes.push(cubeData);
             allCubes = allCubes;
         }
-
-        //generate correct answer values - column number - has to be Number of cols - 4 to have straight 4 answers
         const columnNumber = Math.floor(Math.random() * 5);
-        //generate correct answer values - row number
         const rowNumber = Math.floor(Math.random() * 7);
 
         const startIndex = rowNumber * totalNumberOfColumns + columnNumber;
@@ -71,8 +67,6 @@
         }
 
         getCursorIndices();
-
-        //start game
         setTimeout(() => {
             gameStarted = true;
             counter = setInterval(startTimer, 10);
@@ -89,7 +83,6 @@
                 cursorIndices.push( cursorStartIndex+i );
             }
         }
-        // return group;
     }
 
     function endTheGame() {
@@ -122,7 +115,6 @@
     function scrambleBoard() {
         changeBoardAfter = originalChangeBoardAfter;
 
-         //generating an array to maintain each cube data by index
          let newCubeData = [];
          for(let i = 0; i < numberOfCubes; i++) {
             let cubeValue;
@@ -490,7 +482,6 @@
     text-shadow: 0 0 8px rgba(251, 191, 36, 0.2);
 }
 
-/* Active cursor selection styles */
 .ps-text-red {
     color: #FBBF24 !important;
     text-shadow: 
@@ -503,7 +494,6 @@
     background: rgba(251, 191, 36, 0.2);
 }
 
-/* Active cube highlighting for cursor selection */
 .each-cube:has(.ps-text-red) {
     background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(251, 191, 36, 0.08) 100%);
     border-color: #FBBF24;
@@ -522,8 +512,6 @@
     opacity: 1;
     background: linear-gradient(90deg, transparent 0%, #FBBF24 50%, transparent 100%);
 }
-
-/* Responsive adjustments */
 @media (max-width: 1200px) {
     .scrambler-game-base {
         height: 32vw;

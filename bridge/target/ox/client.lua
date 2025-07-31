@@ -33,7 +33,6 @@ function ps.boxTarget(name, location, size, options)
         options = compat,
         debug = false
     })
-    ps.debug('Creating target: ' .. name)
 end
 
 function ps.circleTarget(name, location, size, options)
@@ -99,21 +98,19 @@ function ps.targetModel(entity, options)
 end
 
 function ps.destroyAllTargets()
-    for resourceName, resourceZones in pairs(zones) do
-        ps.debug('Destroying all targets for resource: ' .. resourceName)
-        for key, name in pairs(zones[resourceName]) do
-            ps.debug('Destroying target: ' .. name)
-            exports.ox_target:removeZone(name)
+    local resource = GetInvokingResource() or GetCurrentResourceName()
+    if zones[resource] then
+        for k, v in pairs(zones[resource]) do
+            exports.ox_target:removeZone(v)
         end
     end
-    zones = {}
 end
 
 function ps.destroyTarget(name)
     if not name then return end
-    exports.ox_target:removeZone(zones[GetInvokingResource() or 'ps_lib'][name])
-    ps.debug('Destroying target: ' .. name)
-    zones[GetInvokingResource() or 'ps_lib'][name] = nil
+    local resource = GetInvokingResource() or GetCurrentResourceName()
+    exports.ox_target:removeZone(zones[resource][name])
+    zones[resource][name] = nil
 end
 
 AddEventHandler('onResourceStop', function(resourceName)

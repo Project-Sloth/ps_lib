@@ -13,9 +13,6 @@ function ps.requestModel(model, timeout)
     return true
 end
 
--- TODO:
--- I added ps.loadAnimDict in animation.lua before I saw this
--- need to consilidate these two
 function ps.requestAnim(dict, timeout)
     timeout = timeout or 15000
     local startTime = GetGameTimer()

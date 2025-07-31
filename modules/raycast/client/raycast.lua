@@ -1,5 +1,5 @@
 
-local RotationToDirection = function(rotation)
+local function RotationToDirection(rotation)
     local adjustedRotation = {
         x = (math.pi / 180) * rotation.x,
         y = (math.pi / 180) * rotation.y,
@@ -13,7 +13,7 @@ local RotationToDirection = function(rotation)
     return direction
 end
 
-local RayCastGamePlayCamera = function(distance)
+local function RayCastGamePlayCamera(distance)
     local currentRenderingCam = false
     if not IsGameplayCamRendering() then
         currentRenderingCam = GetRenderingCam()

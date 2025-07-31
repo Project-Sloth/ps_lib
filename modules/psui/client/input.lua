@@ -5,6 +5,7 @@ RegisterNUICallback('submitForm', function(data, cb)
     if p then
         p:resolve(data)
         p = nil
+        isBusy = false
     end
 end)
 
@@ -15,7 +16,6 @@ end)
 -- required
 -- options?
 local function input(name, options)
-    ps.debug(name, options)
     if not name then name = 'Input Menu' end
     if not options then
         ps.error('Input options are required')
@@ -52,7 +52,7 @@ RegisterCommand('testanput', function(source, args, rawCommand)
         {
             type = 'number',
             title = 'Enter your age',
-            placeholder = 'Age',
+            placeholder = 1,
             required = true,
             min = 1,
             max = 120
@@ -65,6 +65,18 @@ RegisterCommand('testanput', function(source, args, rawCommand)
                 { label = 'Green', value = 'green' },
                 { label = 'Blue', value = 'blue' }
             },
+            required = false
+        },
+        {
+            type = 'checkbox',
+            title = 'Subscribe to newsletter',
+            description = 'Receive updates and news',
+            required = false
+        },
+        {
+            type = 'textarea',
+            title = 'Additional Comments',
+            placeholder = 'Any additional comments or feedback?',
             required = false
         }
     }

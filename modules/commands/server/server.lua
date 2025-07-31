@@ -2,46 +2,39 @@
 local function canAccess(source, terms)
     if terms.admin then
         if not IsPlayerAceAllowed(source, 'command') then
-            ps.debug(('Player %s does not have permission to use admin commands'):format(source))
             return false
         end
     end
     if terms.job then
         if type(terms.job) == 'string' then
             if ps.getJobName(source) ~= terms.job then
-                ps.debug(('Player %s does not have the required job %s'):format(source, terms.job))
                 return false
             end
         elseif type(terms.job) == 'table' then
             local jobName = ps.getJobName(source)
             if not ps.tableContains(terms.job, jobName) then
-                ps.debug(('Player %s does not have one of the required jobs: %s'):format(source, table.concat(terms.job, ', ')))
                 return false
             end
         end
     end
     if terms.jobRank then
         if terms.jobRank > ps.getJobGradeLevel(source) then
-            ps.debug(('Player %s does not have the required job rank %d'):format(source, terms.jobRank))
             return false
         end
     end
     if terms.gangRank then
         if terms.gangRank > ps.getGangGradeLevel(source) then
-            ps.debug(('Player %s does not have the required gang rank %d'):format(source, terms.gangRank))
             return false
         end
     end
     if terms.gang then
         if type(terms.gang) == 'string' then
             if ps.getGangName(source) ~= terms.gang then
-                ps.debug(('Player %s does not have the required gang %s'):format(source, terms.gang))
                 return false
             end
         elseif type(terms.gang) == 'table' then
             local gangName = ps.getGangName(source)
             if not ps.tableContains(terms.gang, gangName) then
-                ps.debug(('Player %s does not have one of the required gangs: %s'):format(source, table.concat(terms.gang, ', ')))
                 return false
             end
         end
@@ -49,13 +42,11 @@ local function canAccess(source, terms)
     if terms.citizenid then
         if type(terms.citizenid) == 'string' then
             if ps.getIdentifier(source) ~= terms.citizenid then
-                ps.debug(('Player %s does not have the required citizen ID %s'):format(source, terms.citizenid))
                 return false
             end
         elseif type(terms.citizenid) == 'table' then
             local citizenId = ps.getIdentifier(source)
             if not ps.tableContains(terms.citizenid, citizenId) then
-                ps.debug(('Player %s does not have one of the required citizen IDs: %s'):format(source, table.concat(terms.citizenid, ', ')))
                 return false
             end
         end
@@ -63,19 +54,18 @@ local function canAccess(source, terms)
     if terms.jobType then
         if type(terms.jobType) == 'string' then
             if ps.getJobType(source) ~= terms.jobType then
-                ps.debug(('Player %s does not have the required job type %s'):format(source, terms.jobType))
                 return false
             end
         elseif type(terms.jobType) == 'table' then
             local jobType = ps.getJobType(source)
             if not ps.tableContains(terms.jobType, jobType) then
-                ps.debug(('Player %s does not have one of the required job types: %s'):format(source, table.concat(terms.jobType, ', ')))
                 return false
             end
         end
     end
     return true
 end
+
 function ps.registerCommand(name, terms, func)
     if not name then 
         ps.debug('ps.registerCommand: name is required')

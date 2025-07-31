@@ -24,8 +24,6 @@ RegisterNetEvent('ps_lib:enteringVehicle', function(vehicle, seat, model, netId)
         plate = GetVehicleNumberPlateText(vehicle),
 
     }
-    ps.debug('Entering Vehicle', ps.vehicle)
-
 end)
 
 RegisterNetEvent('ps_lib:leftVehicle', function(vehicle, seat, model, netId)
@@ -67,10 +65,8 @@ RegisterNetEvent('ps_lib:enteredVehicle', function(vehicle, seat, model, netId)
         color = GetVehicleColours(vehicle),
         doors = GetNumberOfVehicleDoors(vehicle),
         plate = GetVehicleNumberPlateText(vehicle),
-
     }
 end)
-
 
 function ps.vehicleData()
    if not ps.isInVehicle then

@@ -36,7 +36,6 @@ local function loadEmotes()
 
     if not emote then
         loadLib('bridge/emote/custom/client.lua')
-        ps.warn('No emote resource found: falling back to custom')
     end
 end
 
@@ -112,8 +111,9 @@ AddEventHandler('onResourceStart', function(resourceName)
     end
 end)
 
-ps.debug(emote, framework, inventory, target)
+loadLib('bridge/menus/'..Config.Menus..'.lua')
 
 function ps.getFramework()
     return framework
 end
+

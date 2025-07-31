@@ -22,8 +22,8 @@ if Config.Logs == 'fivemerr' then
     end
 end
 
+-- highly experimental as i dont have fivemanage so hopefully it works
 if Config.Logs == 'fivemanage' then
-    
     function ps.log(dataSet, level, message, meta)
         exports.fmsdk:Log(dataSet, level, message, meta)
     end

@@ -1,3 +1,4 @@
+
 function ps.drawText(text)
     if not text then return end
     if Config.DrawText == 'qb' then
@@ -37,6 +38,7 @@ function ps.notify(text, type, time)
         exports['ps_lib']:notify(text, type, time)
     end
 end
+
 local function handleDisable(disabled)
     if disabled.movement == nil then
         disabled.movement = Config.Progressbar.Movement
@@ -52,6 +54,8 @@ local function handleDisable(disabled)
     end
     return disabled
 end
+
+
 local p = nil
 function ps.progressbar(text, time, emote, disabled)
     disabled = handleDisable(disabled or {})
@@ -131,7 +135,7 @@ function ps.minigame(type, values)
     elseif type == 'ps-thermite' then
         return exports['ps-ui']:Thermite(false, values.timeLimit, values.gridsize, values.wrong)
     elseif type == 'ox' then
-        if values.input == nil then
+        if not values.input then
             values.input = {"1", "2", "3", "4"}
         end
         local success = lib.skillCheck(values.difficulty, values.input)

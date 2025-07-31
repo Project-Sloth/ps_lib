@@ -8,6 +8,8 @@
         placeholder?: string;
         required: boolean;
         options?: { value: string; label: string }[];
+        min?: number;
+        max?: number;
     }
 
     let formData: Record<string, any> = {};
@@ -43,8 +45,8 @@
         $inputData.forEach((_, index: number) => {
             dataArray.push(formData[`field_${index}`]);
         });
-        fetchNui('hideUI');
         fetchNui('submitForm', dataArray);
+        fetchNui('hideUI');
         inputData.set([]);
         isInputting.set(false);
     }
@@ -57,7 +59,7 @@
                 <h2 class="form-title">{$inputFormName}</h2>
                 <div class="form-title-accent"></div>
             </div>
-            <form on:submit|preventDefault={handleSubmit}>
+            <div on:submit|preventDefault={handleSubmit}>
                 <div class="input-scroll-container">
                     {#each $inputData as item, index}
                         <div class="form-group">
@@ -88,6 +90,19 @@
                                     placeholder={item.placeholder || ''}
                                     bind:value={formData[`field_${index}`]}
                                     required={item.required}
+                                    min={item.min || -9007199254740991}
+                                    max={item.max || 9007199254740991}
+                                    step="any"
+                                    on:input={() => {
+                                        const key = `field_${index}`;
+                                        const value = formData[key];
+                                        if (value != null && item.min != null && value < item.min) {
+                                            formData[key] = item.min;
+                                        }
+                                        if (value != null && item.max != null && value > item.max) {
+                                            formData[key] = item.max;
+                                        }
+                                    }}
                                 />
                             {:else if item.type === 'longtext'}
                                 <input
@@ -148,7 +163,7 @@
                         Submit
                     </button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 {/if}

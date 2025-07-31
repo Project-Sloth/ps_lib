@@ -95,7 +95,7 @@ function ps.getNearestObjectOfType(type, distance, coords)
     if not type then return end
     if not coords then coords = GetEntityCoords(PlayerPedId()) end
     if not distance then distance = 10.0 end
-    print(GetClosestObjectOfType(coords.x,coords.y,coords.z, distance, type, false, false, false))
+    return GetClosestObjectOfType(coords.x, coords.y, coords.z, distance, type, false, false, false)
 end
 
 function ps.getNearbyPed(coords, distance)

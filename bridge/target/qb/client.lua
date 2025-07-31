@@ -112,7 +112,6 @@ function ps.destroyAllTargets()
         end
         zones[resource] = nil
     end
-
 end
 
 function ps.destroyTarget(name)

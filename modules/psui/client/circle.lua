@@ -40,4 +40,9 @@ RegisterCommand("testCircle", function(source, args, rawCommand)
     local circles = tonumber(args[1]) or 1
     local seconds = tonumber(args[2]) or 10
     local c = circle(false, circles, seconds)
+    if c then
+        ps.notify("Circle game completed successfully with result: " .. tostring(c), 'success')
+    else
+        ps.notify("Circle game failed or was cancelled.", 'error')
+    end
 end, false)

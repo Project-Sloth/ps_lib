@@ -38,7 +38,6 @@ local emotes = {
 ---@param variant string? Optional variant for the emote
 
 function ps.playEmote(emote, variant)
-    ps.debug(emote, emotes[emote])
     if emotes[emote] then
         ps.playAnim(emote)
         IsInEmote = true

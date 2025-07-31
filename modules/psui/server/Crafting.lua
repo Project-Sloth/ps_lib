@@ -27,9 +27,9 @@ local CraftingTable = {
                     time = 3000,
                     anim = 'tosti',
                     recipe = {},
-                    minigame = {
-                        type = 'circle',
-                        data = {circles = 4, time = 8}
+                    minigame = { -- optional, if you want to use a minigame
+                        type = 'ps-circle', -- look at modules/interactions/client/client.lua ps.minigame for more info
+                        data = {circles = 4, time = 8} -- refer above for format
                     }
                 },
                 advancedlockpick = {
@@ -63,14 +63,14 @@ ps.registerCallback('ps-crafting:getCraftingLocations', function(source)
     return CraftingTable
 end)
 
-RegisterNetEvent('ps_lib:craftItem', function(zone, data, num)
-    local src = source 
-    local itemVerify = CraftingTable[zone].recipes[data.item]
+RegisterNetEvent('ps_lib:craftItem', function(data, info)
+    local src = source
+    local itemVerify = CraftingTable[info.script][info.zone].recipes[data.item]
     if not itemVerify then
         ps.notify(src, 'Invalid item', 'error')
         return
     end
-    if not ps.checkDistance(src, CraftingTable[zone].loc[num].loc, 2.5) then
+    if not ps.checkDistance(src, CraftingTable[info.script][info.zone].loc[info.location].loc, 2.5) then
         ps.notify(src, 'You are too far away', 'error')
         return
     end
@@ -84,9 +84,6 @@ end)
 
 local function registerCrafter(data)
     local resource = GetInvokingResource()
-    if not data.label then
-        data.label = 'Crafting'
-    end
     if not data.loc then
         ps.debug('Crafting location not set for:', data.label)
         return
@@ -106,9 +103,6 @@ local function registerCrafter(data)
             label = 'Open Crafting',
             icon = 'fa-solid fa-hammer',
         }
-    end
-    if not data.checks then
-        data.checks = {}
     end
     if not CraftingTable[resource] then
         CraftingTable[resource] = {}

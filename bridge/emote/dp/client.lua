@@ -35,12 +35,12 @@ local emotes = {
 ---@param variant string? Optional variant for the emote
 
 function ps.playEmote(emote, variant)
-    if emotes[emote] then 
+    if emotes[emote] then
         ps.playAnim(emote)
         IsInEmote = true
         return
     end
-    return TriggerEvent('animations:client:EmoteCommandStart', {emote})
+    TriggerEvent('animations:client:EmoteCommandStart', {emote})
 end
 
 -- Cancel an emote
@@ -54,7 +54,7 @@ function ps.cancelEmote()
             return
         end
     end
-    return TriggerEvent('animations:client:EmoteCommandStart', {"c"})
+    TriggerEvent('animations:client:EmoteCommandStart', {"c"})
 end
 
 
@@ -69,6 +69,7 @@ local function listener()
         end
     end)
 end
+
 function ps.playAnim(emote)
     if not emotes[emote] then
         ps.warn('Emote not found: ' .. emote)

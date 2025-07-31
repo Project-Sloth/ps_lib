@@ -114,7 +114,6 @@ end
 
 function ps.isLeader()
     local Gang = ps.getGang()
-    ps.debug("Gang: ", Gang)
     return Gang.isboss or false
 end
 

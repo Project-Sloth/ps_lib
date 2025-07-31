@@ -1,3 +1,5 @@
+
+
 function ps.notify(source, text, type, time)
     if not source then return end
     if not text then return end
@@ -16,5 +18,4 @@ function ps.notify(source, text, type, time)
             duration = time,
         })
     end
-    return {source, text, type, time}
 end

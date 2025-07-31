@@ -39,24 +39,22 @@
 
     let gameTimeRemaining = 0;
 
-    let numberOfCorrectCubesToDisplay = $thermSettings.amountOfAnswers; // how many cubes to remember for game - increment number based on difficulty level
+    let numberOfCorrectCubesToDisplay = $thermSettings.amountOfAnswers;
     let gameTime = $thermSettings.gameTime * 100;
     let numberOfWrongClicksAllowed = $thermSettings.maxAnswersIncorrect;
 
-    let correctIndices = [], displayCorrectIndicesFor = $thermSettings.displayInitialAnswersFor * 1000; // time in seconds
+    let correctIndices = [], displayCorrectIndicesFor = $thermSettings.displayInitialAnswersFor * 1000;
     let counter, gameStarted = false, gameEnded = false;
     let hackSuccess = false;
     let numberOfCubes = $thermSettings.gridSize * $thermSettings.gridSize;
     let allCubes = [];
 
     onMount(() => {
-        //generate random indices from number of cubes
         while(correctIndices.length < numberOfCorrectCubesToDisplay){
             const r = Math.floor(Math.random() * numberOfCubes);
             if(correctIndices.indexOf(r) === -1) correctIndices.push(r);
         }
 
-        //generating an array to maintain each cube data by index
         for(let i = 0; i < numberOfCubes; i++) {
             const cubeData = {
                 cubeIndex: i,
@@ -72,7 +70,6 @@
         })[0];
 
         setTimeout(() => {
-            //assigning cube width and height
             allCubes.forEach((cube) => {
                 const gameContainer = document.getElementById('memory-game-container');
                 if(gameContainer) {
@@ -87,8 +84,6 @@
                 }
             });
         }, 1500);
-        
-        //stop showing the correct cubes and start the guessing game
         setTimeout(() => {
             gameStarted = true;
             counter = setInterval(startTimer, 10);
@@ -135,7 +130,6 @@
 
             const wrongClickedCubes = getWrongClicks();
 
-            // if wrong clicks are done, end the game
             if(wrongClickedCubes.length >= numberOfWrongClicksAllowed) {
                 clearInterval(counter);
                 setTimeout(() => {

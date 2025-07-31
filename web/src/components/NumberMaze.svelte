@@ -15,15 +15,10 @@
     let displayCubeNumbers = false;
 
     onMount(() => {
-        //get starting blinking index
-        blinkingIndex = Math.floor(Math.random() * (4 - 1) + 1); // 4 => highest index, 1 => lowest index for blink
-
-        //generate the correct route
+        blinkingIndex = Math.floor(Math.random() * (4 - 1) + 1);
         correctRoute = generateBestRoute(blinkingIndex);
         
         goodPositions = Object.keys(correctRoute);
-
-        //generating an array to maintain each cube data by index
         for(let i = 0; i < numberOfCubes; i++) {
             const cubeValue = [blinkingIndex, blinkingIndex * 7].includes(i) ? Math.floor(Math.random() * (4 - 1) + 1) : Math.floor(Math.random() * (5 - 1) + 1);
             
@@ -35,8 +30,6 @@
             allCubes.push(cubeData);
             allCubes = allCubes;
         }
-
-        //stop showing the correct cubes and start the guessing game
         setTimeout(() => {
             gameStarted = true;
             counter = setInterval(startTimer, 10);
@@ -103,8 +96,6 @@
         const additionClassString = isGood ? ' ps-bg-green-cube' : ' ps-bg-wrong-cube';
         const newClassList = clickedCube.classList + additionClassString;
         clickedCube.classList = newClassList;
-
-        //replace the clicked cube data in allCubes array
         allCubes[clickedCube.cubeIndex] = clickedCube;
         allCubes = allCubes;
     }
@@ -113,18 +104,13 @@
     function handleCubeClick(clickedCube) {
         if(!gameEnded && clickedCube.cubeIndex !== 0) {
             let posClicked = clickedCube.cubeIndex;
-            //game just started and user made first click
             if(lastPos === 0) {
-                //stop the blinking and hide numbers on cubes
                 stopBlinking = true;
                 if([blinkingIndex, blinkingIndex * 7].includes(posClicked)) {
                     lastPos = posClicked;
-
-                    //display good cube click and update allCubes array
                     updateAllCubesArrayWithClassListOfClickedCube(true, clickedCube);
                 } else {
                     wrongAnswerCount++;
-                    //display bad cube click and update allCubes array
                     updateAllCubesArrayWithClassListOfClickedCube(false, clickedCube);
                 }
             } else {
@@ -134,15 +120,12 @@
 
                 if(posJumps <= maxH && posClicked === lastPos + posJumps) {
                     lastPos = posClicked;
-                    //display good cube click and update allCubes array
                     updateAllCubesArrayWithClassListOfClickedCube(true, clickedCube);
                 } else if (posJumps <= maxV && posClicked === lastPos + (posJumps * 7)) {
                     lastPos = posClicked;
-                    //display good cube click and update allCubes array
                     updateAllCubesArrayWithClassListOfClickedCube(true, clickedCube);
                 } else {
                     wrongAnswerCount++;
-                    //display bad cube click and update allCubes array
                     updateAllCubesArrayWithClassListOfClickedCube(false, clickedCube);
                 }
             }
@@ -152,9 +135,6 @@
     }
 
     function checkMazeAnswer() {
-        // check if wrong answers exceeded / game ended - both with same condition
-        // if yes, end the game, clear counter and display correct answers and then stop game
-        // else, end the game within few seconds
         if(wrongAnswerCount === numberOfWrongClicksAllowed) {
             clearInterval(counter);
             

@@ -40,8 +40,6 @@ function ps.clearInventory(source, identifier)
     if Player then
         Player.Functions.ClearInventory()
         TriggerClientEvent('lj-inventory:client:closeInventory', source)
-    else
-        ps.warn('Player not found for clearing inventory: ' .. identifier)
     end
 end
 
@@ -51,8 +49,6 @@ function ps.clearStash(source, identifier)
     if stash and #stash > 0 then
         MySQL.update.await('UPDATE stashitems SET items = ? WHERE stash = ?', {json.encode({}), identifier})
         TriggerClientEvent('lj-inventory:client:closeInventory', source)
-    else
-        ps.warn('No stash found for clearing: ' .. identifier)
     end
 end
 

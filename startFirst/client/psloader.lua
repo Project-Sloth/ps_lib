@@ -19,7 +19,6 @@ function loadLib(filePath)
     return true
 end
 
--- TODO: test this function
 function ps.loadFile(filePath)
     local fileName = GetInvokingResource()
     local fullScript = LoadResourceFile(fileName, filePath)

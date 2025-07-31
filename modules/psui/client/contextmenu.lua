@@ -7,11 +7,9 @@ RegisterNUICallback('contextMenuItemClicked', function(datas, cb)
     end
     if option and option.event then
         if option.type == 'server' then
-            TriggerServerEvent(option.event, table.unpack(option.args or {}))
+            TriggerServerEvent(option.event, option.args or {})
         else
-            local arg = {option.args or {}}
-            ps.debug('ps-contextmenu:showContext', 'Triggering event:', option.event, 'with args:', arg)
-            TriggerEvent(option.event, table.unpack(arg))
+            TriggerEvent(option.event, option.args or {})
         end
     end
     HoldData = {}
@@ -36,7 +34,6 @@ end
 
 local function showContext(menuData)
     if not menuData or not menuData.items or #menuData.items == 0 then
-        ps.debug('Context Menu', 'No items to show')
         return
     end
 
@@ -62,7 +59,6 @@ RegisterCommand('testContext', function(source, args, rawCommand)
                 action = function()
                     ps.notify('You selected Option 1!', 'success')
                 end,
-                
             },
             {
                 title = 'Option 2',
@@ -71,7 +67,6 @@ RegisterCommand('testContext', function(source, args, rawCommand)
                 action = function()
                     ps.notify('You selected Option 2!', 'success')
                 end,
-                
             },
             {
                 title = 'Option 3 (No Action)',

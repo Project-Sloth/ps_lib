@@ -1,5 +1,4 @@
 <script lang="ts">
-
     import {varActive, varSettings} from "../store/VarGame";
     import { onMount } from "svelte";
     import fetchNui from "../../utils/fetch";
@@ -177,7 +176,8 @@
             </div>
         </div>
     </div>
-{/if}<style>
+{/if}
+<style>
   .overlay {
     position: fixed;
     top: 50%;

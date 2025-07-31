@@ -54,6 +54,3 @@ RegisterNetEvent('ps_lib:client:noCallback', function(name, ...)
     pendingCallbacks[name].promise:resolve(nil)
     pendingCallbacks[name] = nil
 end)
-
-
--- TODO: Add Timeout function so it wont wait forever

@@ -39,7 +39,7 @@ end
 function ps.getIdentifier()
     return ps.getPlayerData().citizenid
 end
-
+ps.getCid = ps.getIdentifier
 --- @PARAM: meta: string
 --- @return: any
 --- @DESCRIPTION: Returns specific metadata for the player.
@@ -61,7 +61,7 @@ end
 function ps.getPlayerName()
     return ps.getPlayerData().charinfo.firstname .. " " .. ps.getPlayerData().charinfo.lastname
 end
-
+ps.getName = ps.getPlayerName
 --- @return: number
 --- @DESCRIPTION: Returns the player's ped ID.
 function ps.getPlayer()

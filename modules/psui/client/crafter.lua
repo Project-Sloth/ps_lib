@@ -1,5 +1,6 @@
 local zoned = nil
 local location = nil
+local script = nil
 local function can(taker)
     for item, amount in pairs(taker) do
         if not ps.hasItem(item, amount) then
@@ -58,15 +59,16 @@ end
 exports('openCrafter', openCrafter)
 
 RegisterNUICallback('craftItem', function(data, cb)
-   if data.minigame then
-      if not ps.minigame(data.minigame.type, data.minigame.data) then
-         return
-      end
-   end
-   if not ps.progressbar('Crafting ' .. ps.getLabel(data.item), data.time, data.anim) then return end
-   TriggerServerEvent('ps_lib:craftItem', zoned, data, location)
-   zoned = nil
-   location = nil
+    if data.minigame then
+        if not ps.minigame(data.minigame.type, data.minigame.data) then
+           return
+        end
+    end
+    if not ps.progressbar('Crafting ' .. ps.getLabel(data.item), data.time, data.anim) then return end
+    TriggerServerEvent('ps_lib:craftItem',  data, {script = script, location = location, zone = zoned})
+    zoned = nil
+    location = nil
+    script = nil
 end)
 
 local function canInteract(checkData)
@@ -139,19 +141,21 @@ local function canInteract(checkData)
 
     return need == have
 end
+local craftingNames = {}
 local function initTargets()
     local locations = ps.callback('ps-crafting:getCraftingLocations')
     for scriptName, values in pairs (locations) do
         for k, v in pairs (values) do
             for locKey, locData in pairs(v.loc) do
-                ps.debug(locData.loc)
-                ps.boxTarget(k .. 'Crafting' .. locKey, locData.loc, v.targetData.size, {
+                craftingNames[#craftingNames+1] = scriptName .. 'Crafting' .. k.. locKey
+                ps.boxTarget(scriptName .. 'Crafting' .. k.. locKey, locData.loc, v.targetData.size, {
                     {
                         label = v.targetData.label,
                         icon = v.targetData.icon,
                         action = function()
                             zoned = k
                             location = locKey
+                            script = scriptName
                             openCrafter(v.recipes)
                         end,
                         canInteract = function()
@@ -166,6 +170,9 @@ end
 initTargets()
 
 RegisterNetEvent('ps_lib:registerCraftingLocation', function()
-    ps.destroyAllTargets()
+    for k, v in pairs(craftingNames) do
+        exports['qb-target']:RemoveZone(v)
+    end
+    craftingNames = {}
     initTargets()
 end)
