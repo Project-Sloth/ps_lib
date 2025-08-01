@@ -47,8 +47,6 @@
             g_end = g_start + g_end;
 
             key_to_press = '' + getRandomInt(1, 4);
-
-            // Randomly choose direction
             direction = Math.random() > 0.5 ? "clockwise" : "counter-clockwise";
 
             if (direction === "clockwise") {

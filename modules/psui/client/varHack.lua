@@ -40,4 +40,4 @@ RegisterCommand("testVarHack", function(source, args, rawCommand)
     local speed = tonumber(args[2])  -- Get the speed from command arguments
     local c = varHack(false, blocks, speed)  -- Start the VarHack game with provided parameters
     ps.debug('testVarHack', 'VarHack result:', c)  -- Log the result for debugging
-end, false)  -- Command is not restricted to admins
+end, false)

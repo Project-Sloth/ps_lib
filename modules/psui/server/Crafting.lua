@@ -2,8 +2,8 @@ local CraftingTable = {
     ps_lib = {
         {
             loc = { -- must be tabled. can use only one location though
-                {loc= vector3(-819.71, -859.37, 20.71), checks = {}},
-                {loc= vector3(-1343.79, -240.20, 42.97), checks = {}}
+                {loc= vector3(-819.71, -859.37, -200.71), checks = {}},
+                {loc= vector3(-1343.79, -240.20, -142.97), checks = {}}
             },
             --checks = { -- can either be strings OR tables
             --    job = {'police', 'ambulance'},

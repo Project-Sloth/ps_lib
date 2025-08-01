@@ -49,7 +49,6 @@ exports("Thermite", thermite)
 ps.exportChange('ps-ui', "Thermite", thermite)
 
 RegisterCommand('testThermite', function(source, args, rawCommand)
-    -- Example command to test the Thermite function
     local time = tonumber(args[1]) or 150
     local gridsize = tonumber(args[2]) or 5
     local wrong = tonumber(args[3]) or 3
@@ -62,4 +61,4 @@ RegisterCommand('testThermite', function(source, args, rawCommand)
             print("Thermite game failed.")
         end
     end, time, gridsize, wrong, correctBlocks)
-end, false)  -- false means this command is not restricted to server-side only
+end, false)

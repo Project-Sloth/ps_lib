@@ -1,22 +1,19 @@
--- FX Information
+
 fx_version 'cerulean'
 use_experimental_fxv2_oal 'yes'
 lua54 'yes'
 game 'gta5'
 
--- Resource Information
 name 'ps_lib'
 version '1.0.0'
 description 'Project Sloth Library'
 author 'Project Sloth'
 
--- Manifest
 client_scripts {
-    '@qbx_core/modules/playerdata.lua',
+    --'@qbx_core/modules/playerdata.lua',
     'startFirst/client/**.lua',
     'modules/**/client/**.lua',
     'bridge/client.lua',
-    
 }
 
 server_scripts {
@@ -24,13 +21,12 @@ server_scripts {
     'startFirst/server/**.lua',
     'modules/**/server/**.lua',
     'bridge/server.lua',
-    
 }
 
 shared_scripts {
     'Config.lua',
     'startFirst/shared/**.lua',
-    '@ox_lib/init.lua',
+    --'@ox_lib/init.lua',
     'modules/**/shared/**.lua',
     'init.lua'
 }
