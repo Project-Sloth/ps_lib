@@ -1,58 +1,104 @@
 --- Player Getters
+
+--- @param source any
+--- @return unknown
+--- @description Returns the player object for the given source.
 function ps.getPlayer(source)
     return QBCore.Functions.GetPlayer(source)
 end
 
+--- @param identifier string
+--- @return table|nil
+--- @description Returns the player object for the given identifier.
 function ps.getPlayerByIdentifier(identifier)
     return QBCore.Functions.GetPlayerByCitizenId(identifier) or QBCore.Functions.GetOfflinePlayerByCitizenId(identifier)
 end
 
+--- @param identifier string
+--- @return table|nil
+--- @description Returns the offline player object for the given identifier.
 function ps.getOfflinePlayer(identifier)
     return QBCore.Functions.GetOfflinePlayerByCitizenId(identifier)
 end
 
+--- @param source any
+--- @return string|nil
+--- @description Returns the GTA license identifier for the given source.
 function ps.getLicense(source)
     if GetConvarInt('sv_fxdkMode', 0) == 1 then return 'license:fxdk' end
     return GetPlayerIdentifierByType(source, 'license')
 end
 
+--- @param source any
+--- @return string|nil
+--- @description Returns the citizen identifier for the given source.
 function ps.getIdentifier(source)
     local player = ps.getPlayer(source)
     return player.PlayerData.citizenid
 end
 
+--- @param identifier string
+--- @return string|nil
+--- @description Returns the citizen identifier for the given identifier.
 function ps.getSource(identifier)
     local player = ps.getPlayerByIdentifier(identifier)
     if not player then return nil end
     return player.PlayerData.source
 end
 
+--- @param source any
+--- @return string
+--- @description Returns the full name of the player for the given source.
 function ps.getPlayerName(source)
     local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData.charinfo.firstname .. " " .. player.PlayerData.charinfo.lastname
 end
 
+--- @param identifier string
+--- @return string
+--- @description Returns the full name of the player for the given identifier.
 function ps.getPlayerNameByIdentifier(identifier)
     local player = ps.getPlayerByIdentifier(identifier) or ps.getOfflinePlayer(identifier)
     if not player then return 'Unknown Person' end
     return player.PlayerData.charinfo.firstname .. " " .. player.PlayerData.charinfo.lastname
 end
 
+--- @param source any
+--- @return table
+--- @description Returns the PlayerData for the given source.
 function ps.getPlayerData(source)
     local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData
 end
 
+--- @param source any
+--- @param meta string
+--- @return any
+--- @description Returns the metadata for the given source and meta key.
+--- @example
+--- ps.getMetadata(source, 'bloodtype') -- returns the blood type of the player
 function ps.getMetadata(source, meta)
     local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData.metadata[meta]
 end
 
+--- @param source any
+--- @param info string
+--- @return any
+--- @description Returns the character info for the given source and info key.
+--- @example
+--- ps.getCharInfo(source, 'age') -- returns the age of the character
 function ps.getCharInfo(source, info)
     local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData.charinfo[info]
 end
 
+--- @param source any
+--- @return string
+--- @description
+--- @return The job object for the given source.
+--- @example
+--- ps.getJob(source) -- returns the job object of the player
 function ps.getJob(source)
     local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData.job

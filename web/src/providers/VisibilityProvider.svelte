@@ -28,6 +28,7 @@
   import VarGame from '../components/VarGame.svelte';
   import ScramblerGame from '../components/ScramblerGame.svelte';
   import ThermiteGame from '../components/ThermiteGame.svelte';
+
   useNuiEvent<{
     message: string;
     type: 'success' | 'error' | 'warning' | 'info';
@@ -97,25 +98,29 @@
     thermActive.set(true);
     thermSettings.set(data);
   });
+
   function copyToClipboards(str) {
-        const el = document.createElement("textarea");
-        el.value = str;
-        document.body.appendChild(el);
-        el.select();
-        document.execCommand("copy");
-        document.body.removeChild(el);
-        let copied = true;
-        setTimeout(() => {
-            copied = false;
-        }, 2000);
-    }
+      const el = document.createElement("textarea");
+      el.value = str;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand("copy");
+      document.body.removeChild(el);
+      let copied = true;
+      setTimeout(() => {
+          copied = false;
+      }, 2000);
+  }
+
   useNuiEvent('copyClipboard', (data) => {
       copyToClipboards(data);
   });
+
   useNuiEvent('hideContext', () => {
     contextMenuShown.set(false);
     contextMenuItems.set([]);
   });
+  
   function hideUI() {
     fetchNui('hideUI');
     craftingRecipes.set([]);

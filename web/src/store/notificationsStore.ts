@@ -9,8 +9,6 @@ export interface Notification {
   duration?: number;
 }
 
-// Use an array to hold multiple notifications
 export const notifications: Writable<Notification[]> = writable([]);
 
-// Optional: Derived store if you still want `showNotification`
 export const showNotification = derived(notifications, ($notifications) => $notifications.length > 0);

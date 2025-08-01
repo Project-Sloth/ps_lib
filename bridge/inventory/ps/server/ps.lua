@@ -100,7 +100,7 @@ end
 function ps.verifyRecipe(source, recipe)
     local need, have = 0, 0
     if not recipe or not recipe.ingredients then return false end
-    for item, amount in pairs (recipe) do 
+    for item, amount in pairs (recipe) do
         if ps.getItemCount(source, item) >= amount then
             have = have + 1
         end
@@ -118,7 +118,6 @@ function ps.craftItem(source, recipe)
 
     for item, amount in pairs(recipe.take) do
         if not ps.removeItem(src, item, amount) then
-            ps.warn('Failed to remove item during crafting: ' .. item)
             return false
         end
     end

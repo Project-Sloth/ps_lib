@@ -1,11 +1,3 @@
-Build:0.0.9
-
-- `updated` ps-ui
-- `updated` changelog
-
-
-Newest Build: 1.0.1
-- `tested` version checker
-- `merged` alot of fixes
-- `new` module Crafting added in
-- `new` Locales for uWu language added
+Newest Build: 1.0.0
+- initial release
+- please no major bugs, ill cry (im crying already)

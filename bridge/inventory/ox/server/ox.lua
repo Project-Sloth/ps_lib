@@ -104,12 +104,13 @@ function ps.craftItem(source, recipe)
     if not itemChecks then return false end
 
     for item, amount in pairs(recipe.take) do
-        ps.removeItem(source, item, amount)
+       if not  ps.removeItem(source, item, amount) then
+           ps.notify(source, ps.lang('noItem', amount, ps.getLabel(item)), "error")
+            return false
+       end
     end
-
     for k, v in pairs(recipe.give) do
         if not ps.addItem(source, k, v) then
-            ps.notify(source, 'Failed to add ' .. v .. ' ' .. ps.getLabel(k), 'error')
             return false
         end
     end

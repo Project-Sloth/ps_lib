@@ -12,15 +12,16 @@ RegisterNetEvent('lj-inventory:server:SearchPlayer', function(name, data)
         TriggerServerEvent('inventory:server:OpenInventory', 'otherplayer', playerId)
         TriggerServerEvent('police:server:SearchPlayer', playerId)
     else
-        QBCore.Functions.Notify(Lang:t('error.none_nearby'), 'error')
+        ps.notify(ps.lang("noOneNear"), 'error')
     end
 end)
+
 function ps.getImage(item)
     local itemData = QBCore.Shared.Items[item].image
     if itemData then
         return 'nui://lj-inventory/html/images/' .. itemData
     else
-        return nil
+        return 'https://avatars.githubusercontent.com/u/99291234?s=280&v=4'
     end
 end
 function ps.getLabel(item)
@@ -28,13 +29,23 @@ function ps.getLabel(item)
     if itemData then
         return itemData.label or item
     else
-        return nil
+        return 'missing item'
     end
 end
 function ps.hasItem(item, amount)
     if not item then return end
     if not amount then amount = 1 end
     return QBCore.Functions.HasItem(item, amount)
+end
+
+function ps.hasItems(items)
+    if not items then return false end
+    for k, v in pairs(items) do
+        if not ps.hasItem(k, v) then
+            return false
+        end
+    end
+    return true
 end
 
 RegisterNetEvent('ps_lib:client:createShop', function(shopData)

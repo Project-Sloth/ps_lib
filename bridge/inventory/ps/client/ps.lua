@@ -3,7 +3,7 @@ function ps.getImage(item)
     if itemData then
         return 'nui://ps-inventory/html/images/' .. itemData
     else
-        return nil
+        return 'https://avatars.githubusercontent.com/u/99291234?s=280&v=4'
     end
 end
 
@@ -12,7 +12,7 @@ function ps.getLabel(item)
     if itemData then
         return itemData.label or item
     else
-        return nil
+        return 'Missing Item'
     end
 end
 
@@ -20,4 +20,14 @@ function ps.hasItem(item, amount)
     if not item then return end
     if not amount then amount = 1 end
     return exports['qb-inventory']:HasItem(item, amount)
+end
+
+function ps.hasItems(items)
+    if not items then return false end
+    for k, v in pairs(items) do
+        if not ps.hasItem(k, v) then
+            return false
+        end
+    end
+    return true
 end

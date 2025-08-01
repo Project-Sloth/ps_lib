@@ -97,13 +97,13 @@ function ps.craftItem(source, recipe)
     if not itemChecks then return false end
     for k, v in pairs(recipe.take) do
         if not ps.removeItem(src, k, v) then
-            ps.notify(src, Lang:t("error.no_item", {item = k}), "error")
+            ps.notify(src, ps.lang('noItem', v, k), "error")
             return false
         end
     end
     for k, v in pairs(recipe.give) do
         if not ps.addItem(src, k, v) then
-            ps.notify(src, Lang:t("error.no_item", {item = k}), "error")
+            ps.notify(src, ps.lang('noItem', v, k), "error")
             return false
         end
     end

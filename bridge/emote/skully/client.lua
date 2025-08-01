@@ -37,7 +37,7 @@ local emotes = {
 
 function ps.playEmote(emote, variant)
     if emotes[emote] then 
-        ps.playAnim(emote)
+        ps.playAnims(emote)
         IsInEmote = true
         return
     end
@@ -71,7 +71,7 @@ local function listener()
     end)
 end
 
-function ps.playAnim(emote)
+function ps.playAnims(emote)
     if not emotes[emote] then
         ps.warn('Emote not found: ' .. emote)
         return

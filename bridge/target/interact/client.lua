@@ -107,12 +107,12 @@ function ps.targetModel(entity, options)
 end
 
 function ps.destroyAllTargets()
-    for resourceName, resourceZones in pairs(zones) do
-        for key, name in pairs(zones[resourceName]) do
-            exports.ox_target:removeZone(name)
+    local resource = GetInvokingResource() or GetCurrentResourceName()
+    if zones[resource] then
+        for k, v in pairs(zones[resource]) do
+            exports.interact:RemoveInteraction(v)
         end
     end
-    zones = {}
 end
 
 function ps.destroyTarget(name)
