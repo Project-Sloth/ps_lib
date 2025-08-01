@@ -153,7 +153,6 @@ function ps.getJobType(source)
     return esxJOBCompat[player.job.name] or 'none'
 end
 
--- no support for duty ????
 function ps.getJobDuty(source)
     local player = ps.getPlayer(source)
     return player.job.onDuty
@@ -355,6 +354,7 @@ function ps.getSharedJobGrade(jobName, grade)
     local job = ps.Shared.Jobs[jobName]
     return job.grades[grade] or nil
 end
+
 -- Someone PR This 
 function ps.getGang(source)
    -- local player = ps.getPlayer(source)
