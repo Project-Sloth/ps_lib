@@ -6,3 +6,6 @@ Build:0.0.9
 
 Newest Build: 1.0.1
 - `tested` version checker
+- `merged` alot of fixes
+- `new` module Crafting added in
+- `new` Locales for uWu language added

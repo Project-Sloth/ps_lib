@@ -62,7 +62,7 @@ RegisterCommand('testContext', function(source, args, rawCommand)
             },
             {
                 title = 'Option 2',
-                icon = 'https://i.ytimg.com/vi/ZyI7bOqaldg/maxresdefault.jpg',
+                icon = 'https://media.tenor.com/clggq8NCzY0AAAAe/stare-anya-forger.png',
                 description = 'This is option 2',
                 action = function()
                     ps.notify('You selected Option 2!', 'success')
@@ -70,7 +70,7 @@ RegisterCommand('testContext', function(source, args, rawCommand)
             },
             {
                 title = 'Option 3 (No Action)',
-                icon = nil,
+                icon = 'https://giffiles.alphacoders.com/219/219518.gif',
                 description = 'This option has no action or event.',
             }
         }

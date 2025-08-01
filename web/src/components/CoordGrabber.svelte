@@ -46,9 +46,9 @@
             <span>W: {$coordGrabberCoords.w.toFixed(2)}</span>
         </div>
         <div class="instructions">
-            <span>Click <span class="key">E</span> for Vector3</span>
-            <span>Click <span class="key">R</span> for Vector4</span>
-            <span>Click <span class="key">F</span> for Vector2</span>
+            <span>Click <span class="key">F</span> for Vector3</span>
+            <span>Click <span class="key">G</span> for Vector4</span>
+            <span>Click <span class="key">H</span> for Vector2</span>
             <span>Right Click Mouse To Exit</span>
             {#if copied}
                 <span style = "color: green;">Copied to clipboard!</span>

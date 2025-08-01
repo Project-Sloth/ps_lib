@@ -40,4 +40,4 @@ function ps.versionCheck(script, link, updateLink)
     end, "GET", "", "")
 end
 -- TODO: on release ill need to PR this to get the raw link for version check :) 
---ps.versionCheck('ps_lib', 'https://raw.githubusercontent.com/Mustachedom/versionChecker/refs/heads/main/md-drugs2', 'https://github.com/Project-Sloth/ps_lib')
+ps.versionCheck('ps_lib', 'https://raw.githubusercontent.com/Mustachedom/versionChecker/refs/heads/main/md-drugs2', 'https://github.com/Project-Sloth/ps_lib')

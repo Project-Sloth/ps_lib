@@ -106,7 +106,6 @@ local function registerCrafter(data)
     end
     if not CraftingTable[resource] then
         CraftingTable[resource] = {}
-        ps.success('Loading crafting locations for resource:', resource)
     end
     table.insert(CraftingTable[resource], data)
     TriggerClientEvent('ps_lib:registerCraftingLocation', -1)
@@ -115,7 +114,6 @@ end
 AddEventHandler('onResourceStop', function(res)
     if CraftingTable[res] then
         CraftingTable[res] = nil
-        ps.success('Unloading crafting locations for resource:', res)
         TriggerClientEvent('ps_lib:registerCraftingLocation', -1)
     end
 end)

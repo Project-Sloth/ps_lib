@@ -10,16 +10,16 @@ local function coordGrab()
             action = 'updateCoords',
             data = { x = math.floor(coords.x * 100) / 100, y = math.floor(coords.y * 100) / 100, z = math.floor(coords.z * 100) / 100, w = GetEntityHeading(PlayerPedId()) }
         })
-         if IsControlPressed(0, 38) then
+         if IsControlPressed(0, 23) then -- f
             SendNUIMessage({action = 'copyCoords', data = { type = 'vec3'}})
         end
-        if IsControlPressed(0, 45) then
+        if IsControlPressed(0, 47) then -- g
             SendNUIMessage({action = 'copyCoords', data = { type = 'vec4'}})
         end
-        if IsControlPressed(0, 49) then
+        if IsControlPressed(0, 74) then -- h
             SendNUIMessage({action = 'copyCoords', data = { type = 'vec2'}})
         end
-        if IsControlPressed(0, 25) then
+        if IsControlPressed(0, 25) then -- right mouse button
             SendNUIMessage({action = 'copyCoords', data = { type = 'stop'}})
             run = false
         end
