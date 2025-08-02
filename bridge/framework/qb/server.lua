@@ -13,6 +13,8 @@ end
 function ps.getPlayerByIdentifier(identifier)
     return QBCore.Functions.GetPlayerByCitizenId(identifier) or QBCore.Functions.GetOfflinePlayerByCitizenId(identifier)
 end
+ps.getPlayerByCid = ps.getPlayerByIdentifier
+
 
 --- @param identifier string
 --- @return table|nil
@@ -36,6 +38,8 @@ function ps.getIdentifier(source)
     local player = ps.getPlayer(source)
     return player.PlayerData.citizenid
 end
+ps.getCid = ps.getIdentifier 
+
 
 --- @param identifier string
 --- @return string|nil
@@ -53,6 +57,8 @@ function ps.getPlayerName(source)
     local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
     return player.PlayerData.charinfo.firstname .. " " .. player.PlayerData.charinfo.lastname
 end
+ps.getName = ps.getPlayerName
+
 
 --- @param identifier string
 --- @return string
@@ -62,7 +68,7 @@ function ps.getPlayerNameByIdentifier(identifier)
     if not player then return 'Unknown Person' end
     return player.PlayerData.charinfo.firstname .. " " .. player.PlayerData.charinfo.lastname
 end
-
+ps.getPlayerNameByCid = ps.getPlayerNameByIdentifier
 --- @param source any
 --- @return table
 --- @description Returns the PlayerData for the given source.
@@ -255,6 +261,47 @@ function ps.getMoney(source, type)
     return player.PlayerData.money[type] or 0
 end
 
+function ps.getAllJobs()
+    local jobsArray = {}
+    for k, v in pairs(QBCore.Shared.Jobs) do
+        table.insert(jobsArray, k)
+    end
+    return jobsArray
+end
+
+
+function ps.getJobTable()
+    return QBCore.Shared.Jobs
+end
+
+
+function ps.getSharedJob(job)
+    local jobData = QBCore.Shared.Jobs[job]
+    if not jobData then return nil end
+    return jobData
+end
+
+function ps.getSharedJobData(job, data)
+    local jobData = ps.getSharedJob(job)
+    if not jobData then return nil end
+    return jobData[data] or nil
+end
+
+function ps.getSharedJobGrade(jobName, grade)
+    local jobData = ps.getSharedJob(jobName)
+    if not jobData then return nil end
+    local gradeData = jobData.grades[tostring(grade)]
+    if not gradeData then return nil end
+    return gradeData
+end
+
+function ps.getSharedJobGradeData(job, rank, data)
+    local jobData = ps.getSharedJob(job)
+    if not jobData then return nil end
+    local gradeData = jobData.grades[tostring(rank)]
+    if not gradeData then return nil end
+    return gradeData[data] or nil
+end
 
 function ps.getGang(source)
     local player = ps.getPlayer(source) or ps.getPlayerByIdentifier(source) or ps.getOfflinePlayer(source)
@@ -291,6 +338,13 @@ function ps.isLeader(source)
     return player.PlayerData.gang.isboss
 end
 
+function ps.getAllGangs()
+     local gangsArray = {}
+    for k, v in pairs(QBCore.Shared.Gangs) do
+        table.insert(gangsArray, k)
+    end
+    return gangsArray
+end
 
 function ps.vehicleOwner(licensePlate)
     local vehicle = MySQL.query.await('SELECT * FROM player_vehicles WHERE plate = ?', {licensePlate})
@@ -299,6 +353,11 @@ function ps.vehicleOwner(licensePlate)
     end
     return vehicle[1].citizenid
 end
+
+function ps.jobExists(jobName)
+    return QBCore.Shared.Jobs[jobName] ~= nil
+end
+
 
 
 function ps.hasPermission(source, permission)
@@ -339,33 +398,9 @@ function ps.getSharedWeaponData(model, dataType)
     return weaponData[dataType] or nil
 end
 
-function ps.getJobTable()
-    return QBCore.Shared.Jobs
-end
 
-function ps.jobExists(jobName)
-    return QBCore.Shared.Jobs[jobName] ~= nil
-end
 
-function ps.getSharedJob(job)
-    local jobData = QBCore.Shared.Jobs[job]
-    if not jobData then return nil end
-    return jobData
-end
 
-function ps.getSharedJobData(job, data)
-    local jobData = ps.getSharedJob(job)
-    if not jobData then return nil end
-    return jobData[data] or nil
-end
-
-function ps.getSharedJobRankData(job, rank, data)
-    local jobData = ps.getSharedJob(job)
-    if not jobData then return nil end
-    local gradeData = jobData.grades[tostring(rank)]
-    if not gradeData then return nil end
-    return gradeData[data] or nil
-end
 
 function ps.getSharedGang(gang)
     local gangData = QBCore.Shared.Gangs[gang]
@@ -387,21 +422,8 @@ function ps.getSharedGangRankData(gang, rank, data)
     return gradeData[data] or nil
 end
 
-function ps.getAllJobs()
-    local jobsArray = {}
-    for k, v in pairs(QBCore.Shared.Jobs) do
-        table.insert(jobsArray, k)
-    end
-    return jobsArray
-end
 
-function ps.getAllGangs()
-     local gangsArray = {}
-    for k, v in pairs(QBCore.Shared.Gangs) do
-        table.insert(gangsArray, k)
-    end
-    return gangsArray
-end
+
 
 -- end shared functions
 RegisterNetEvent('ps_lib:server:toggleDuty', function(bool)
@@ -413,3 +435,67 @@ RegisterNetEvent('ps_lib:server:toggleDuty', function(bool)
         ps.setJobDuty(src, true)
     end
 end)
+
+exports('getPlayer', ps.getPlayer)
+exports('getPlayerByIdentifier', ps.getPlayerByIdentifier)
+exports('getPlayerByCid', ps.getPlayerByCid)
+exports('getOfflinePlayer', ps.getOfflinePlayer)
+exports('getLicense', ps.getLicense)
+exports('getIdentifier', ps.getIdentifier)
+exports('getCid', ps.getCid)
+exports('getSource', ps.getSource)
+exports('getPlayerName', ps.getPlayerName)
+exports('getName', ps.getName)
+exports('getPlayerNameByIdentifier', ps.getPlayerNameByIdentifier)
+exports('getPlayerNameByCid', ps.getPlayerNameByCid)
+exports('getPlayerData', ps.getPlayerData)
+exports('getMetadata', ps.getMetadata)
+exports('getCharInfo', ps.getCharInfo)
+exports('getJob', ps.getJob)
+exports('getJobName', ps.getJobName)
+exports('getJobType', ps.getJobType)
+exports('getJobDuty', ps.getJobDuty)
+exports('getJobData', ps.getJobData)
+exports('getJobGrade', ps.getJobGrade)
+exports('getJobGradeLevel', ps.getJobGradeLevel)
+exports('getJobGradeName', ps.getJobGradeName)
+exports('getJobGradePay', ps.getJobGradePay)
+exports('isBoss', ps.isBoss)
+exports('getAllPlayers', ps.getAllPlayers)
+exports('getEntityCoords', ps.getEntityCoords)
+exports('getDistance', ps.getDistance)
+exports('checkDistance', ps.checkDistance)
+exports('getNearbyPlayers', ps.getNearbyPlayers)
+exports('getJobCount', ps.getJobCount)
+exports('getJobTypeCount', ps.getJobTypeCount)
+exports('createUseable', ps.createUseable)
+exports('setJob', ps.setJob)
+exports('setJobDuty', ps.setJobDuty)
+exports('addMoney', ps.addMoney)
+exports('removeMoney', ps.removeMoney)
+exports('getMoney', ps.getMoney)
+exports('getAllJobs', ps.getAllJobs)
+exports('getJobTable', ps.getJobTable)
+exports('getSharedJob', ps.getSharedJob)
+exports('getSharedJobData', ps.getSharedJobData)
+exports('getSharedJobGrade', ps.getSharedJobGrade)
+exports('getSharedJobGradeData', ps.getSharedJobGradeData)
+exports('getGang', ps.getGang)
+exports('getGangName', ps.getGangName)
+exports('getGangData', ps.getGangData)
+exports('getGangGrade', ps.getGangGrade)
+exports('getGangGradeLevel', ps.getGangGradeLevel)
+exports('getGangGradeName', ps.getGangGradeName)
+exports('isLeader', ps.isLeader)
+exports('getAllGangs', ps.getAllGangs)
+exports('vehicleOwner', ps.vehicleOwner)
+exports('jobExists', ps.jobExists)
+exports('hasPermission', ps.hasPermission)
+exports('isOnline', ps.isOnline)
+exports('getSharedVehicle', ps.getSharedVehicle)
+exports('getSharedVehicleData', ps.getSharedVehicleData)
+exports('getSharedWeapons', ps.getSharedWeapons)
+exports('getSharedWeaponData', ps.getSharedWeaponData)
+exports('getSharedGang', ps.getSharedGang)
+exports('getSharedGangData', ps.getSharedGangData)
+exports('getSharedGangRankData', ps.getSharedGangRankData)

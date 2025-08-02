@@ -30,8 +30,9 @@ function ps.getPlayerData()
 end
 
 function ps.getIdentifier()
-    return ps.citizenid
+    return ps.getPlayerData().citizenid
 end
+ps.getCid = ps.getIdentifier
 
 function ps.getMetadata(meta)
     return ps.getPlayerData().metadata[meta]
@@ -42,11 +43,12 @@ function ps.getCharInfo(info)
 end
 
 function ps.getPlayerName()
-    return ps.name
+    return ps.getPlayerData().charinfo.firstname .. " " .. ps.getPlayerData().charinfo.lastname
 end
+ps.getName = ps.getPlayerName
 
 function ps.getPlayer()
-    return ps.ped
+    return PlayerPedId()
 end
 
 function ps.getVehicleLabel(model)
@@ -149,9 +151,11 @@ end
 
 exports('getPlayerData', ps.getPlayerData)
 exports('getIdentifier', ps.getIdentifier)
+exports('getCid', ps.getCid)
 exports('getMetadata', ps.getMetadata)
 exports('getCharInfo', ps.getCharInfo)
 exports('getPlayerName', ps.getPlayerName)
+exports('getName', ps.getName)
 exports('getPlayer', ps.getPlayer)
 exports('getVehicleLabel', ps.getVehicleLabel)
 exports('isDead', ps.isDead)
@@ -163,7 +167,6 @@ exports('getJobDuty', ps.getJobDuty)
 exports('getJobData', ps.getJobData)
 exports('getGang', ps.getGang)
 exports('getGangName', ps.getGangName)
-exports('defaultDuty', ps.defaultDuty)
 exports('isLeader', ps.isLeader)
 exports('getGangData', ps.getGangData)
 exports('getCoords', ps.getCoords)
