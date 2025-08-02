@@ -10,7 +10,7 @@ description 'Project Sloth Library'
 author 'Project Sloth'
 
 client_scripts {
-    --'@qbx_core/modules/playerdata.lua',
+    '@qbx_core/modules/playerdata.lua',
     'startFirst/client/**.lua',
     'modules/**/client/**.lua',
     'bridge/client.lua',
@@ -26,7 +26,7 @@ server_scripts {
 shared_scripts {
     'Config.lua',
     'startFirst/shared/**.lua',
-    --'@ox_lib/init.lua',
+    '@ox_lib/init.lua',
     'modules/**/shared/**.lua',
     'init.lua'
 }

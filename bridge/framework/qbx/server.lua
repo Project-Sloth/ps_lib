@@ -237,12 +237,12 @@ function ps.getNearbyPlayers(source, distance)
     if not distance then distance = 10.0 end
     local players = {}
     for k, v in pairs(ps.getAllPlayers()) do
-        local dist = #(GetEntityCoords(GetPlayerPed(v)) - GetEntityCoords(GetPlayerPed(source)))
+        local dist = #(GetEntityCoords(GetPlayerPed(v.PlayerData.source)) - GetEntityCoords(GetPlayerPed(source)))
         if dist < 5.0 then
             table.insert(players, {
-                value = ps.getIdentifier(v),
-                label = ps.getPlayerName(v),
-                source = v,
+                value = ps.getIdentifier(v.PlayerData.source),
+                label = ps.getPlayerName(v.PlayerData.source),
+                source = v.PlayerData.source,
                 distance = dist,
             })
         end
@@ -551,7 +551,7 @@ end
 function ps.getSharedJobGradeData(job, rank, data)
     local jobData = ps.getSharedJob(job)
     if not jobData then return nil end
-    local gradeData = jobData.grades[tostring(rank)]
+    local gradeData = jobData.grades[tonumber(rank)]
     if not gradeData then return nil end
     return gradeData[data] or nil
 end
@@ -569,9 +569,9 @@ function ps.getSharedGangData(gang, data)
 end
 
 function ps.getSharedGangRankData(gang, rank, data)
-    local gangData = QBCore.Shared.Gangs[gang]
+    local gangData = exports.qbx_core:GetGangs()[gang]
     if not gangData then return nil end
-    local gradeData = gangData.grades[tostring(rank)]
+    local gradeData = gangData.grades[tonumber(rank)]
     if not gradeData then return nil end
     return gradeData[data] or nil
 end

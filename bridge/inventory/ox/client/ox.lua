@@ -47,14 +47,6 @@ function ps.hasItems(items)
 end
 
 RegisterNetEvent('ps_lib:client:createShop', function(shopData)
-    if not shopData.name then shopData.name = 'Shop' end
-    if not shopData.slots then shopData.slots = 50 end
-    if not shopData.maxweight then shopData.maxweight = 100000 end
-    exports.ox_inventory:RegisterShop(shopData.name, {
-        name = shopData.name,
-        slots = shopData.slots,
-        maxweight = shopData.maxweight,
-        items = shopData.items or {},
-    })
+    if not shopData then shopData.name = 'Shop' end
     exports.ox_inventory:openInventory('shop', { type = shopData, id = shopData })
 end)

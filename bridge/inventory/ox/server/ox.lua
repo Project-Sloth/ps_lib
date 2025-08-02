@@ -2,7 +2,8 @@
 function ps.CanCarryItem(source, item, amount)
     if not source or not item then return end
     if not amount then amount = 1 end
-    return exports.ox_inventory:CanCarryItem(source, item, amount)
+    local can = exports.ox_inventory:CanCarryItem(source, item, amount)
+    return can
 end
 
 function ps.removeItem(identifier, item, amount, slot, reason)
@@ -86,15 +87,14 @@ function ps.createShop(source, shopData)
 end
 
 function ps.verifyRecipe(source, recipe)
-    if not source or not recipe then return false end
-    local requiredItems = recipe.requiredItems or {}
-    for item, amount in pairs(requiredItems) do
-        if not ps.hasItem(source, item, amount) then
-            ps.notify(source, 'You need ' .. amount .. ' ' .. ps.getLabel(item) .. ' to craft this.', 'error')
-            return false
+    local need, have = 0,0
+    for k, v in pairs (recipe) do
+        if ps.getItemCount(source, k) >= v then
+            have = have + 1
         end
+        need = need + 1
     end
-    return true
+    return have >= need
 end
 
 function ps.craftItem(source, recipe)
