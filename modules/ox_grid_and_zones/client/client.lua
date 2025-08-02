@@ -329,8 +329,7 @@ CreateThread(function()
         local coords = GetEntityCoords(PlayerPedId())
         local zones = ps.grid.getNearbyEntries(coords, function(entry) return entry.remove == removeZone end) --[[@as Array<CZone>]]
         local cellX, cellY = ps.grid.getCellPosition(coords)
-        cache.coords = coords
-
+        local cache = ps.grid.getCell(coords)
         if cellX ~= cache.lastCellX or cellY ~= cache.lastCellY then
             for i = 1, #nearbyZones do
                 local zone = nearbyZones[i]
