@@ -27,7 +27,6 @@ end
 function ps.lang(key, ...)
     local resource = GetInvokingResource() or 'ps_lib'
     local value = nil
-    ps.success('ps.lang called for resource: ' .. resource .. ' with key: ' .. tostring(key))
     if lang[resource] then
         value = check(lang[resource], key)
     end
@@ -59,7 +58,6 @@ ps.locale = ps.lang
 AddEventHandler('onResourceStop', function(resource)
     if lang[resource] then
         lang[resource] = nil
-        ps.success('Language unloaded for resource: ' .. resource)
     end
 end)
 
@@ -102,7 +100,6 @@ function ps.loadLangs(language)
         return false
     end
     lang[resource] = decoded
-    ps.success('Language loaded for resource: ' .. resource .. ' Language: ' ..  language)
     return true
 end
 
@@ -145,17 +142,16 @@ local function loadLangsInternal(script, language)
         return false
     end
     lang[resource] = decoded
-    ps.success('Language loaded for resource: ' .. resource .. ' Language: ' ..  language)
     return true
 end
 
 local psScripts = {
-    ['ps-banking'] = true,
-    ['ps-realtor'] = true,
-    ['ps-mdt'] = true,
-    ['ps-dispatch'] = true,
-    ['ps-multijob'] = true,
-    ['ps-drugprocessing'] = true,
+    ['ps-banking'] = false,
+    ['ps-realtor'] = false,
+    ['ps-mdt'] = false,
+    ['ps-dispatch'] = false,
+    ['ps-multijob'] = false,
+    ['ps-drugprocessing'] = false,
 }
 AddEventHandler('onResourceStart', function(resourceName)
     if psScripts[resourceName] then
@@ -174,6 +170,5 @@ else
     TriggerServerEvent('ps_lib:loadLangs')
     RegisterNetEvent('ps_lib:loadLangs', function(langData)
         lang = langData
-        ps.success('Language loaded on client side.')
     end)
 end
