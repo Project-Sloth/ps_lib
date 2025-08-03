@@ -1,9 +1,15 @@
 Config = {}
 ps = {}
 
+Config.Inventory = 'qb' -- qb, ox, ps, lj, jpr, custom
+Config.Target = 'qb' -- qb, ox, interact
+Config.EmoteMenu = 'rp' -- rp, dp, scully, custom
+
 Config.Notify = "ps" -- qb, ox, ps
 Config.Menus = "qb" -- qb, ox, ps
 Config.DrawText = "ps" -- qb, ox, ps
+
+
 Config.Progressbar = { -- these are DEFAULT values, you can override them in the progressbar function
     style = "oxbar", -- qb, oxbar, ps
     Movement = true, -- Disable movement
