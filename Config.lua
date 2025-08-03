@@ -6,9 +6,9 @@ Config.Target = 'qb' -- qb, ox, interact
 Config.EmoteMenu = 'rp' -- rp, dp, scully, custom
 
 Config.Notify = "ps" -- qb, ox, ps
-Config.Menus = "qb" -- qb, ox, ps
+Config.Menus = "ps" -- qb, ox, ps
 Config.DrawText = "ps" -- qb, ox, ps
-
+Config.ConvertQBMenu = false -- Convert qb-menu to ps-ui context menu
 
 Config.Progressbar = { -- these are DEFAULT values, you can override them in the progressbar function
     style = "oxbar", -- qb, oxbar, ps

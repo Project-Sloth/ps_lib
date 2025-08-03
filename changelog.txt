@@ -1,3 +1,16 @@
-Newest Build: 1.0.0
+Build: 1.0.0
 - initial release
 - please no major bugs, ill cry (im crying already)
+
+Newest Build: 1.0.1
+ - fix ps_lib's version check. Now goes to the proper git link to pull data
+ - added Config Options for inventory, emote menu, and target system
+    - will allow easier install and not worrying about load order 
+
+ - Remove Success prints from startfirst/shared/locales
+ - `added` QB menu overwrite
+   - Use The Config Option To Turn It On, It will Take all qb-menu exports and convert
+   - To ps_lib context menu!
+
+
+ 
