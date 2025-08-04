@@ -37,7 +37,6 @@ declare module "client/resources" {
      * @param callback - The function to execute once the resource is ready.
      */
     export function onResourceReady(resourceName: string, callback: () => void): void;
-    export function getResource(resourceName: string): string;
 }
 declare module "utils/index" {
     export interface PSUtils {
@@ -60,8 +59,147 @@ declare module "index" {
         }
     }
 }
+declare module "security/security" {
+    /**
+     * Security configuration and content validation utilities
+     */
+    export const SECURITY_CONFIG: {
+        readonly MAX_NUI_MESSAGE_SIZE: number;
+        readonly MAX_DATA_SIZE: number;
+        readonly MAX_INSTANCE_NAME_LENGTH: 50;
+        readonly MAX_REPORT_TITLE_LENGTH: 200;
+        readonly MAX_SEARCH_QUERY_LENGTH: 100;
+        readonly MAX_NOTES_LENGTH: 2000;
+        readonly MAX_SERIAL_NUMBER_LENGTH: 50;
+        readonly MAX_EVIDENCE_ITEMS: 20;
+        readonly MAX_INVOLVED_PERSONS: 50;
+        readonly MAX_TAGS_PER_REPORT: 10;
+        readonly MAX_IMAGE_SIZE: number;
+        readonly MAX_PERSISTENCE_SIZE: number;
+    };
+    /**
+     * Checks if text contains forbidden characters for names/identifiers
+     */
+    export function containsForbiddenNameChars(text: string): boolean;
+    /**
+     * Checks if text contains forbidden content patterns
+     */
+    export function containsForbiddenContent(text: string): boolean;
+    /**
+     * Sanitizes text by removing or escaping dangerous content
+     */
+    export function sanitizeText(text: string): string;
+    /**
+     * Validates that a string is within acceptable length limits
+     */
+    export function isWithinLengthLimit(text: string, maxLength: number): boolean;
+    /**
+     * Truncates text to specified length while preserving word boundaries
+     */
+    export function truncateText(text: string, maxLength: number): string;
+    /**
+     * Comprehensive content validation
+     */
+    export function validateContent(content: string, options?: {
+        maxLength?: number;
+        allowEmpty?: boolean;
+        checkForbiddenChars?: boolean;
+        checkForbiddenContent?: boolean;
+    }): {
+        isValid: boolean;
+        sanitized: string;
+        message?: string;
+    };
+}
+declare module "security/inputValidation" {
+    /**
+     * Input validation utilities using the global security config
+     */
+    /**
+     * Validates and sanitizes tag input
+     */
+    export function validateTagInput(tag: string): {
+        isValid: boolean;
+        sanitized: string;
+        message?: string;
+    };
+    /**
+     * Validates report title input
+     */
+    export function validateReportTitle(title: string): {
+        isValid: boolean;
+        sanitized: string;
+        message?: string;
+    };
+    /**
+     * Validates search query input
+     */
+    export function validateSearchQuery(query: string): {
+        isValid: boolean;
+        sanitized: string;
+        message?: string;
+    };
+    /**
+     * Validates text area/notes input
+     */
+    export function validateNotesInput(notes: string): {
+        isValid: boolean;
+        sanitized: string;
+        message?: string;
+    };
+    /**
+     * Validates evidence serial number input
+     */
+    export function validateSerialNumber(serial: string): {
+        isValid: boolean;
+        sanitized: string;
+        message?: string;
+    };
+}
+declare module "security/nuiSecurity" {
+    /**
+     * NUI (Native User Interface) security utilities for FiveM
+     */
+    /**
+     * Validates incoming NUI message data
+     */
+    export function validateNuiMessage(data: any): {
+        isValid: boolean;
+        sanitized: any;
+        message?: string;
+    };
+    /**
+     * Validates NUI event action names against the whitelist of allowed events
+     */
+    export function validateNuiAction<T extends string>(action: T): boolean;
+    /**
+     * Secure wrapper for postMessage to FiveM
+     */
+    export function securePostMessage<T extends string>(action: T, data?: any): void;
+    /**
+     * Rate limiting for NUI events to prevent spam
+     */
+    class NuiRateLimit {
+        private actionCounts;
+        private readonly maxRequestsPerMinute;
+        private readonly windowMs;
+        isAllowed<T extends string>(action: T): boolean;
+    }
+    export const nuiRateLimit: NuiRateLimit;
+    /**
+     * Check if an action is allowed without validation side effects
+     * Note: This is for internal use only - doesn't reveal validation details
+     */
+    export function isNuiActionAllowed<T extends string>(action: T, nuiEvents: T[]): boolean;
+}
+declare module "shared/envBrowser" {
+    export function isEnvBrowser(): boolean;
+}
 declare module "utils/detection/framework-detection" {
     import { Framework } from "shared/types";
     function getFramework(): Framework;
     export { getFramework };
+}
+declare module "utils/nui/fetchNui" {
+    export function fetchNui<T = any>(eventName: string, data?: any, mockData?: T): Promise<T>;
 }

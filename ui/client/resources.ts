@@ -8,7 +8,10 @@
  * @param resourceName - The name of the resource to monitor.
  * @param callback - The function to execute once the resource is ready.
  */
-export function onResourceReady(resourceName: string, callback: () => void): void {
+export function onResourceReady(
+	resourceName: string,
+	callback: () => void
+): void {
 	const checkResourceState = () => {
 		try {
 			const state = window.GetResourceState(resourceName);
@@ -18,19 +21,13 @@ export function onResourceReady(resourceName: string, callback: () => void): voi
 				setTimeout(checkResourceState, 1000);
 			}
 		} catch (err) {
-			console.error(`Error checking resource state for ${resourceName}:`, err);
+			console.error(
+				`Error checking resource state for ${resourceName}:`,
+				err
+			);
 			setTimeout(checkResourceState, 1000);
 		}
 	};
 
 	checkResourceState();
-}
-
-export function getResource(resourceName: string): string {
-	try {
-		return window.GetResourceState(resourceName) ?? "unknown";
-	} catch (err) {
-		console.error(`Error getting resource state for ${resourceName}:`, err);
-		return "unknown";
-	}
 }
