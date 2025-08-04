@@ -1,13 +1,36 @@
-# Install Guide
+# ps_lib
 
-Welcome to ps_lib! This lib has been a long time coming and something we are passionate about. If you are reading this, you are in the very early stages and we thank you for taking the time to check this out. This is not something in perfect condition, and will constantly be getting updated, patched, and expanding. With that being said the best way to get our attention about any issues people are facing are 2 ways
+Welcome to **ps_lib**!  
+This library has been a long time coming, and we're passionate about what it can become. If you're reading this, you're among the early adopters, and we appreciate you checking it out.
 
-1. Github Issues
-Github Issues is very well organized and our team can do our best to replicate and patch on the spot
+**Please note:**  
+This project is in active development and not in a perfect state. It will continue to evolve with regular updates, patches, and new features.
 
-2. Github Pull Requests
-Sometimes an issue or bug may just be an easy fix that we didnt notice during testing. If you want to Open a PR for us we will make sure we view all PR quickly and test them out and push out to the community
+---
 
-# Documentation
+## Getting Support
 
-> Documentation for this library can be found here: https://docs.projectsloth.org/ps/scripts/ps-lib
+If you encounter issues or bugs, there are two primary ways to get our attention:
+
+### 1. GitHub Issues
+The best way to report bugs or problems is through GitHub Issues.  
+This helps us track problems in an organized way, replicate the issues, and patch them quickly.
+
+[Create an issue here](https://github.com/your-org/ps_lib/issues)
+
+### 2. GitHub Pull Requests
+If you've identified an easy fix or improvement, feel free to open a Pull Request!  
+We review all PRs promptly, test them thoroughly, and if accepted, merge them for the benefit of the whole community.
+
+[Open a Pull Request](https://github.com/your-org/ps_lib/pulls)
+
+---
+
+## Documentation
+
+Full documentation for **ps_lib** is available at:  
+[https://docs.projectsloth.org/ps/scripts/ps-lib](https://docs.projectsloth.org/ps/scripts/ps-lib)
+
+---
+
+Thanks again for being part of the early journey. Your feedback and contributions help shape the future of this library!
