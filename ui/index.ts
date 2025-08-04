@@ -1,5 +1,7 @@
-import { client, PSClient } from "./client";
-import { PSUtils, utils } from "./utils";
+import { ui } from "./client/index";
+import { client } from "./client";
+import { security } from "./security";
+import { utils } from "./utils";
 
 export * from "./client";
 export * from "./utils";
@@ -18,11 +20,25 @@ if (typeof exports !== "undefined") {
 			exports(key, value);
 		}
 	});
+
+	Object.entries(security).forEach(([key, value]) => {
+		if (typeof value === "function") {
+			exports(key, value);
+		}
+	});
+
+	Object.entries(ui).forEach(([key, value]) => {
+		if (typeof value === "function") {
+			exports(key, value);
+		}
+	});
 }
 
 export interface PSLib {
-	client: PSClient;
-	utils: PSUtils;
+	client: typeof client;
+	utils: typeof utils;
+	security: typeof security;
+	ui: typeof ui;
 	// Add more utility functions here as needed
 }
 

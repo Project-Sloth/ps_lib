@@ -82,42 +82,6 @@ export function validateNuiAction<T extends string>(action: T) {
 }
 
 /**
- * Secure wrapper for postMessage to FiveM
- */
-export function securePostMessage<T extends string>(
-	action: T,
-	data?: any
-): void {
-	// Validate action against whitelist (silent validation)
-	if (!validateNuiAction(action)) {
-		// Silent rejection - no error details
-		return;
-	}
-
-	// Validate data (silent validation)
-	const validation = validateNuiMessage(data);
-	if (!validation.isValid) {
-		// Silent rejection - no error details
-		return;
-	}
-
-	// Safe to send
-	try {
-		const resourceName = GetCurrentResourceName();
-
-		fetch(`https://${resourceName}/${action}`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json; charset=UTF-8",
-			},
-			body: JSON.stringify(validation.sanitized),
-		});
-	} catch (error) {
-		// Silent failure - don't reveal fetch details
-	}
-}
-
-/**
  * Rate limiting for NUI events to prevent spam
  */
 class NuiRateLimit {

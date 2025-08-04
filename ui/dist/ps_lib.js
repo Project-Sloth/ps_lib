@@ -26,6 +26,15 @@ define("client/notify", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.notify = notify;
+    /**
+     * Displays a notification message to the user via NUI.
+     *
+     * @param message - The main text content of the notification.
+     * @param options - Optional configuration for the notification, such as type, icon, and duration.
+     *   - `type`: The style or category of the notification (e.g., "primary", "success", "error"). Defaults to "primary".
+     *   - `icon`: The icon class to display with the notification. Defaults to "fa-solid fa-info-circle".
+     *   - `duration`: How long (in milliseconds) the notification should be visible. Defaults to 5000.
+     */
     function notify(message, options) {
         SendNUIMessage({
             action: "notify",
@@ -35,76 +44,6 @@ define("client/notify", ["require", "exports"], function (require, exports) {
                 icon: options?.icon || "fa-solid fa-info-circle",
                 duration: options?.duration || 5000,
             },
-        });
-    }
-});
-define("client/index", ["require", "exports", "client/notify"], function (require, exports, notify_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.client = void 0;
-    exports.client = {
-        notify: notify_1.notify,
-    };
-});
-define("client/resources", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.onResourceReady = onResourceReady;
-    /**
-     * Waits for a specified resource to reach the "started" state before executing a callback.
-     *
-     * This function repeatedly checks the state of the given resource using `window.GetResourceState`.
-     * Once the resource state is "started", the provided callback is invoked. If the resource is not
-     * yet started or an error occurs during the check, the function will retry after a 1-second delay.
-     *
-     * @param resourceName - The name of the resource to monitor.
-     * @param callback - The function to execute once the resource is ready.
-     */
-    function onResourceReady(resourceName, callback) {
-        const checkResourceState = () => {
-            try {
-                const state = window.GetResourceState(resourceName);
-                if (state === "started") {
-                    callback();
-                }
-                else {
-                    setTimeout(checkResourceState, 1000);
-                }
-            }
-            catch (err) {
-                console.error(`Error checking resource state for ${resourceName}:`, err);
-                setTimeout(checkResourceState, 1000);
-            }
-        };
-        checkResourceState();
-    }
-});
-define("utils/index", ["require", "exports", "client/resources"], function (require, exports, resources_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.utils = void 0;
-    // Export empty utils object for now - extend as needed
-    exports.utils = {
-        onResourceReady: resources_1.onResourceReady,
-    };
-});
-define("index", ["require", "exports", "client/index", "utils/index", "client/index", "utils/index"], function (require, exports, client_1, utils_1, client_2, utils_2) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    __exportStar(client_2, exports);
-    __exportStar(utils_2, exports);
-    // Export individual functions for FiveM
-    if (typeof exports !== "undefined") {
-        // Export individual functions
-        Object.entries(client_1.client).forEach(([key, value]) => {
-            if (typeof value === "function") {
-                exports(key, value);
-            }
-        });
-        Object.entries(utils_1.utils).forEach(([key, value]) => {
-            if (typeof value === "function") {
-                exports(key, value);
-            }
         });
     }
 });
@@ -309,190 +248,12 @@ define("security/security", ["require", "exports"], function (require, exports) 
         return { isValid: true, sanitized: trimmed };
     }
 });
-define("security/inputValidation", ["require", "exports", "security/security"], function (require, exports, security_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.validateTagInput = validateTagInput;
-    exports.validateReportTitle = validateReportTitle;
-    exports.validateSearchQuery = validateSearchQuery;
-    exports.validateNotesInput = validateNotesInput;
-    exports.validateSerialNumber = validateSerialNumber;
-    /**
-     * Input validation utilities using the global security config
-     */
-    /**
-     * Validates and sanitizes tag input
-     */
-    function validateTagInput(tag) {
-        if (!tag || typeof tag !== "string") {
-            return {
-                isValid: false,
-                sanitized: "",
-                message: "Tag must be a non-empty string",
-            };
-        }
-        const trimmed = tag.trim();
-        // Check length
-        if (trimmed.length === 0) {
-            return {
-                isValid: false,
-                sanitized: "",
-                message: "Invalid input",
-            };
-        }
-        if (trimmed.length > security_1.SECURITY_CONFIG.MAX_INSTANCE_NAME_LENGTH) {
-            return {
-                isValid: false,
-                sanitized: trimmed.substring(0, security_1.SECURITY_CONFIG.MAX_INSTANCE_NAME_LENGTH),
-                message: "Input too long",
-            };
-        }
-        // Check for forbidden characters
-        if ((0, security_1.containsForbiddenNameChars)(trimmed)) {
-            return {
-                isValid: false,
-                sanitized: trimmed,
-                message: "Invalid input",
-            };
-        }
-        // Check for suspicious content
-        if ((0, security_1.containsForbiddenContent)(trimmed)) {
-            return {
-                isValid: false,
-                sanitized: trimmed,
-                message: "Invalid input",
-            };
-        }
-        return { isValid: true, sanitized: trimmed };
-    }
-    /**
-     * Validates report title input
-     */
-    function validateReportTitle(title) {
-        if (!title || typeof title !== "string") {
-            return {
-                isValid: false,
-                sanitized: "",
-                message: "Title must be a non-empty string",
-            };
-        }
-        const trimmed = title.trim();
-        // Allow longer titles for reports but still limit them
-        const MAX_TITLE_LENGTH = 200;
-        if (trimmed.length > MAX_TITLE_LENGTH) {
-            return {
-                isValid: false,
-                sanitized: trimmed.substring(0, MAX_TITLE_LENGTH),
-                message: `Input too long`,
-            };
-        }
-        // Check for forbidden characters (less strict for titles)
-        if ((0, security_1.containsForbiddenContent)(trimmed)) {
-            return {
-                isValid: false,
-                sanitized: trimmed,
-                message: "Invalid input",
-            };
-        }
-        return { isValid: true, sanitized: trimmed };
-    }
-    /**
-     * Validates search query input
-     */
-    function validateSearchQuery(query) {
-        if (!query || typeof query !== "string") {
-            return { isValid: true, sanitized: "" }; // Empty search is valid
-        }
-        const trimmed = query.trim();
-        // Limit search query length
-        const MAX_SEARCH_LENGTH = 100;
-        if (trimmed.length > MAX_SEARCH_LENGTH) {
-            return {
-                isValid: false,
-                sanitized: trimmed.substring(0, MAX_SEARCH_LENGTH),
-                message: `Input too long`,
-            };
-        }
-        // Check for suspicious content in search
-        if ((0, security_1.containsForbiddenContent)(trimmed)) {
-            return {
-                isValid: false,
-                sanitized: trimmed,
-                message: "Invalid input",
-            };
-        }
-        return { isValid: true, sanitized: trimmed };
-    }
-    /**
-     * Validates text area/notes input
-     */
-    function validateNotesInput(notes) {
-        if (!notes || typeof notes !== "string") {
-            return { isValid: true, sanitized: "" }; // Empty notes are valid
-        }
-        const trimmed = notes.trim();
-        // Limit notes length
-        const MAX_NOTES_LENGTH = 2000;
-        if (trimmed.length > MAX_NOTES_LENGTH) {
-            return {
-                isValid: false,
-                sanitized: trimmed.substring(0, MAX_NOTES_LENGTH),
-                message: `Input too long`,
-            };
-        }
-        // Check for suspicious content
-        if ((0, security_1.containsForbiddenContent)(trimmed)) {
-            return {
-                isValid: false,
-                sanitized: trimmed,
-                message: "Invalid input",
-            };
-        }
-        return { isValid: true, sanitized: trimmed };
-    }
-    /**
-     * Validates evidence serial number input
-     */
-    function validateSerialNumber(serial) {
-        if (!serial || typeof serial !== "string") {
-            return { isValid: true, sanitized: "" }; // Empty serial is valid
-        }
-        const trimmed = serial.trim();
-        // Limit serial length
-        const MAX_SERIAL_LENGTH = 50;
-        if (trimmed.length > MAX_SERIAL_LENGTH) {
-            return {
-                isValid: false,
-                sanitized: trimmed.substring(0, MAX_SERIAL_LENGTH),
-                message: `Input too long`,
-            };
-        }
-        // Check for forbidden characters
-        if ((0, security_1.containsForbiddenNameChars)(trimmed)) {
-            return {
-                isValid: false,
-                sanitized: trimmed,
-                message: "Invalid input",
-            };
-        }
-        // Check for suspicious content
-        if ((0, security_1.containsForbiddenContent)(trimmed)) {
-            return {
-                isValid: false,
-                sanitized: trimmed,
-                message: "Invalid input",
-            };
-        }
-        return { isValid: true, sanitized: trimmed };
-    }
-});
-define("security/nuiSecurity", ["require", "exports", "security/security"], function (require, exports, security_2) {
+define("security/nuiSecurity", ["require", "exports", "security/security"], function (require, exports, security_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.nuiRateLimit = void 0;
     exports.validateNuiMessage = validateNuiMessage;
     exports.validateNuiAction = validateNuiAction;
-    exports.securePostMessage = securePostMessage;
     exports.isNuiActionAllowed = isNuiActionAllowed;
     /**
      * NUI (Native User Interface) security utilities for FiveM
@@ -509,7 +270,7 @@ define("security/nuiSecurity", ["require", "exports", "security/security"], func
             try {
                 // Check serialization size
                 const serialized = JSON.stringify(data);
-                if (serialized.length > security_2.SECURITY_CONFIG.MAX_DATA_SIZE) {
+                if (serialized.length > security_1.SECURITY_CONFIG.MAX_DATA_SIZE) {
                     return {
                         isValid: false,
                         sanitized: {},
@@ -518,7 +279,7 @@ define("security/nuiSecurity", ["require", "exports", "security/security"], func
                     };
                 }
                 // Check for suspicious content
-                if ((0, security_2.containsForbiddenContent)(serialized)) {
+                if ((0, security_1.containsForbiddenContent)(serialized)) {
                     return {
                         isValid: false,
                         sanitized: {},
@@ -539,7 +300,7 @@ define("security/nuiSecurity", ["require", "exports", "security/security"], func
         }
         // For primitive types, check for suspicious content
         if (typeof data === "string") {
-            if ((0, security_2.containsForbiddenContent)(data)) {
+            if ((0, security_1.containsForbiddenContent)(data)) {
                 return {
                     isValid: false,
                     sanitized: "",
@@ -557,40 +318,10 @@ define("security/nuiSecurity", ["require", "exports", "security/security"], func
         if (!action || typeof action !== "string") {
             return false;
         }
-        if ((0, security_2.containsForbiddenContent)(action)) {
+        if ((0, security_1.containsForbiddenContent)(action)) {
             return false;
         }
         return true;
-    }
-    /**
-     * Secure wrapper for postMessage to FiveM
-     */
-    function securePostMessage(action, data) {
-        // Validate action against whitelist (silent validation)
-        if (!validateNuiAction(action)) {
-            // Silent rejection - no error details
-            return;
-        }
-        // Validate data (silent validation)
-        const validation = validateNuiMessage(data);
-        if (!validation.isValid) {
-            // Silent rejection - no error details
-            return;
-        }
-        // Safe to send
-        try {
-            const resourceName = GetCurrentResourceName();
-            fetch(`https://${resourceName}/${action}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json; charset=UTF-8",
-                },
-                body: JSON.stringify(validation.sanitized),
-            });
-        }
-        catch (error) {
-            // Silent failure - don't reveal fetch details
-        }
     }
     /**
      * Rate limiting for NUI events to prevent spam
@@ -637,39 +368,18 @@ define("shared/envBrowser", ["require", "exports"], function (require, exports) 
         return typeof window !== "undefined" && typeof document !== "undefined";
     }
 });
-define("utils/detection/framework-detection", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.getFramework = getFramework;
-    function getFramework() {
-        const resourceStates = {
-            qbcore: "qb-core",
-            esx: "es_extended",
-            qbox: "qbox-core",
-            other: "",
-        };
-        if (typeof window.GetResourceState === "function") {
-            for (const framework in resourceStates) {
-                if (framework === "other")
-                    continue;
-                const resource = resourceStates[framework];
-                try {
-                    if (window.GetResourceState(resource) === "started") {
-                        return framework;
-                    }
-                }
-                catch (error) {
-                    console.error(`Error checking resource state for ${resource}:`, error);
-                }
-            }
-        }
-        return "other";
-    }
-});
-define("utils/nui/fetchNui", ["require", "exports", "security/nuiSecurity", "shared/envBrowser"], function (require, exports, nuiSecurity_1, envBrowser_1) {
+define("client/nui/fetchNui", ["require", "exports", "security/nuiSecurity", "shared/envBrowser"], function (require, exports, nuiSecurity_1, envBrowser_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.fetchNui = fetchNui;
+    /**
+     * Sends a NUI (Native UI) event to the backend and returns the response as a Promise.
+     *
+     * @template T - The expected response type.
+     * @param eventName - The name of the NUI event to trigger.
+     * @param data - Optional data to send with the event.
+     * @param mockData - Optional mock data to return in browser environments for testing.
+     */
     async function fetchNui(eventName, data, mockData) {
         // Security: Validate the event name (silent)
         if (!(0, nuiSecurity_1.validateNuiAction)(eventName)) {
@@ -708,5 +418,175 @@ define("utils/nui/fetchNui", ["require", "exports", "security/nuiSecurity", "sha
             return await resp.json();
         }
         throw new Error(`HTTP error! status: ${resp.status}`);
+    }
+});
+define("client/nui/sendNui", ["require", "exports", "security/nuiSecurity"], function (require, exports, nuiSecurity_2) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.sendNui = sendNui;
+    /**
+     * Sends a NUI (Native UI) message to the specified action endpoint with optional data.
+     *
+     * @param action - The action endpoint to send the message to. Must pass whitelist validation.
+     * @param data - Optional data payload to send. Must pass data validation.
+     */
+    function sendNui(action, data) {
+        // Validate action against whitelist (silent validation)
+        if (!(0, nuiSecurity_2.validateNuiAction)(action)) {
+            // Silent rejection - no error details
+            return;
+        }
+        // Validate data (silent validation)
+        const validation = (0, nuiSecurity_2.validateNuiMessage)(data);
+        if (!validation.isValid) {
+            // Silent rejection - no error details
+            return;
+        }
+        // Safe to send
+        try {
+            const resourceName = GetCurrentResourceName();
+            fetch(`https://${resourceName}/${action}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json; charset=UTF-8",
+                },
+                body: JSON.stringify(validation.sanitized),
+            });
+        }
+        catch (error) {
+            // Silent failure - don't reveal fetch details
+        }
+    }
+});
+define("client/index", ["require", "exports", "client/notify", "client/nui/fetchNui", "client/nui/sendNui"], function (require, exports, notify_1, fetchNui_1, sendNui_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.ui = exports.client = void 0;
+    exports.client = {
+        fetchNui: fetchNui_1.fetchNui,
+        sendNui: sendNui_1.sendNui,
+    };
+    /**
+     * Provides UI-related utilities and functions.
+     *
+     * @property notify - Function to trigger user notifications.
+     */
+    exports.ui = {
+        notify: notify_1.notify,
+    };
+});
+define("security/index", ["require", "exports", "security/security"], function (require, exports, security_2) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.security = void 0;
+    exports.security = {
+        containsForbiddenContent: security_2.containsForbiddenContent,
+        containsForbiddenNameChars: security_2.containsForbiddenNameChars,
+        sanitizeText: security_2.sanitizeText,
+    };
+});
+define("client/resources", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.onResourceReady = onResourceReady;
+    /**
+     * Waits for a specified resource to reach the "started" state before executing a callback.
+     *
+     * This function repeatedly checks the state of the given resource using `window.GetResourceState`.
+     * Once the resource state is "started", the provided callback is invoked. If the resource is not
+     * yet started or an error occurs during the check, the function will retry after a 1-second delay.
+     *
+     * @param resourceName - The name of the resource to monitor.
+     * @param callback - The function to execute once the resource is ready.
+     */
+    function onResourceReady(resourceName, callback) {
+        const checkResourceState = () => {
+            try {
+                const state = window.GetResourceState(resourceName);
+                if (state === "started") {
+                    callback();
+                }
+                else {
+                    setTimeout(checkResourceState, 1000);
+                }
+            }
+            catch (err) {
+                console.error(`Error checking resource state for ${resourceName}:`, err);
+                setTimeout(checkResourceState, 1000);
+            }
+        };
+        checkResourceState();
+    }
+});
+define("utils/detection/framework-detection", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.getFramework = getFramework;
+    /**
+     * Detects and returns the current framework being used based on the state of known resources.
+     */
+    function getFramework() {
+        const resourceStates = {
+            qbcore: "qb-core",
+            esx: "es_extended",
+            qbox: "qbox-core",
+            other: "",
+        };
+        if (typeof window.GetResourceState === "function") {
+            for (const framework in resourceStates) {
+                if (framework === "other")
+                    continue;
+                const resource = resourceStates[framework];
+                try {
+                    if (window.GetResourceState(resource) === "started") {
+                        return framework;
+                    }
+                }
+                catch (error) {
+                    console.error(`Error checking resource state for ${resource}:`, error);
+                }
+            }
+        }
+        return "other";
+    }
+});
+define("utils/index", ["require", "exports", "client/resources", "utils/detection/framework-detection"], function (require, exports, resources_1, framework_detection_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.utils = void 0;
+    // Export empty utils object for now - extend as needed
+    exports.utils = {
+        onResourceReady: resources_1.onResourceReady,
+        getFramework: framework_detection_1.getFramework,
+    };
+});
+define("index", ["require", "exports", "client/index", "client/index", "security/index", "utils/index", "client/index", "utils/index"], function (require, exports, index_1, client_1, security_3, utils_1, client_2, utils_2) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    __exportStar(client_2, exports);
+    __exportStar(utils_2, exports);
+    // Export individual functions for FiveM
+    if (typeof exports !== "undefined") {
+        // Export individual functions
+        Object.entries(client_1.client).forEach(([key, value]) => {
+            if (typeof value === "function") {
+                exports(key, value);
+            }
+        });
+        Object.entries(utils_1.utils).forEach(([key, value]) => {
+            if (typeof value === "function") {
+                exports(key, value);
+            }
+        });
+        Object.entries(security_3.security).forEach(([key, value]) => {
+            if (typeof value === "function") {
+                exports(key, value);
+            }
+        });
+        Object.entries(index_1.ui).forEach(([key, value]) => {
+            if (typeof value === "function") {
+                exports(key, value);
+            }
+        });
     }
 });

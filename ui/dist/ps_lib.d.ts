@@ -15,49 +15,17 @@ declare module "shared/interfaces" {
 }
 declare module "client/notify" {
     import { NotificationOptions } from "shared/interfaces";
+    /**
+     * Displays a notification message to the user via NUI.
+     *
+     * @param message - The main text content of the notification.
+     * @param options - Optional configuration for the notification, such as type, icon, and duration.
+     *   - `type`: The style or category of the notification (e.g., "primary", "success", "error"). Defaults to "primary".
+     *   - `icon`: The icon class to display with the notification. Defaults to "fa-solid fa-info-circle".
+     *   - `duration`: How long (in milliseconds) the notification should be visible. Defaults to 5000.
+     */
     function notify(message: string, options?: Partial<NotificationOptions>): void;
     export { notify };
-}
-declare module "client/index" {
-    import { notify } from "client/notify";
-    export interface PSClient {
-        notify: typeof notify;
-    }
-    export const client: PSClient;
-}
-declare module "client/resources" {
-    /**
-     * Waits for a specified resource to reach the "started" state before executing a callback.
-     *
-     * This function repeatedly checks the state of the given resource using `window.GetResourceState`.
-     * Once the resource state is "started", the provided callback is invoked. If the resource is not
-     * yet started or an error occurs during the check, the function will retry after a 1-second delay.
-     *
-     * @param resourceName - The name of the resource to monitor.
-     * @param callback - The function to execute once the resource is ready.
-     */
-    export function onResourceReady(resourceName: string, callback: () => void): void;
-}
-declare module "utils/index" {
-    export interface PSUtils {
-        onResourceReady: (resourceName: string, callback: () => void) => void;
-    }
-    export const utils: PSUtils;
-}
-declare module "index" {
-    import { PSClient } from "client/index";
-    import { PSUtils } from "utils/index";
-    export * from "client/index";
-    export * from "utils/index";
-    export interface PSLib {
-        client: PSClient;
-        utils: PSUtils;
-    }
-    global {
-        interface CitizenExports {
-            ["ps_lib"]: PSLib;
-        }
-    }
 }
 declare module "security/security" {
     /**
@@ -111,51 +79,6 @@ declare module "security/security" {
         message?: string;
     };
 }
-declare module "security/inputValidation" {
-    /**
-     * Input validation utilities using the global security config
-     */
-    /**
-     * Validates and sanitizes tag input
-     */
-    export function validateTagInput(tag: string): {
-        isValid: boolean;
-        sanitized: string;
-        message?: string;
-    };
-    /**
-     * Validates report title input
-     */
-    export function validateReportTitle(title: string): {
-        isValid: boolean;
-        sanitized: string;
-        message?: string;
-    };
-    /**
-     * Validates search query input
-     */
-    export function validateSearchQuery(query: string): {
-        isValid: boolean;
-        sanitized: string;
-        message?: string;
-    };
-    /**
-     * Validates text area/notes input
-     */
-    export function validateNotesInput(notes: string): {
-        isValid: boolean;
-        sanitized: string;
-        message?: string;
-    };
-    /**
-     * Validates evidence serial number input
-     */
-    export function validateSerialNumber(serial: string): {
-        isValid: boolean;
-        sanitized: string;
-        message?: string;
-    };
-}
 declare module "security/nuiSecurity" {
     /**
      * NUI (Native User Interface) security utilities for FiveM
@@ -172,10 +95,6 @@ declare module "security/nuiSecurity" {
      * Validates NUI event action names against the whitelist of allowed events
      */
     export function validateNuiAction<T extends string>(action: T): boolean;
-    /**
-     * Secure wrapper for postMessage to FiveM
-     */
-    export function securePostMessage<T extends string>(action: T, data?: any): void;
     /**
      * Rate limiting for NUI events to prevent spam
      */
@@ -195,11 +114,102 @@ declare module "security/nuiSecurity" {
 declare module "shared/envBrowser" {
     export function isEnvBrowser(): boolean;
 }
+declare module "client/nui/fetchNui" {
+    /**
+     * Sends a NUI (Native UI) event to the backend and returns the response as a Promise.
+     *
+     * @template T - The expected response type.
+     * @param eventName - The name of the NUI event to trigger.
+     * @param data - Optional data to send with the event.
+     * @param mockData - Optional mock data to return in browser environments for testing.
+     */
+    function fetchNui<T = unknown>(eventName: string, data?: unknown, mockData?: T): Promise<T>;
+    export { fetchNui };
+}
+declare module "client/nui/sendNui" {
+    /**
+     * Sends a NUI (Native UI) message to the specified action endpoint with optional data.
+     *
+     * @param action - The action endpoint to send the message to. Must pass whitelist validation.
+     * @param data - Optional data payload to send. Must pass data validation.
+     */
+    export function sendNui<T extends string>(action: T, data?: unknown): void;
+}
+declare module "client/index" {
+    import { notify } from "client/notify";
+    import { fetchNui } from "client/nui/fetchNui";
+    import { sendNui } from "client/nui/sendNui";
+    export interface PSClient {
+        notify: typeof notify;
+    }
+    export const client: {
+        fetchNui: typeof fetchNui;
+        sendNui: typeof sendNui;
+    };
+    /**
+     * Provides UI-related utilities and functions.
+     *
+     * @property notify - Function to trigger user notifications.
+     */
+    export const ui: {
+        notify: typeof notify;
+    };
+}
+declare module "security/index" {
+    import { containsForbiddenContent, containsForbiddenNameChars, sanitizeText } from "security/security";
+    export const security: {
+        containsForbiddenContent: typeof containsForbiddenContent;
+        containsForbiddenNameChars: typeof containsForbiddenNameChars;
+        sanitizeText: typeof sanitizeText;
+    };
+}
+declare module "client/resources" {
+    /**
+     * Waits for a specified resource to reach the "started" state before executing a callback.
+     *
+     * This function repeatedly checks the state of the given resource using `window.GetResourceState`.
+     * Once the resource state is "started", the provided callback is invoked. If the resource is not
+     * yet started or an error occurs during the check, the function will retry after a 1-second delay.
+     *
+     * @param resourceName - The name of the resource to monitor.
+     * @param callback - The function to execute once the resource is ready.
+     */
+    export function onResourceReady(resourceName: string, callback: () => void): void;
+}
 declare module "utils/detection/framework-detection" {
-    import { Framework } from "shared/types";
-    function getFramework(): Framework;
+    /**
+     * Detects and returns the current framework being used based on the state of known resources.
+     */
+    function getFramework(): "qbcore" | "esx" | "qbox" | "other";
     export { getFramework };
 }
-declare module "utils/nui/fetchNui" {
-    export function fetchNui<T = any>(eventName: string, data?: any, mockData?: T): Promise<T>;
+declare module "utils/index" {
+    import { onResourceReady } from "client/resources";
+    import { getFramework } from "utils/detection/framework-detection";
+    export interface PSUtils {
+        onResourceReady: (resourceName: string, callback: () => void) => void;
+    }
+    export const utils: {
+        onResourceReady: typeof onResourceReady;
+        getFramework: typeof getFramework;
+    };
+}
+declare module "index" {
+    import { ui } from "client/index";
+    import { client } from "client/index";
+    import { security } from "security/index";
+    import { utils } from "utils/index";
+    export * from "client/index";
+    export * from "utils/index";
+    export interface PSLib {
+        client: typeof client;
+        utils: typeof utils;
+        security: typeof security;
+        ui: typeof ui;
+    }
+    global {
+        interface CitizenExports {
+            ["ps_lib"]: PSLib;
+        }
+    }
 }

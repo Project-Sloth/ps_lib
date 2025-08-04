@@ -45,7 +45,7 @@ const FORBIDDEN_NAME_CHARS = [
 	"file:",
 	"ftp:",
 	"javascript",
-];
+] as const;
 
 /**
  * List of suspicious content patterns
@@ -98,7 +98,7 @@ export function containsForbiddenNameChars(text: string): boolean {
 	const lowerText = text.toLowerCase();
 
 	return FORBIDDEN_NAME_CHARS.some((char) =>
-		lowerText.includes(char.toLowerCase()),
+		lowerText.includes(char.toLowerCase())
 	);
 }
 
@@ -176,7 +176,7 @@ export function validateContent(
 		allowEmpty?: boolean;
 		checkForbiddenChars?: boolean;
 		checkForbiddenContent?: boolean;
-	} = {},
+	} = {}
 ): {
 	isValid: boolean;
 	sanitized: string;

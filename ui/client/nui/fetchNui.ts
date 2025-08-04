@@ -4,9 +4,17 @@ import {
 } from "../../security/nuiSecurity";
 import { isEnvBrowser } from "../../shared/envBrowser";
 
-export async function fetchNui<T = any>(
+/**
+ * Sends a NUI (Native UI) event to the backend and returns the response as a Promise.
+ *
+ * @template T - The expected response type.
+ * @param eventName - The name of the NUI event to trigger.
+ * @param data - Optional data to send with the event.
+ * @param mockData - Optional mock data to return in browser environments for testing.
+ */
+async function fetchNui<T = unknown>(
 	eventName: string,
-	data?: any,
+	data?: unknown,
 	mockData?: T
 ): Promise<T> {
 	// Security: Validate the event name (silent)
@@ -54,3 +62,5 @@ export async function fetchNui<T = any>(
 
 	throw new Error(`HTTP error! status: ${resp.status}`);
 }
+
+export { fetchNui };

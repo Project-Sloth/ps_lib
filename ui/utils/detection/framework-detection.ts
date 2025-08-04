@@ -1,6 +1,9 @@
 import { Framework } from "../../shared/types";
 
-function getFramework(): Framework {
+/**
+ * Detects and returns the current framework being used based on the state of known resources.
+ */
+function getFramework() {
 	const resourceStates: Record<Framework, string> = {
 		qbcore: "qb-core",
 		esx: "es_extended",
@@ -14,7 +17,7 @@ function getFramework(): Framework {
 			const resource = resourceStates[framework as Framework];
 			try {
 				if (window.GetResourceState(resource) === "started") {
-					return framework as Framework;
+					return framework as "qbcore" | "esx" | "qbox" | "other";
 				}
 			} catch (error) {
 				console.error(
