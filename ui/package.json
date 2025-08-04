@@ -1,0 +1,13 @@
+{
+	"name": "@ps_lib/ui",
+	"private": true,
+	"scripts": {
+		"build": "tsc",
+		"dev": "tsc --watch",
+		"type-check": "tsc --noEmit"
+	},
+	"devDependencies": {
+		"typescript": "5.9.2",
+		"@citizenfx/client": "^2.0.17871-1"
+	}
+}
