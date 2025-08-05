@@ -10,9 +10,11 @@ Newest Build: 0.5.1
  - `added` QB menu overwrite
    - Use The Config Option To Turn It On, It will Take all qb-menu exports and convert
    - To ps_lib context menu!
+   - `added` qb-input to auto convert to lib
+   
 - added ox arrays 
 - `seperated` ox zones and grids to seperate luas
-- `added` qb-input to auto convert to lib
+
 
 
  
