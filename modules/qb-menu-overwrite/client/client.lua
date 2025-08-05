@@ -65,3 +65,45 @@ ps.exportChange('qb-menu', 'showHeader', function(data)
     })
 end)
 
+local function convertOptionsInput(data)
+    local options = {}
+    for k, v in pairs(data) do
+        options[k] = {
+            label = v.text or nil,
+            value = v.value or nil,
+        }
+    end
+    return options
+end
+
+local function overWriteInput(data)
+    local name = data.header or 'Input'
+    local options, tabl = {}, {}
+    for k, v in pairs(data.inputs) do
+        options[#options + 1] = {
+            id = k,
+            name = v.name or k,
+            title = v.text or nil,
+            type = v.type or 'input',
+            description = v.txt or nil,
+            placeholder = v.default or nil,
+            options = convertOptionsInput(v.options or {}),
+            required = v.isRequired or false,
+            min = v.min or nil,
+            max = v.max or nil,
+        }
+        tabl[v.name] = v.default or nil
+    end
+    local result = exports.ps_lib:input(name, options)
+    if not result or not result[1] then
+        return nil
+    end
+    for k, v in pairs (options) do
+        if v.id == k then
+            tabl[v.name] = result[k]
+        end
+    end
+   return tabl
+end
+
+ps.exportChange('qb-input', 'ShowInput', overWriteInput)

@@ -12,200 +12,6 @@
     all lib. calls will be ps. calls.
     some instances where where table:push() was used have been changed to table.insert() to work with the current library structure.
     ]]
-
---- GRID:
---[[
-    Based on PolyZone's grid system (https://github.com/mkafrin/PolyZone/blob/master/ComboZone.lua)
-
-    MIT License
-
-    Copyright © 2019-2021 Michael Afrin
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
-]]
-
-local mapMinX = -3700
-local mapMinY = -4400
-local mapMaxX = 4500
-local mapMaxY = 8000
-local xDelta = (mapMaxX - mapMinX) / 34
-local yDelta = (mapMaxY - mapMinY) / 50
-local grid = {}
-local lastCell = {}
-local gridCache = {}
-local entrySet = {}
-
-ps.grid = {}
-
----@class GridEntry
----@field coords vector
----@field length? number
----@field width? number
----@field radius? number
----@field [string] any
-
----@param point vector
----@param length number
----@param width number
----@return number, number, number, number
-local function getGridDimensions(point, length, width)
-    local minX = (point.x - width - mapMinX) // xDelta
-    local maxX = (point.x + width - mapMinX) // xDelta
-    local minY = (point.y - length - mapMinY) // yDelta
-    local maxY = (point.y + length - mapMinY) // yDelta
-
-    return minX, maxX, minY, maxY
-end
-
----@param point vector
----@return number, number
-function ps.grid.getCellPosition(point)
-    local x = (point.x - mapMinX) // xDelta
-    local y = (point.y - mapMinY) // yDelta
-
-    return x, y
-end
-
----@param point vector
----@return GridEntry[]
-function ps.grid.getCell(point)
-    local x, y = ps.grid.getCellPosition(point)
-
-    if lastCell.x ~= x or lastCell.y ~= y then
-        lastCell.x = x
-        lastCell.y = y
-        lastCell.cell = grid[y] and grid[y][x] or {}
-    end
-
-    return lastCell.cell
-end
-
----@param point vector
----@param filter? fun(entry: GridEntry): boolean
----@return Array<GridEntry>
-function ps.grid.getNearbyEntries(point, filter)
-    local minX, maxX, minY, maxY = getGridDimensions(point, xDelta, yDelta)
-
-    if gridCache.filter == filter and
-        gridCache.minX == minX and
-        gridCache.maxX == maxX and
-        gridCache.minY == minY and
-        gridCache.maxY == maxY then
-        return gridCache.entries
-    end
-
-    local entries = {}
-    local n = 0
-
-    table.wipe(entrySet)
-
-    for y = minY, maxY do
-        local row = grid[y]
-
-        for x = minX, maxX do
-            local cell = row and row[x]
-
-            if cell then
-                for j = 1, #cell do
-                    local entry = cell[j]
-
-                    if not entrySet[entry] and (not filter or filter(entry)) then
-                        n = n + 1
-                        entrySet[entry] = true
-                        entries[n] = entry
-                    end
-                end
-            end
-        end
-    end
-
-    gridCache.minX = minX
-    gridCache.maxX = maxX
-    gridCache.minY = minY
-    gridCache.maxY = maxY
-    gridCache.entries = entries
-    gridCache.filter = filter
-
-    return entries
-end
-
----@param entry { coords: vector, length?: number, width?: number, radius?: number, [string]: any }
-function ps.grid.addEntry(entry)
-    entry.length = entry.length or entry.radius * 2
-    entry.width = entry.width or entry.radius * 2
-    local minX, maxX, minY, maxY = getGridDimensions(entry.coords, entry.length, entry.width)
-
-    for y = minY, maxY do
-        local row = grid[y] or {}
-
-        for x = minX, maxX do
-            local cell = row[x] or {}
-
-            cell[#cell + 1] = entry
-            row[x] = cell
-        end
-
-        grid[y] = row
-
-        table.wipe(gridCache)
-    end
-end
-
----@param entry table A table that was added to the grid previously.
-function ps.grid.removeEntry(entry)
-    local minX, maxX, minY, maxY = getGridDimensions(entry.coords, entry.length, entry.width)
-    local success = false
-
-    for y = minY, maxY do
-        local row = grid[y]
-
-        if not row then goto continue end
-
-        for x = minX, maxX do
-            local cell = row[x]
-
-            if cell then
-                for i = 1, #cell do
-                    if cell[i] == entry then
-                        table.remove(cell, i)
-                        success = true
-                        break
-                    end
-                end
-
-                if #cell == 0 then
-                    row[x] = nil
-                end
-            end
-        end
-
-        if not next(row) then
-            grid[y] = nil
-        end
-
-        ::continue::
-    end
-
-    table.wipe(gridCache)
-
-    return success
-end
 --- Zones:
 local glm = require 'glm'
 
@@ -306,10 +112,10 @@ local function getTriangles(polygon)
     return triangles
 end
 
-local insideZones =  {} --lib.context == 'client' and {} --[[@as table<number, CZone>]]
-local exitingZones = {} --lib.context == 'client' and {} --[[@as Array<CZone>]]
-local enteringZones =  {} -- lib.context == 'client' and {} --[[@as Array<CZone>]]
-local nearbyZones = {} -- lib.array:new() --[[@as Array<CZone>]]
+local insideZones =    {}
+local exitingZones =   ps.array:new()
+local enteringZones =  ps.array:new()
+local nearbyZones =     ps.array:new()
 local glm_polygon_contains = glm.polygon.contains
 local tick
 
@@ -318,6 +124,7 @@ local function removeZone(zone)
     Zones[zone.id] = nil
 
     ps.grid.removeEntry(zone)
+
     insideZones[zone.id] = nil
 
     table.remove(exitingZones, exitingZones:indexOf(zone))
@@ -325,8 +132,10 @@ local function removeZone(zone)
 end
 
 CreateThread(function()
+    if ps.context == 'server' then return end
+
     while true do
-        local coords = GetEntityCoords(PlayerPedId())
+        local coords = GetEntityCoords(cache.ped)
         local zones = ps.grid.getNearbyEntries(coords, function(entry) return entry.remove == removeZone end) --[[@as Array<CZone>]]
         local cellX, cellY = ps.grid.getCellPosition(coords)
         local cache = ps.grid.getCell(coords)
@@ -363,8 +172,7 @@ CreateThread(function()
                     zone.insideZone = true
 
                     if zone.onEnter then
-                        --enteringZones:push(zone)
-                        table.insert(enteringZones, zone)
+                        enteringZones:push(zone)
                     end
 
                     if zone.inside or zone.debug then
@@ -377,8 +185,7 @@ CreateThread(function()
                     insideZones[zone.id] = nil
 
                     if zone.onExit then
-                        table.insert(exitingZones, zone)
-                        --exitingZones:push(zone)
+                        exitingZones:push(zone)
                     end
                 end
 
@@ -402,6 +209,7 @@ CreateThread(function()
 
             table.wipe(exitingZones)
         end
+
         if enteringSize > 0 then
             table.sort(enteringZones, function(a, b)
                 return a.distance < b.distance
@@ -533,7 +341,6 @@ local function setZone(data)
     data.remove = removeZone
     data.contains = data.contains or contains
 
-   
     data.setDebug = setDebug
 
     if data.debug then
@@ -624,7 +431,7 @@ function ps.zones.poly(data)
 
     data.coords = data.polygon:centroid()
     data.__type = 'poly'
-    data.radius = lib.array.reduce(data.polygon, function(acc, point)
+    data.radius = ps.array.reduce(data.polygon, function(acc, point)
         local distance = #(point - data.coords)
         return distance > acc and distance or acc
     end, 0)
@@ -679,4 +486,3 @@ function ps.zones.getAllZones() return Zones end
 function ps.zones.getCurrentZones() return insideZones end
 
 function ps.zones.getNearbyZones() return nearbyZones end
-
