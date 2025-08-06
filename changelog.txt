@@ -4,8 +4,6 @@ Build: 0.5.0
 
 Newest Build: 0.5.1
  - fix ps_lib's version check. Now goes to the proper git link to pull data
-
-
  - Remove Success prints from startfirst/shared/locales
  - `added` QB menu overwrite
    - Use The Config Option To Turn It On, It will Take all qb-menu exports and convert
