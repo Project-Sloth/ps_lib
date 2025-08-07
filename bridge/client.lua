@@ -4,7 +4,7 @@ local emoteResources = {
     ['rpemotes'] = 'bridge/emote/rp/client.lua',
     ['rpemotes-reborn'] = 'bridge/emote/rp/client.lua',
     ['dpemotes'] = 'bridge/emote/dp/client.lua',
-    ['scully_emotemenu'] = 'bridge/emote/skully/client.lua',
+    ['scully_emotemenu'] = 'bridge/emote/scully/client.lua',
 }
 local frameworkResources = {
     {name = 'qbx_core', path = 'bridge/framework/qbx/client.lua'},
@@ -116,4 +116,3 @@ loadLib('bridge/menus/'..Config.Menus..'.lua')
 function ps.getFramework()
     return framework
 end
-

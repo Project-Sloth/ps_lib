@@ -20,6 +20,7 @@ end)
 local function handleData(datas)
     sendData.items = {}
     sendData.name = datas.name or 'Missing Name'
+    HoldData = datas.items
     for k, v in ipairs(datas.items) do
         table.insert(sendData.items, {
             title = v.title or 'Missing Title',
@@ -27,7 +28,6 @@ local function handleData(datas)
             description = v.description or nil,
         })
     end
-    HoldData = datas.items
     return sendData
 end
 
@@ -36,8 +36,9 @@ local function showContext(menuData)
     if not menuData or not menuData.items or #menuData.items == 0 then
         return
     end
-
+    Wait(100)
     local dataToSend = handleData(menuData)
+
     SetNuiFocus(true, true)
     SendNUIMessage({
         action = 'openContextMenu',

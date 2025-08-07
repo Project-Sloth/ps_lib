@@ -2,8 +2,10 @@ Config = {}
 ps = {}
 
 Config.Notify = "ps" -- qb, ox, ps
-Config.Menus = "qb" -- qb, ox, ps
+Config.Menus = "ps" -- qb, ox, ps
 Config.DrawText = "ps" -- qb, ox, ps
+Config.ConvertQBMenu = false -- Convert qb-menu to ps-ui context menu and qb-input to ps-ui input
+
 Config.Progressbar = { -- these are DEFAULT values, you can override them in the progressbar function
     style = "oxbar", -- qb, oxbar, ps
     Movement = true, -- Disable movement
