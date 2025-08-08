@@ -82,7 +82,7 @@ RegisterCommand('testanput', function(source, args, rawCommand)
     }
 
     local result = input('Test Input Menu', options)
-    if result then
+    if result and result[1] then
         ps.debug('Input Result:', result)
     else
         ps.debug('Input was cancelled or failed.')
