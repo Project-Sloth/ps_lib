@@ -9,7 +9,7 @@ import {
  * @param action - The action endpoint to send the message to. Must pass whitelist validation.
  * @param data - Optional data payload to send. Must pass data validation.
  */
-export function sendNui<T extends string>(action: T, data?: unknown): void {
+export function sendNui<T extends string>(action: T, data: unknown): void {
 	// Validate action against whitelist (silent validation)
 	if (!validateNuiAction(action)) {
 		// Silent rejection - no error details

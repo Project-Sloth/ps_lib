@@ -444,7 +444,7 @@ define("client/nui/sendNui", ["require", "exports", "security/nuiSecurity"], fun
         }
         // Safe to send
         try {
-            const resourceName = GetCurrentResourceName();
+            const resourceName = GetInvokingResource() || GetCurrentResourceName();
             fetch(`https://${resourceName}/${action}`, {
                 method: "POST",
                 headers: {
