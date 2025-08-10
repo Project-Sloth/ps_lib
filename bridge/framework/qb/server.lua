@@ -421,7 +421,22 @@ function ps.getSharedGangRankData(gang, rank, data)
     if not gradeData then return nil end
     return gradeData[data] or nil
 end
+--- Items
+function ps.getSharedItems()
+    return QBCore.Shared.Items
+end
 
+function ps.getItemLabel(item)
+    local itemData = ps.getSharedItems()[item]
+    if not itemData then return item end
+    return itemData.label
+end
+
+function ps.getItemWeight(item)
+    local itemData = ps.getSharedItems()[item]
+    if not itemData then return 0 end
+    return itemData.weight or 0
+end
 
 
 

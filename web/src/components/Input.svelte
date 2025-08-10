@@ -1,6 +1,7 @@
 <script lang="ts">
     import { isInputting, inputData, inputFormName } from '../store/inputStore';
     import { fetchNui } from '../utils/fetchNui';
+    import {onMount} from "svelte";
     interface InputItem {
         type: 'text' | 'number' | 'password' | 'select' | 'checkbox' | 'longtext' | 'textarea';
         title: string;
@@ -45,11 +46,22 @@
         $inputData.forEach((_, index: number) => {
             dataArray.push(formData[`field_${index}`]);
         });
-        fetchNui('submitForm', dataArray);
-        fetchNui('hideUI');
+        fetchNui('submitForm', dataArray || []);
         inputData.set([]);
         isInputting.set(false);
+        inputFormName.set('');
+        
     }
+    onMount(() => {
+        window.addEventListener('keydown', (e: KeyboardEvent) => {
+            if (['Escape'].includes(e.code)) {
+                fetchNui('submitForm');
+                inputData.set([]);
+                isInputting.set(false);
+                inputFormName.set('');
+            }
+        });
+    });
 </script>
 
 {#if $isInputting}

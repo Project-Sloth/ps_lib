@@ -145,19 +145,7 @@ local function loadLangsInternal(script, language)
     return true
 end
 
-local psScripts = {
-    ['ps-banking'] = false,
-    ['ps-realtor'] = false,
-    ['ps-mdt'] = false,
-    ['ps-dispatch'] = false,
-    ['ps-multijob'] = false,
-    ['ps-drugprocessing'] = false,
-}
-AddEventHandler('onResourceStart', function(resourceName)
-    if psScripts[resourceName] then
-        loadLangsInternal(resourceName, langs)
-    end
-end)
+
 
 loadLangsInternal('ps_lib', langs)
 

@@ -129,9 +129,6 @@
     contextMenuItems.set([]);
     isCoordGrabbing.set(false);
     coordGrabberCoords.set({});
-    isInputting.set(false);
-    inputData.set([]);
-    inputFormName.set('');
     showImage.set(false);
     imageUrl.set('');
     isDrawText.set(false);

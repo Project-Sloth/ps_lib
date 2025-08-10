@@ -204,7 +204,7 @@ CreateThread(function()
             end)
 
             for i = exitingSize, 1, -1 do
-                exitingZones[i]:onExit()
+                exitingZones[i].onExit()
             end
 
             table.wipe(exitingZones)
@@ -216,7 +216,7 @@ CreateThread(function()
             end)
 
             for i = 1, enteringSize do
-                enteringZones[i]:onEnter()
+                enteringZones[i].onEnter()
             end
 
             table.wipe(enteringZones)
@@ -230,10 +230,10 @@ CreateThread(function()
                             zone:debug()
 
                             if zone.inside and zone.insideZone then
-                                zone:inside()
+                                zone.inside()
                             end
                         else
-                            zone:inside()
+                            zone.inside()
                         end
                     end
                 end)

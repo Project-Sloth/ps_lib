@@ -2,7 +2,7 @@ Build: 0.5.0
 - initial release
 - please no major bugs, ill cry (im crying already)
 
-Newest Build: 0.5.1
+build: 0.5.1
  - fix ps_lib's version check. Now goes to the proper git link to pull data
  - Remove Success prints from startfirst/shared/locales
  - `added` QB menu overwrite
@@ -12,6 +12,14 @@ Newest Build: 0.5.1
    
 - added ox arrays 
 - `seperated` ox zones and grids to seperate luas
+
+Newest Build: 0.5.2
+- fix for input Ui not opening on second run
+- adjustment for ox zones
+- removed autoload locales ( was giving weird issues on qbx/esx but qb worked)
+- getSharedItem
+- getItemLabel
+- getItemWeight
 
 
 
