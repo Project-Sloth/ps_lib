@@ -12,7 +12,14 @@
     all lib. calls will be ps. calls.
     some instances where where table:push() was used have been changed to table.insert() to work with the current library structure.
     ]]
---- Zones:
+--[[
+    https://github.com/overextended/ox_lib
+
+    This file is licensed under LGPL-3.0 or higher <https://www.gnu.org/licenses/lgpl-3.0.en.html>
+
+    Copyright © 2025 Linden <https://github.com/thelindat>
+]]
+
 local glm = require 'glm'
 
 ---@class ZoneProperties
@@ -112,10 +119,10 @@ local function getTriangles(polygon)
     return triangles
 end
 
-local insideZones =    {}
-local exitingZones =   ps.array:new()
-local enteringZones =  ps.array:new()
-local nearbyZones =     ps.array:new()
+local insideZones = not IsDuplicityVersion() and {} --[[@as table<number, CZone>]]
+local exitingZones = not IsDuplicityVersion() and ps.array:new() --[[@as Array<CZone>]]
+local enteringZones = not IsDuplicityVersion() and ps.array:new() --[[@as Array<CZone>]]
+local nearbyZones = ps.array:new() --[[@as Array<CZone>]]
 local glm_polygon_contains = glm.polygon.contains
 local tick
 
@@ -125,6 +132,8 @@ local function removeZone(zone)
 
     ps.grid.removeEntry(zone)
 
+    if IsDuplicityVersion() then return end
+
     insideZones[zone.id] = nil
 
     table.remove(exitingZones, exitingZones:indexOf(zone))
@@ -132,13 +141,14 @@ local function removeZone(zone)
 end
 
 CreateThread(function()
-    if ps.context == 'server' then return end
+    if IsDuplicityVersion() then return end
 
     while true do
-        local coords = GetEntityCoords(cache.ped)
+        local coords = GetEntityCoords(PlayerPedId())
         local zones = ps.grid.getNearbyEntries(coords, function(entry) return entry.remove == removeZone end) --[[@as Array<CZone>]]
         local cellX, cellY = ps.grid.getCellPosition(coords)
-        local cache = ps.grid.getCell(coords)
+        local cache = {lastCellX = cellX, lastCellY = cellY, coords = coords}
+
         if cellX ~= cache.lastCellX or cellY ~= cache.lastCellY then
             for i = 1, #nearbyZones do
                 local zone = nearbyZones[i]
@@ -204,7 +214,7 @@ CreateThread(function()
             end)
 
             for i = exitingSize, 1, -1 do
-                exitingZones[i].onExit()
+                exitingZones[i]:onExit()
             end
 
             table.wipe(exitingZones)
@@ -216,7 +226,7 @@ CreateThread(function()
             end)
 
             for i = 1, enteringSize do
-                enteringZones[i].onEnter()
+                enteringZones[i]:onEnter()
             end
 
             table.wipe(enteringZones)
@@ -230,10 +240,10 @@ CreateThread(function()
                             zone:debug()
 
                             if zone.inside and zone.insideZone then
-                                zone.inside()
+                                zone:inside()
                             end
                         else
-                            zone.inside()
+                            zone:inside()
                         end
                     end
                 end)
@@ -341,14 +351,17 @@ local function setZone(data)
     data.remove = removeZone
     data.contains = data.contains or contains
 
-    data.setDebug = setDebug
+    if not IsDuplicityVersion() then
+        data.setDebug = setDebug
 
-    if data.debug then
+        if data.debug then
+            data.debug = nil
+
+            data:setDebug(true, data.debugColour)
+        end
+    else
         data.debug = nil
-
-        data:setDebug(true, data.debugColour)
     end
-    
 
     Zones[data.id] = data
     ps.grid.addEntry(data)
@@ -486,3 +499,5 @@ function ps.zones.getAllZones() return Zones end
 function ps.zones.getCurrentZones() return insideZones end
 
 function ps.zones.getNearbyZones() return nearbyZones end
+
+return ps.zones
