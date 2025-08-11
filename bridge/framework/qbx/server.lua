@@ -577,7 +577,7 @@ function ps.getSharedGangRankData(gang, rank, data)
 end
 
 function ps.getSharedItems()
-    return exports.ox_inventory:GetItems()
+    return exports.ox_inventory:Items()
 end
 
 function ps.getItemLabel(item)
