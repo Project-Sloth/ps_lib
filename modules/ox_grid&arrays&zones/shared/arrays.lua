@@ -5,9 +5,9 @@
 
     Copyright © 2025 Linden <https://github.com/thelindat>
 ]]
---- Array:
+
 ---@class Array<T> : OxClass, { [number]: T }
-ps.array = {}
+ps.array = ps.class('Array')
 
 local table_unpack = table.unpack
 local table_remove = table.remove
@@ -25,12 +25,7 @@ function ps.array:constructor(...)
         self[i] = arr[i]
     end
 end
-function ps.array:new(...)
-    local instance = {}
-    setmetatable(instance, { __index = ps.array })
-    instance:constructor(...)
-    return instance
-end
+
 ---@private
 function ps.array:__newindex(index, value)
     if type(index) ~= 'number' then error(("Cannot insert non-number index '%s' into an array."):format(index)) end
@@ -364,3 +359,5 @@ function ps.array.isArray(tbl)
 
     return false
 end
+
+return ps.array
