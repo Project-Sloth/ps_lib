@@ -24,7 +24,6 @@
     SOFTWARE.
 ]]
 
---- GRID:
 local mapMinX = -3700
 local mapMinY = -4400
 local mapMaxX = 4500

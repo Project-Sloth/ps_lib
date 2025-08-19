@@ -14,7 +14,7 @@ if Config.Logs == 'fivemerr' then
         exports['fm-logs']:createLog({
             logType = name,
             message = description,
-            level = 'Image', 
+            level = 'Image',
             resource = GetInvokingResource() or 'ps_lib',
             source = source or nil,
             Metadata = {},

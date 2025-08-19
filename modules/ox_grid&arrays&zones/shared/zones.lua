@@ -1,18 +1,11 @@
 --[[
-    This file and module was made by Linden and all overextended contributors.
-    You can find the ox_lib repository here:
     https://github.com/overextended/ox_lib
 
     This file is licensed under LGPL-3.0 or higher <https://www.gnu.org/licenses/lgpl-3.0.en.html>
 
     Copyright © 2025 Linden <https://github.com/thelindat>
-    
-    Major Thank you to them for providing an amazing zoning and grid system system.
-    The only changes made to this file will be to make the structure work in line with our library and will comment out the original code to show what has been changed.
-    all lib. calls will be ps. calls.
-    some instances where where table:push() was used have been changed to table.insert() to work with the current library structure.
-    ]]
---- Zones:
+]]
+
 local glm = require 'glm'
 
 ---@class ZoneProperties
@@ -33,7 +26,11 @@ local glm = require 'glm'
 ---@type table<number, CZone>
 local Zones = {}
 _ENV.Zones = Zones
-
+if IsDuplicityVersion() then
+    ps.context = 'server'
+else
+    ps.context = 'client'
+end
 local function nextFreePoint(points, b, len)
     for i = 1, len do
         local n = (i + b) % len
@@ -112,10 +109,10 @@ local function getTriangles(polygon)
     return triangles
 end
 
-local insideZones =    {}
-local exitingZones =   ps.array:new()
-local enteringZones =  ps.array:new()
-local nearbyZones =     ps.array:new()
+local insideZones = ps.context == 'client' and {} --[[@as table<number, CZone>]]
+local exitingZones = ps.context == 'client' and ps.array:new() --[[@as Array<CZone>]]
+local enteringZones = ps.context == 'client' and ps.array:new() --[[@as Array<CZone>]]
+local nearbyZones = ps.array:new() --[[@as Array<CZone>]]
 local glm_polygon_contains = glm.polygon.contains
 local tick
 
@@ -124,6 +121,8 @@ local function removeZone(zone)
     Zones[zone.id] = nil
 
     ps.grid.removeEntry(zone)
+
+    if ps.context == 'server' then return end
 
     insideZones[zone.id] = nil
 
@@ -138,7 +137,8 @@ CreateThread(function()
         local coords = GetEntityCoords(cache.ped)
         local zones = ps.grid.getNearbyEntries(coords, function(entry) return entry.remove == removeZone end) --[[@as Array<CZone>]]
         local cellX, cellY = ps.grid.getCellPosition(coords)
-        local cache = ps.grid.getCell(coords)
+        cache.coords = coords
+
         if cellX ~= cache.lastCellX or cellY ~= cache.lastCellY then
             for i = 1, #nearbyZones do
                 local zone = nearbyZones[i]
@@ -204,7 +204,7 @@ CreateThread(function()
             end)
 
             for i = exitingSize, 1, -1 do
-                exitingZones[i].onExit()
+                exitingZones[i]:onExit()
             end
 
             table.wipe(exitingZones)
@@ -216,7 +216,7 @@ CreateThread(function()
             end)
 
             for i = 1, enteringSize do
-                enteringZones[i].onEnter()
+                enteringZones[i]:onEnter()
             end
 
             table.wipe(enteringZones)
@@ -230,10 +230,10 @@ CreateThread(function()
                             zone:debug()
 
                             if zone.inside and zone.insideZone then
-                                zone.inside()
+                                zone:inside()
                             end
                         else
-                            zone.inside()
+                            zone:inside()
                         end
                     end
                 end)
@@ -341,14 +341,17 @@ local function setZone(data)
     data.remove = removeZone
     data.contains = data.contains or contains
 
-    data.setDebug = setDebug
+    if ps.context == 'client' then
+        data.setDebug = setDebug
 
-    if data.debug then
+        if data.debug then
+            data.debug = nil
+
+            data:setDebug(true, data.debugColour)
+        end
+    else
         data.debug = nil
-
-        data:setDebug(true, data.debugColour)
     end
-    
 
     Zones[data.id] = data
     ps.grid.addEntry(data)
@@ -365,6 +368,7 @@ ps.zones = {}
 ---@param data PolyZone
 ---@return CZone
 function ps.zones.poly(data)
+    data.resource = GetInvokingResource() or 'ps_lib'
     data.id = #Zones + 1
     data.thickness = data.thickness or 4
 
@@ -447,6 +451,7 @@ end
 ---@param data BoxZone
 ---@return CZone
 function ps.zones.box(data)
+    data.resource = GetInvokingResource() or 'ps_lib'
     data.id = #Zones + 1
     data.coords = convertToVector(data.coords)
     data.size = data.size and convertToVector(data.size) / 2 or vec3(2)
@@ -472,6 +477,7 @@ end
 ---@param data SphereZone
 ---@return CZone
 function ps.zones.sphere(data)
+    data.resource = GetInvokingResource() or 'ps_lib'
     data.id = #Zones + 1
     data.coords = convertToVector(data.coords)
     data.radius = (data.radius or 2) + 0.0
@@ -486,3 +492,11 @@ function ps.zones.getAllZones() return Zones end
 function ps.zones.getCurrentZones() return insideZones end
 
 function ps.zones.getNearbyZones() return nearbyZones end
+
+AddEventHandler('onResourceStop', function(resourceName)
+    for id, zone in pairs(Zones) do
+        if zone.resource == resourceName then
+            zone:remove()
+        end
+    end
+end)
