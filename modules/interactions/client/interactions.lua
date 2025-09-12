@@ -36,6 +36,16 @@ function ps.notify(text, type, time)
         })
     elseif Config.Notify == 'ps' then
         exports['ps_lib']:notify(text, type, time)
+    elseif Config.Notify == 'mad_thoughts' then
+        if type == 'error' then
+            exports['mad-thoughts']:error(text, time / 1000)
+        elseif type == 'success' then
+            exports['mad-thoughts']:success(text, time / 1000)
+        elseif type == 'info' then
+            exports['mad-thoughts']:info(text, time / 1000)
+        elseif type == 'warning' then
+            exports['mad-thoughts']:warning(text, time / 1000)
+        end
     end
 end
 

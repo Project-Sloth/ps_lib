@@ -1,9 +1,14 @@
 local sendData, HoldData = {}, {}
+local p = nil
 
 RegisterNUICallback('contextMenuItemClicked', function(datas, cb)
     local option = HoldData[datas]
     if option and option.action then
         option.action()
+        p:resolve(true)
+        HoldData = {}
+        sendData = {}
+        return
     end
     if option and option.event then
         if option.type == 'server' then
@@ -12,6 +17,7 @@ RegisterNUICallback('contextMenuItemClicked', function(datas, cb)
             TriggerEvent(option.event, option.args or {})
         end
     end
+    p:resolve(true)
     HoldData = {}
     sendData = {}
     cb('ok')
@@ -38,12 +44,13 @@ local function showContext(menuData)
     end
     Wait(100)
     local dataToSend = handleData(menuData)
-
+    p = promise:new()
     SetNuiFocus(true, true)
     SendNUIMessage({
         action = 'openContextMenu',
         data = dataToSend
     })
+    return Citizen.Await(p)
 end
 
 exports('showContext', showContext)
@@ -85,7 +92,9 @@ local function hideMenu()
     SendNUIMessage({
         action = 'hideContext'
     })
-
+    if p then
+        p:resolve(false)
+    end
 end
 
 ps.exportChange('ps-ui', 'HideMenu', hideMenu)

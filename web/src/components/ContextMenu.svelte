@@ -16,7 +16,9 @@
         contextMenuItems.set([]);
     }
 
-    
+    function breakDown(text: string): string {
+        return text.replace(/\n/g, '<br>') || text;
+    }
 </script>
 
 {#if $contextMenuShown}
@@ -40,7 +42,7 @@
                         {/if}
                         <div class="menu-text">
                             <span class="title">{item.title}</span>
-                            <span class="description">{item.description}</span>
+                            <span class="description">{@html breakDown(item.description)}</span>
                         </div>
                         <div class="menu-arrow">→</div>
                     </div>

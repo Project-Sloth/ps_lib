@@ -1,7 +1,7 @@
 Config = {}
 ps = {}
 
-Config.Notify = "ps" -- qb, ox, ps
+Config.Notify = "ps" -- qb, ox, ps, mad_thoughts
 Config.Menus = "ps" -- qb, ox, ps
 Config.DrawText = "ps" -- qb, ox, ps
 Config.ConvertQBMenu = false -- Convert qb-menu to ps-ui context menu and qb-input to ps-ui input
