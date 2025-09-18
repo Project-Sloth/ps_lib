@@ -48,6 +48,17 @@ function ps.hasItems(items)
     return true
 end
 
+function ps.getItemCount(item)
+    if not item then return end
+    local amount = 0
+    for k, v in pairs (ps.getPlayerData().items) do
+        if v.name == item then
+            amount = amount + v.amount
+        end
+    end
+    return amount
+end
+
 RegisterNetEvent('ps_lib:client:createShop', function(shopData)
     if not shopData.name then shopData.name = 'Shop' end
     if not shopData.slots then shopData.slots = 50 end

@@ -13,7 +13,7 @@ build: 0.5.1
 - added ox arrays 
 - `seperated` ox zones and grids to seperate luas
 
-Newest Build: 0.5.2
+Build: 0.5.2
 - fix for input Ui not opening on second run
 - adjustment for ox zones
 - removed autoload locales ( was giving weird issues on qbx/esx but qb worked)
@@ -21,6 +21,11 @@ Newest Build: 0.5.2
 - getItemLabel
 - getItemWeight
 
-
+Newest Build: 0.5.3
+  - reformated interactions.
+    - now checks your config for what you use and populates the necessary functions
+  - added support for mad_thoughts for notifications
+  - added new client inventory function `ps.getItemCount(item)`
+    - returns the total amount of the item you send through
 
  

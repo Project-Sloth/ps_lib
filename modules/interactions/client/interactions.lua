@@ -1,44 +1,82 @@
 
-function ps.drawText(text)
-    if not text then return end
-    if Config.DrawText == 'qb' then
+
+if Config.DrawText == 'qb' then
+    function ps.drawText(text)
+        if not text then return end
         exports['qb-core']:ShowText(text)
-    elseif Config.DrawText == 'ox' then
-        lib.showTextUI(text)
-    elseif Config.DrawText == 'ps' then
-        exports['ps-ui']:drawText(text, "yellow")
+    end
+    function ps.hideText()
+        exports['qb-core']:HideText()
     end
 end
 
-function ps.hideText()
-    if Config.DrawText == 'qb' then
-        exports['qb-core']:HideText()
-    elseif Config.DrawText == 'ox' then
+if Config.DrawText == 'ox' then
+    function ps.drawText(text)
+        if not text then return end
+        lib.showTextUI(text)
+    end
+    function ps.hideText()
         lib.hideTextUI()
-    elseif Config.DrawText == 'ps' then
+    end
+end
+
+if Config.DrawText == 'ps' then
+    function ps.drawText(text)
+        if not text then return end
+        exports['ps-ui']:drawText(text, "yellow")
+    end
+    function ps.hideText()
         exports['ps-ui']:hideDrawText()
     end
 end
 
-function ps.notify(text, type, time)
-    if not text then return end
-    if not type then type = 'info' end
-    if not time then time = 5000 end
-    if Config.Notify == 'qb' then
+if Config.Notify == 'qb' then
+    function ps.notify(text, type, time)
+        if not text then return end
+        if not type then type = 'info' end
+        if not time then time = 5000 end
         QBCore.Functions.Notify(text, type, time)
-    elseif Config.Notify == 'esx' then
-        ESX.ShowNotification(text)
-    elseif Config.Notify == 'ox' then
+    end
+end
+
+if Config.Notify == 'ox' then
+    function ps.notify(text, type, time)
+        if not text then return end
+        if not type then type = 'info' end
+        if not time then time = 5000 end
         lib.notify({
             description = text,
             type = type,
             duration = time,
         })
-    elseif Config.Notify == 'ps' then
+    end
+end
+
+if Config.Notify == 'ps' then
+    function ps.notify(text, type, time)
+        if not text then return end
+        if not type then type = 'info' end
+        if not time then time = 5000 end
         exports['ps_lib']:notify(text, type, time)
     end
 end
 
+if Config.Notify == 'math_thoughts' then
+    function ps.notify(text, type, time)
+        if not text then return end
+        if not type then type = 'info' end
+        if not time then time = 5000 end
+        if type == 'error' then
+            exports['mad-thoughts']:error(text, time / 1000)
+        elseif type == 'success' then
+            exports['mad-thoughts']:success(text, time / 1000)
+        elseif type == 'info' then
+            exports['mad-thoughts']:info(text, time / 1000)
+        elseif type == 'warning' then
+            exports['mad-thoughts']:warning(text, time / 1000)
+        end
+    end
+end
 local function handleDisable(disabled)
     if disabled.movement == nil then
         disabled.movement = Config.Progressbar.Movement
@@ -56,13 +94,13 @@ local function handleDisable(disabled)
 end
 
 
-local p = nil
-function ps.progressbar(text, time, emote, disabled)
-    disabled = handleDisable(disabled or {})
-    if emote then
-        ps.playEmote(emote)
-    end
-    if Config.Progressbar.style == 'qb' then
+if Config.Progressbar.Style == 'qb' then
+    local p = nil
+    function ps.progressbar(text, time, emote, disabled)
+        disabled = handleDisable(disabled or {})
+        if emote then
+            ps.playEmote(emote)
+        end
         p = promise.new()
         QBCore.Functions.Progressbar('testasd', text, time, false, true, {
             disableMovement = disabled.movement,
@@ -79,7 +117,15 @@ function ps.progressbar(text, time, emote, disabled)
             ps.cancelEmote()
         end)
         return Citizen.Await(p)
-    elseif Config.Progressbar.style == 'oxbar' then
+    end
+end
+
+if Config.Progressbar.style == 'oxbar' then
+    function ps.progressbar(text, time, emote, disabled)
+        disabled = handleDisable(disabled or {})
+        if emote then
+            ps.playEmote(emote)
+        end
         local data = {
             duration = time,
             label = text,
@@ -99,7 +145,15 @@ function ps.progressbar(text, time, emote, disabled)
             ps.cancelEmote()
             return false
         end
-    elseif Config.Progressbar.style == 'oxcir' then
+    end
+end
+
+if Config.Progressbar.style == 'oxcir' then
+    function ps.progressbar(text, time, emote, disabled)
+        disabled = handleDisable(disabled or {})
+        if emote then
+            ps.playEmote(emote)
+        end
         local data = {
             duration = time,
             label = text,
@@ -122,6 +176,7 @@ function ps.progressbar(text, time, emote, disabled)
         end
     end
 end
+
 
 function ps.minigame(type, values)
     if type == 'ps-circle' then

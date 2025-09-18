@@ -3,18 +3,27 @@ local esxJOBCompat = {
     ['police'] = 'leo',
     ['unemployed'] = 'loser'
 }
-local health, armor, thirst, hunger,stress = 0, 0, 0, 0,0
+
 
 local esxMetadata = {
-    health = health,
-    armor = armor,
-    thirst = thirst,
-    hunger = hunger,
-    stress = stress,
+    health = 0,
+    armor = 0,
+    thirst = 0,
+    hunger = 0,
+    stress = 0,
 }
 
-AddEventHandler("esx:playerLoaded", function()
-    local playerData = ESX.GetPlayerData()
+
+AddEventHandler('onResourceStop', function(resourceName)
+    if resourceName == GetCurrentResourceName() then
+        ps.ped = nil
+        ps.charinfo = nil
+        ps.name = nil
+        ps.identifier = nil
+    end
+end)
+
+AddEventHandler('esx:playerLoaded', function(playerData)
     ps.ped = PlayerPedId()
     ps.charinfo = {
         firstname = playerData.firstName,
@@ -24,29 +33,9 @@ AddEventHandler("esx:playerLoaded", function()
     }
     ps.name = playerData.firstName .. " " .. playerData.lastName
     ps.identifier = playerData.identifier
+    ps.debug(ps.ped, ps.charinfo, ps.name, ps.identifier)
 end)
-AddEventHandler('onResourceStart', function(resourceName)
-    if resourceName == GetCurrentResourceName() then
-         local playerData = ESX.GetPlayerData()
-        ps.ped = PlayerPedId()
-        ps.charinfo = {
-            firstname = playerData.firstName,
-            lastname = playerData.lastName,
-            age = playerData.dateofbirth,
-            gender = playerData.sex
-        }
-        ps.name = playerData.firstName .. " " .. playerData.lastName
-        ps.identifier = playerData.identifier
-    end
-end)
-AddEventHandler('onResourceStop', function(resourceName)
-    if resourceName == GetCurrentResourceName() then
-        ps.ped = nil
-        ps.charinfo = nil
-        ps.name = nil
-        ps.identifier = nil
-    end
-end)
+
 AddEventHandler("esx_status:onTick", function(data)
     local hunger, thirst, stress 
     for i = 1, #data do
@@ -74,7 +63,8 @@ end)
 ---@return: table
 ---@DESCRIPTION: Returns the player's data, including job, gang, and metadata.
 function ps.getPlayerData()
-    return ESX.PlayerData
+
+    return ESX.GetPlayerData()
 end
 
 --- @return: string
@@ -103,13 +93,20 @@ end
 --- @DESCRIPTION: Returns specific character information based on the provided key.
 --- @example: ps.getCharInfo('age')
 function ps.getCharInfo(info)
-    return ps.charinfo[info]
+    local playerData = ps.getPlayerData()
+    local charinfo = {
+            firstname = playerData.firstName,
+            lastname = playerData.lastName,
+            age = playerData.dateofbirth,
+            gender = playerData.sex
+        }
+    return charinfo[info]
 end
 
 --- @return: string
 --- @DESCRIPTION: Returns the player's full name.
 function ps.getPlayerName()
-    return ps.name
+    return ESX.getName()
 end
 
 --- @return: number

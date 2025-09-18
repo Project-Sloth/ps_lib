@@ -1,13 +1,13 @@
 Config = {}
 ps = {}
 
-Config.Notify = "ps" -- qb, ox, ps
-Config.Menus = "ps" -- qb, ox, ps
-Config.DrawText = "ps" -- qb, ox, ps
+Config.Notify = "ox" -- qb, ox, ps, esx, mad_thoughts
+Config.Menus = "ox" -- qb, ox, ps
+Config.DrawText = "ox" -- qb, ox, ps
 Config.ConvertQBMenu = false -- Convert qb-menu to ps-ui context menu and qb-input to ps-ui input
 
 Config.Progressbar = { -- these are DEFAULT values, you can override them in the progressbar function
-    style = "oxbar", -- qb, oxbar, ps
+    style = "oxcir", -- qb, oxbar, ox
     Movement = true, -- Disable movement
     CarMovement = true, -- Disable car movement
     Mouse = true, -- Disable mouse
