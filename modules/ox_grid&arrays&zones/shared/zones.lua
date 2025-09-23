@@ -132,14 +132,19 @@ end
 
 CreateThread(function()
     if ps.context == 'server' then return end
-
+    cached = {
+        lastCellX = nil,
+        lastCellY = nil,
+        coords = nil
+    }
     while true do
-        local coords = GetEntityCoords(cache.ped)
+        local coords = GetEntityCoords(PlayerPedId())
         local zones = ps.grid.getNearbyEntries(coords, function(entry) return entry.remove == removeZone end) --[[@as Array<CZone>]]
         local cellX, cellY = ps.grid.getCellPosition(coords)
-        cache.coords = coords
+        
+        cached.coords = coords
 
-        if cellX ~= cache.lastCellX or cellY ~= cache.lastCellY then
+        if cellX ~= cached.lastCellX or cellY ~= cached.lastCellY then
             for i = 1, #nearbyZones do
                 local zone = nearbyZones[i]
 
@@ -157,8 +162,8 @@ CreateThread(function()
                 end
             end
 
-            cache.lastCellX = cellX
-            cache.lastCellY = cellY
+            cached.lastCellX = cellX
+            cached.lastCellY = cellY
         end
 
         nearbyZones = zones
