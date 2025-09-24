@@ -31,6 +31,9 @@ end
 function ps.input(label, data)
     local options = {}
     for k, v in pairs(data or {}) do
+        if v.type == 'input' then
+            v.type = 'text'
+        end
         options[k] = {
             title = v.title or nil,
             type = v.type or 'input',
