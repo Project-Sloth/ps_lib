@@ -25,12 +25,9 @@ local glm = require 'glm'
 
 ---@type table<number, CZone>
 local Zones = {}
-_ENV.Zones = Zones
-if IsDuplicityVersion() then
-    ps.context = 'server'
-else
-    ps.context = 'client'
-end
+ps.context = 'client'
+
+
 local function nextFreePoint(points, b, len)
     for i = 1, len do
         local n = (i + b) % len
@@ -132,19 +129,14 @@ end
 
 CreateThread(function()
     if ps.context == 'server' then return end
-    cached = {
-        lastCellX = nil,
-        lastCellY = nil,
-        coords = nil
-    }
+    local cache = { lastCellX = nil, lastCellY = nil, coords = nil }
     while true do
         local coords = GetEntityCoords(PlayerPedId())
         local zones = ps.grid.getNearbyEntries(coords, function(entry) return entry.remove == removeZone end) --[[@as Array<CZone>]]
         local cellX, cellY = ps.grid.getCellPosition(coords)
-        
-        cached.coords = coords
+        cache.coords = coords
 
-        if cellX ~= cached.lastCellX or cellY ~= cached.lastCellY then
+        if cellX ~= cache.lastCellX or cellY ~= cache.lastCellY then
             for i = 1, #nearbyZones do
                 local zone = nearbyZones[i]
 
@@ -162,8 +154,8 @@ CreateThread(function()
                 end
             end
 
-            cached.lastCellX = cellX
-            cached.lastCellY = cellY
+            cache.lastCellX = cellX
+            cache.lastCellY = cellY
         end
 
         nearbyZones = zones
@@ -505,3 +497,12 @@ AddEventHandler('onResourceStop', function(resourceName)
         end
     end
 end)
+
+function ps.zones.remove(zone)
+    for k, v in pairs(Zones) do
+        if v.id == zone.id then
+            v:remove()
+            break
+        end
+    end
+end
