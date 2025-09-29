@@ -116,3 +116,15 @@ loadLib('bridge/menus/'..Config.Menus..'.lua')
 function ps.getFramework()
     return framework
 end
+local zones = {
+    {script = 'ox_lib', path = 'bridge/zones/ox/client.lua'},
+    {script = 'PolyZone', path = 'bridge/zones/PolyZone/client.lua'},
+}
+
+for k, v in pairs(zones) do
+    if GetResourceState(v.script) == 'started' then
+        loadLib(v.path)
+        ps.success(('Zone resource found: %s'):format(v.script))
+        break
+    end
+end
