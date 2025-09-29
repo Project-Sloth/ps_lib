@@ -57,3 +57,6 @@ end)
 function ps.getFramework()
     return framework
 end
+
+loadLib('bridge/notify/server/' .. Config.Notify .. '.lua')
+ps.success(('Loaded notify bridge: %s'):format(Config.Notify))

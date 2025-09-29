@@ -6,6 +6,7 @@ local emoteResources = {
     ['dpemotes'] = 'bridge/emote/dp/client.lua',
     ['scully_emotemenu'] = 'bridge/emote/scully/client.lua',
 }
+
 local frameworkResources = {
     {name = 'qbx_core', path = 'bridge/framework/qbx/client.lua'},
     {name = 'qb-core', path = 'bridge/framework/qb/client.lua'},
@@ -19,11 +20,18 @@ local inventoryResources = {
     ['ps-inventory'] = 'bridge/inventory/ps/client/ps.lua',
     ['jpr-inventory'] = 'bridge/inventory/jpr/client/jpr.lua',
 }
+
 local targetResources = {
     ['qb-target'] = 'bridge/target/qb/client.lua',
     ['ox_target'] = 'bridge/target/ox/client.lua',
     ['interact'] = 'bridge/target/interact/client.lua',
 }
+
+local zones = {
+    {script = 'ox_lib', path = 'bridge/zones/ox/client.lua'},
+    {script = 'PolyZone', path = 'bridge/zones/PolyZone/client.lua'},
+}
+
 local function loadEmotes()
     for script, path in pairs(emoteResources) do
         if GetResourceState(script) == 'started' then
@@ -36,10 +44,9 @@ local function loadEmotes()
 
     if not emote then
         loadLib('bridge/emote/custom/client.lua')
+        ps.warn('No emote resource found: falling back to custom')
     end
 end
-
-loadEmotes()
 
 AddEventHandler('onResourceStart', function(resourceName)
     if emoteResources[resourceName] then
@@ -48,6 +55,16 @@ AddEventHandler('onResourceStart', function(resourceName)
         emote = resourceName
     end
 end)
+
+loadEmotes()
+
+for k, v in pairs(zones) do
+    if GetResourceState(v.script) == 'started' then
+        loadLib(v.path)
+        ps.success(('Zone resource found: %s'):format(v.script))
+        break
+    end
+end
 
 local function loadFramework()
     for key, v in ipairs(frameworkResources) do
@@ -112,19 +129,6 @@ AddEventHandler('onResourceStart', function(resourceName)
 end)
 
 loadLib('bridge/menus/'..Config.Menus..'.lua')
-
-function ps.getFramework()
-    return framework
-end
-local zones = {
-    {script = 'ox_lib', path = 'bridge/zones/ox/client.lua'},
-    {script = 'PolyZone', path = 'bridge/zones/PolyZone/client.lua'},
-}
-
-for k, v in pairs(zones) do
-    if GetResourceState(v.script) == 'started' then
-        loadLib(v.path)
-        ps.success(('Zone resource found: %s'):format(v.script))
-        break
-    end
-end
+ps.success(('Menu system loaded: %s'):format(Config.Menus))
+loadLib('bridge/notify/client/'..Config.Notify..'.lua')
+ps.success(('Notification system loaded: %s'):format(Config.Notify))
