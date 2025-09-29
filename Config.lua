@@ -7,7 +7,7 @@ Config.DrawText = "ox" -- qb, ox, ps
 Config.ConvertQBMenu = false -- Convert qb-menu to ps-ui context menu and qb-input to ps-ui input
 
 Config.Progressbar = { -- these are DEFAULT values, you can override them in the progressbar function
-    style = "oxcir", -- qb, oxbar, ox
+    style = "keep", -- qb, oxbar, oxcircle, keep
     Movement = true, -- Disable movement
     CarMovement = true, -- Disable car movement
     Mouse = true, -- Disable mouse

@@ -32,6 +32,35 @@ local zones = {
     {script = 'PolyZone', path = 'bridge/zones/PolyZone/client.lua'},
 }
 
+local drawText = {
+    ['qb'] = 'qb.lua',
+    ['ox'] = 'ox.lua',
+    ['ps'] = 'ps.lua',
+}
+
+local notify = {
+    ['qb'] = 'client/qb.lua',
+    ['ox'] = 'client/ox.lua',
+    ['ps'] = 'client/ps.lua',
+    ['esx'] = 'client/esx.lua',
+    ['mad_thoughts'] = 'client/mad_thoughts.lua',
+}
+
+local progressbars = {
+    ['qb'] = 'qb.lua',
+    ['oxbar'] = 'oxbar.lua',
+    ['oxcircle'] = 'oxcircle.lua',
+    ['keep'] = 'keep.lua',
+}
+
+local menus = {
+    ['qb'] = 'qb.lua',
+    ['ox'] = 'ox.lua',
+    ['ps'] = 'ps.lua',
+}
+
+
+
 local function loadEmotes()
     for script, path in pairs(emoteResources) do
         if GetResourceState(script) == 'started' then
@@ -128,7 +157,20 @@ AddEventHandler('onResourceStart', function(resourceName)
     end
 end)
 
-loadLib('bridge/menus/'..Config.Menus..'.lua')
-ps.success(('Menu system loaded: %s'):format(Config.Menus))
-loadLib('bridge/notify/client/'..Config.Notify..'.lua')
-ps.success(('Notification system loaded: %s'):format(Config.Notify))
+if menus[Config.Menus] then
+    loadLib('bridge/menus/'..menus[Config.Menus])
+    ps.success(('Menu system loaded: %s'):format(Config.Menus))
+end
+
+if drawText[Config.DrawText] then
+    loadLib('bridge/drawtext/'..drawText[Config.DrawText])
+    ps.success(('DrawText system loaded: %s'):format(Config.DrawText))
+end
+if notify[Config.Notify] then
+    loadLib('bridge/notify/'..notify[Config.Notify])
+    ps.success(('Notify system loaded: %s'):format(Config.Notify))
+end
+if progressbars[Config.Progressbar.style] then
+    loadLib('bridge/progressbars/'..progressbars[Config.Progressbar.style])
+    ps.success(('Progressbar system loaded: %s'):format(Config.Progressbar.style))
+end
