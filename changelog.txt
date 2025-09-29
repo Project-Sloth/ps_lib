@@ -21,7 +21,7 @@ Build: 0.5.2
 - getItemLabel
 - getItemWeight
 
-Newest Build: 0.5.3
+Build: 0.5.3
   - reformated interactions.
     - now checks your config for what you use and populates the necessary functions
   - added support for mad_thoughts for notifications
@@ -29,3 +29,11 @@ Newest Build: 0.5.3
     - returns the total amount of the item you send through
 
  
+Newest Build: 0.5.4
+  - moved a lot to bridge
+     - progressbars, menus, notifications, drawtext, zones
+  - removed ox_grids&Arrays&zones folder from modules
+  - built wrapper for ox zones and PolyZone
+  - fix small ox_inventory bugs for stashes
+  - added support for mad_thoughts and keep_progressbar
+  
