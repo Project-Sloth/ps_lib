@@ -1,5 +1,5 @@
 RegisterNetEvent('ps_lib:client:openInventory', function(name)
-    exports.ox_inventory:openInventory(name)
+    exports.ox_inventory:openInventory('stash', name)
 end)
 
 RegisterNetEvent('ps_lib:client:openInventoryox', function(name, data)
@@ -44,6 +44,11 @@ function ps.hasItems(items)
         end
     end
     return true
+end
+
+function ps.getItemCount(item)
+    if not item then return end
+    return exports.ox_inventory:Search('count', item)
 end
 
 RegisterNetEvent('ps_lib:client:createShop', function(shopData)

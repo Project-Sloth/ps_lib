@@ -12,6 +12,19 @@ local inventoryResources = {
     ['jpr-inventory'] = 'bridge/inventory/jpr/server/jpr.lua',
 }
 
+local notify = {
+    ['qb'] = 'server/qb.lua',
+    ['ox'] = 'server/ox.lua',
+    ['ps'] = 'server/ps.lua',
+    ['esx'] = 'server/esx.lua',
+    ['mad_thoughts'] = 'server/mad_thoughts.lua',
+}
+
+if notify[Config.Notify] then
+    loadLib('bridge/notify/'..notify[Config.Notify])
+    ps.success(('Notify system loaded: %s'):format(Config.Notify))
+end
+
 local function loadFramework()
     for key, data in ipairs(frameworkResources) do
         if GetResourceState(data.name) == 'started' then

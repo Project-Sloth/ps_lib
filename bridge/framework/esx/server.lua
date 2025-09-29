@@ -251,7 +251,7 @@ end
 
 function ps.createUseable(item, func)
     if not item or not func then return end
-    ESX.RegisterUseableItem(item, func)
+    ESX.RegisterUsableItem(item, func)
 end
 
 function ps.setJob(source, jobName, rank)
@@ -287,18 +287,15 @@ function ps.removeMoney(source, type,  amount, reason)
     local player = ps.getPlayer(source)
     if not player then return end
     if type == 'cash' then
-        if player.removeMoney(amount, reason or 'Removed by script') then
-            return true
-        else
-            return false
-        end
+        local balance = player.getAccount('money').money
+        if balance - amount < 0 then return false end
+        player.removeAccountMoney('money', amount, reason or 'Removed by script')
+        return true
     elseif type == 'bank' then
         local balance = player.getAccount('bank').money
-        if balance - amount >= 0 then 
+        if balance - amount >= 0 then
             player.removeAccountMoney('bank', amount, reason or 'Removed by script')
             return true
-        else
-            return false
         end
     end
     return false

@@ -46,3 +46,14 @@ function ps.hasItems(items)
     end
     return true
 end
+
+function ps.getItemCount(item)
+    if not item then return end
+    local amount = 0
+    for k, v in pairs (ps.getPlayerData().items) do
+        if v.name == item then
+            amount = amount + v.amount
+        end
+    end
+    return amount
+end
