@@ -1,9 +1,9 @@
 Config = {}
 ps = {}
 
-Config.Notify = "ox" -- qb, ox, ps, esx, mad_thoughts
-Config.Menus = "ox" -- qb, ox, ps
-Config.DrawText = "ox" -- qb, ox, ps
+Config.Notify = "ox" -- qb, ox, ps, esx, mad_thoughts, okok, lation
+Config.Menus = "ox" -- qb, ox, ps, lation
+Config.DrawText = "ox" -- qb, ox, ps, lation, okok 
 Config.ConvertQBMenu = false -- Convert qb-menu to ps-ui context menu and qb-input to ps-ui input
 
 Config.Progressbar = { -- these are DEFAULT values, you can override them in the progressbar function
@@ -14,8 +14,7 @@ Config.Progressbar = { -- these are DEFAULT values, you can override them in the
     Combat = true, -- Disable combat
 }
 
-Config.Logs = "fivemerr" -- fivemerr or fivemanage 
-
+Config.Logs = "fivemerr" -- fivemerr or fivemanage
 
 QBCore, ESX, qbx, langs = nil, nil, nil
 
