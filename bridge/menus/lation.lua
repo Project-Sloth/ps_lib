@@ -61,3 +61,7 @@ function ps.input(label, data)
         return nil
     end
 end
+
+exports('menu', ps.menu)
+exports('closeMenu', ps.closeMenu)
+exports('input', ps.input)

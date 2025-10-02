@@ -13,3 +13,5 @@ end
 RegisterNetEvent('ps_lib:notify:lation', function(data)
     ps.notify(data.message, data.type, data.duration)
 end)
+
+exports('notify', ps.notify)

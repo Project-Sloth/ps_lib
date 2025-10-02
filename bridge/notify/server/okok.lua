@@ -6,3 +6,4 @@ function ps.notify(src, text, type, time)
     if not time then time = 5000 end
     TriggerClientEvent('okokNotify:Alert', src, '', text, time, type, false)
 end
+exports('notify', ps.notify)

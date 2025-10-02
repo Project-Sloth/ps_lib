@@ -10,3 +10,5 @@ RegisterCommand('testCopyClipboard', function(source, args, rawCommand)
     local text = table.concat(args, ' ')
     ps.copyClipboard(text)
 end, false)
+
+exports('copyClipboard', ps.copyClipboard)

@@ -5,3 +5,5 @@ function ps.notify(text, type, time)
     if not time then time = 5000 end
     QBCore.Functions.Notify(text, type, time)
 end
+
+exports('notify', ps.notify)

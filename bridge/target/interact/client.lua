@@ -133,3 +133,10 @@ AddEventHandler('onResourceStop', function(resourceName)
         zones[resourceName] = nil
     end
 end)
+
+exports('boxTarget', ps.boxTarget)
+exports('circleTarget', ps.circleTarget)
+exports('entityTarget', ps.entityTarget)
+exports('targetModel', ps.targetModel)
+exports('destroyAllTargets', ps.destroyAllTargets)
+exports('destroyTarget', ps.destroyTarget)

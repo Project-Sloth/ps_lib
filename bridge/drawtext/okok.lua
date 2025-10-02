@@ -6,3 +6,5 @@ end
 function ps.hideText()
     exports['okokTextUI']:Close()
 end
+exports('drawText', ps.drawText)
+exports('hideText', ps.hideText)

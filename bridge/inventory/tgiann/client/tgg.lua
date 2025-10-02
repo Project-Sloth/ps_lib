@@ -53,3 +53,8 @@ function ps.getItemCount(item)
     if not item then return end
     return exports["tgiann-inventory"]:GetItemCount(item, nil, nil)
 end
+
+exports('getImage', ps.getImage)
+exports('getLabel', ps.getLabel)
+exports('hasItem', ps.hasItem)
+exports('hasItems', ps.hasItems)

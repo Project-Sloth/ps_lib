@@ -6,3 +6,6 @@ end
 function ps.hideText()
     lib.hideTextUI()
 end
+
+exports('drawText', ps.drawText)
+exports('hideText', ps.hideText)

@@ -4,3 +4,4 @@ function ps.notify( text, type, time)
     if not time then time = 5000 end
     ESX.ShowNotification(text, type, time, "Notification", "top-left")
 end
+exports('notify', ps.notify)

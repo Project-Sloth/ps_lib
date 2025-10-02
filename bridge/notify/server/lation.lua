@@ -9,3 +9,5 @@ function ps.notify(source, text, type, time)
         duration = time,
     })
 end
+
+exports('notify', ps.notify)

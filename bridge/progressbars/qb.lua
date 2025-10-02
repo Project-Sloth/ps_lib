@@ -39,3 +39,6 @@ function ps.progressbar(text, time, emote, disabled)
     end)
     return Citizen.Await(p)
 end
+
+
+exports('progressbar', ps.progressbar)

@@ -65,3 +65,8 @@ RegisterNetEvent('ps_lib:client:createShop', function(shopData)
     if not shopData.maxweight then shopData.maxweight = 100000 end
      TriggerServerEvent("inventory:server:OpenInventory", "shop", "Shop"..math.random(1, 99), shopData)
 end)
+
+exports('getImage', ps.getImage)
+exports('getLabel', ps.getLabel)
+exports('hasItem', ps.hasItem)
+exports('hasItems', ps.hasItems)

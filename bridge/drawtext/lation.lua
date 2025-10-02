@@ -6,3 +6,6 @@ end
 function ps.hideText()
     exports.lation_ui:hideText()
 end
+
+exports('drawText', ps.drawText)
+exports('hideText', ps.hideText)
