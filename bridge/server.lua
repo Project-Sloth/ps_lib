@@ -10,6 +10,7 @@ local inventoryResources = {
     ['lj-inventory'] = 'bridge/inventory/lj/server/lj.lua',
     ['ps-inventory'] = 'bridge/inventory/ps/server/ps.lua',
     ['jpr-inventory'] = 'bridge/inventory/jpr/server/jpr.lua',
+    ['tgiann-inventory'] = 'bridge/inventory/tgiann/server/tgg.lua',
 }
 
 local notify = {

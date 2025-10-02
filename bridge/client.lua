@@ -19,6 +19,7 @@ local inventoryResources = {
     ['lj-inventory'] = 'bridge/inventory/lj/client/lj.lua',
     ['ps-inventory'] = 'bridge/inventory/ps/client/ps.lua',
     ['jpr-inventory'] = 'bridge/inventory/jpr/client/jpr.lua',
+    ['tgiann-inventory'] = 'bridge/inventory/tgiann/client/tgg.lua',
 }
 
 local targetResources = {
