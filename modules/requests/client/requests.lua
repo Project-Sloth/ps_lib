@@ -41,3 +41,6 @@ function ps.requestPTFX(dict, timeout)
     return true
 end
 
+exports('requestModel', ps.requestModel)
+exports('requestAnim', ps.requestAnim)
+exports('requestPTFX', ps.requestPTFX)

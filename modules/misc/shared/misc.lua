@@ -32,3 +32,10 @@ function ps.tableContains(tab, value)
     end
     return false
 end
+
+exports('sorter', ps.sorter)
+exports('concat', ps.concat)
+exports('string', ps.string)
+exports('decimalRound', ps.decimalRound)
+exports('random', ps.random)
+exports('tableContains', ps.tableContains)

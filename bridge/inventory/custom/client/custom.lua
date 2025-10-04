@@ -26,3 +26,8 @@ function ps.hasItems(items)
     end
     return true
 end
+
+exports('getImage', ps.getImage)
+exports('getLabel', ps.getLabel)
+exports('hasItem', ps.hasItem)
+exports('hasItems', ps.hasItems)

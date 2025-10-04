@@ -132,3 +132,6 @@ function ps.playAnims(emote)
         )
     end
 end
+
+exports('playEmote', ps.playEmote)
+exports('cancelEmote', ps.cancelEmote)

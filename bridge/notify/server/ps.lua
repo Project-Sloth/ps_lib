@@ -5,3 +5,4 @@ function ps.notify(source, text, type, time)
     if not time then time = 5000 end
     TriggerClientEvent('ps_lib:notify', source, text, type, time)
 end
+exports('notify', ps.notify)

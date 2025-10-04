@@ -25,3 +25,6 @@ function ps.removeKeybind(key)
        ps.debug('Keybind does not exist')
     end
 end
+
+exports('addKeybind', ps.addKeybind)
+exports('removeKeybind', ps.removeKeybind)

@@ -94,3 +94,6 @@ function ps.cancelEmote()
     IsInEmote = false
     ClearPedTasks(PlayerPedId())
 end
+
+exports('playEmote', ps.playEmote)
+exports('cancelEmote', ps.cancelEmote)

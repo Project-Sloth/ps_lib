@@ -10,6 +10,7 @@ local inventoryResources = {
     ['lj-inventory'] = 'bridge/inventory/lj/server/lj.lua',
     ['ps-inventory'] = 'bridge/inventory/ps/server/ps.lua',
     ['jpr-inventory'] = 'bridge/inventory/jpr/server/jpr.lua',
+    ['tgiann-inventory'] = 'bridge/inventory/tgiann/server/tgg.lua',
 }
 
 local notify = {
@@ -20,9 +21,20 @@ local notify = {
     ['mad_thoughts'] = 'server/mad_thoughts.lua',
 }
 
+local banking = {
+    ['qb'] = 'bridge/banking/qb/server.lua',
+    ['okok'] = 'bridge/banking/okok/server.lua',
+    ['Renewed'] = 'bridge/banking/Renewed/server.lua',
+}
+
 if notify[Config.Notify] then
     loadLib('bridge/notify/'..notify[Config.Notify])
     ps.success(('Notify system loaded: %s'):format(Config.Notify))
+end
+
+if banking[Config.Banking] then
+    loadLib(banking[Config.Banking])
+    ps.success(('Banking system loaded: %s'):format(Config.Banking))
 end
 
 local function loadFramework()

@@ -1,21 +1,23 @@
 Config = {}
 ps = {}
 
-Config.Notify = "ox" -- qb, ox, ps, esx, mad_thoughts
-Config.Menus = "ox" -- qb, ox, ps
-Config.DrawText = "ox" -- qb, ox, ps
+Config.EmoteMenu = "rpemotes" -- rpemotes, dpemotes, scully, anything else for custom
+Config.Notify = "ox" -- qb, ox, ps, esx, mad_thoughts, okok, lation
+Config.Menus = "ox" -- qb, ox, ps, lation
+Config.DrawText = "ox" -- qb, ox, ps, lation, okok 
+Config.Banking = "qb" -- qb, okok, Renewed, none
+Config.VehicleKeys = "qb" -- qb, mrnewb, none
 Config.ConvertQBMenu = false -- Convert qb-menu to ps-ui context menu and qb-input to ps-ui input
 
 Config.Progressbar = { -- these are DEFAULT values, you can override them in the progressbar function
-    style = "keep", -- qb, oxbar, oxcircle, keep
+    style = "oxcircle", -- qb, oxbar, oxcircle, keep
     Movement = true, -- Disable movement
     CarMovement = true, -- Disable car movement
     Mouse = true, -- Disable mouse
     Combat = true, -- Disable combat
 }
 
-Config.Logs = "fivemerr" -- fivemerr or fivemanage 
-
+Config.Logs = "fivemerr" -- fivemerr or fivemanage
 
 QBCore, ESX, qbx, langs = nil, nil, nil
 

@@ -6,3 +6,6 @@ end
 function ps.hideText()
     exports['qb-core']:HideText()
 end
+
+exports('drawText', ps.drawText)
+exports('hideText', ps.hideText)

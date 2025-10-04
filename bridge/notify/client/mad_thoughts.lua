@@ -12,3 +12,5 @@ function ps.notify(text, type, time)
         exports['mad-thoughts']:warning(text, time / 1000)
     end
 end
+
+exports('notify', ps.notify)

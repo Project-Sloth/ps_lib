@@ -18,3 +18,5 @@ function ps.minigame(type, values)
         return success
     end
 end
+
+exports('minigame', ps.minigame)

@@ -4,3 +4,5 @@ function ps.notify(text, type, time)
     if not time then time = 5000 end
     exports['ps_lib']:notify(text, type, time)
 end
+
+exports('notify', ps.notify)

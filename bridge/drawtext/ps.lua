@@ -6,3 +6,6 @@ end
 function ps.hideText()
     exports['ps-ui']:hideDrawText()
 end
+
+exports('drawText', ps.drawText)
+exports('hideText', ps.hideText)

@@ -40,3 +40,6 @@ function ps.progressbar(text, time, emote, disabled)
         return false
     end
 end
+
+
+exports('progressbar', ps.progressbar)
