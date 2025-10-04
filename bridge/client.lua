@@ -2,9 +2,8 @@ local emote, framework, inventory, target = false, false, false, false
 -- Emote Loading
 local emoteResources = {
     ['rpemotes'] = 'bridge/emote/rp/client.lua',
-    ['rpemotes-reborn'] = 'bridge/emote/rp/client.lua',
     ['dpemotes'] = 'bridge/emote/dp/client.lua',
-    ['scully_emotemenu'] = 'bridge/emote/scully/client.lua',
+    ['scully'] = 'bridge/emote/scully/client.lua',
 }
 
 local frameworkResources = {
@@ -60,33 +59,10 @@ local menus = {
     ['ps'] = 'ps.lua',
 }
 
-
-
-local function loadEmotes()
-    for script, path in pairs(emoteResources) do
-        if GetResourceState(script) == 'started' then
-            loadLib(path)
-            emote = true
-            ps.success(('Emote resource found: %s'):format(script))
-            break
-        end
-    end
-
-    if not emote then
-        loadLib('bridge/emote/custom/client.lua')
-        ps.warn('No emote resource found: falling back to custom')
-    end
-end
-
-AddEventHandler('onResourceStart', function(resourceName)
-    if emoteResources[resourceName] then
-        loadLib(emoteResources[resourceName])
-        ps.success(('Emote resourcedfs started: %s'):format(resourceName))
-        emote = resourceName
-    end
-end)
-
-loadEmotes()
+local vehicleKeys = {
+    ['qb'] = 'bridge/vehiclekeys/qb/client/client.lua',
+    ['mrnewb'] = 'bridge/vehiclekeys/mrnewb/client/client.lua',
+}
 
 for k, v in pairs(zones) do
     if GetResourceState(v.script) == 'started' then
@@ -167,11 +143,23 @@ if drawText[Config.DrawText] then
     loadLib('bridge/drawtext/'..drawText[Config.DrawText])
     ps.success(('DrawText system loaded: %s'):format(Config.DrawText))
 end
+
 if notify[Config.Notify] then
     loadLib('bridge/notify/'..notify[Config.Notify])
     ps.success(('Notify system loaded: %s'):format(Config.Notify))
 end
+
 if progressbars[Config.Progressbar.style] then
     loadLib('bridge/progressbars/'..progressbars[Config.Progressbar.style])
     ps.success(('Progressbar system loaded: %s'):format(Config.Progressbar.style))
+end
+
+if vehicleKeys[Config.VehicleKeys] then
+    loadLib(vehicleKeys[Config.VehicleKeys])
+    ps.success(('Vehicle Keys system loaded: %s'):format(Config.VehicleKeys))
+end
+
+if emoteResources[Config.EmoteMenu] then
+    loadLib(emoteResources[Config.EmoteMenu])
+    ps.success(('Emote system loaded: %s'):format(Config.EmoteMenu))
 end

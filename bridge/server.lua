@@ -21,9 +21,20 @@ local notify = {
     ['mad_thoughts'] = 'server/mad_thoughts.lua',
 }
 
+local banking = {
+    ['qb'] = 'bridge/banking/qb/server.lua',
+    ['okok'] = 'bridge/banking/okok/server.lua',
+    ['Renewed'] = 'bridge/banking/Renewed/server.lua',
+}
+
 if notify[Config.Notify] then
     loadLib('bridge/notify/'..notify[Config.Notify])
     ps.success(('Notify system loaded: %s'):format(Config.Notify))
+end
+
+if banking[Config.Banking] then
+    loadLib(banking[Config.Banking])
+    ps.success(('Banking system loaded: %s'):format(Config.Banking))
 end
 
 local function loadFramework()
