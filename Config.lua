@@ -25,11 +25,11 @@ QBCore, ESX, qbx, langs = nil, nil, nil
 
 if GetResourceState('qbx_core') == 'started' then
     qbx = exports.qbx_core
-    langs = GetConvar('ox:locale', 'en')
+    langs = GetConvar('ox:locale', 'en') or 'en'
 elseif GetResourceState('es_extended') == 'started' then
     ESX = exports['es_extended']:getSharedObject()
-    langs = GetConvar('esx:locale', 'en')
+    langs = GetConvar('esx:locale', 'en') or 'en'
 elseif GetResourceState('qb-core') == 'started' then
     QBCore = exports['qb-core']:GetCoreObject()
-    langs = GetConvar('qb_locale', 'en')
+    langs = GetConvar('qb_locale', 'en') or 'en'
 end
