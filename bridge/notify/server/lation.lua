@@ -11,3 +11,4 @@ function ps.notify(source, text, type, time)
 end
 
 exports('notify', ps.notify)
+ps.success('Notification Module Loaded: Lation UI')

@@ -12,3 +12,5 @@ function ps.removeVehicleKey(vehicle)
     end
     TriggerEvent('qb-vehiclekeys:client:RemoveKeys', QBCore.Functions.GetPlate(vehicle))
 end
+
+ps.success('Vehicle Keys Module Loaded: MrNewb Vehicle Keys')

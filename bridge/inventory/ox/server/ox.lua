@@ -1,4 +1,4 @@
-
+ps.success('Inventory Module Loaded: OX Inventory')
 local function CanCarryItem(source, item, amount)
     if not source or not item then return end
     if not amount then amount = 1 end

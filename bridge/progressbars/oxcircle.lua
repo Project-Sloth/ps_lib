@@ -44,3 +44,4 @@ end
 
 
 exports('progressbar', ps.progressbar)
+ps.success('Progressbar Module Loaded: ox_lib OX Circle Progressbar')

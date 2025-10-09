@@ -1,3 +1,4 @@
+ps.success('Inventory Module Loaded: OX Inventory')
 RegisterNetEvent('ps_lib:client:openInventory', function(name)
     exports.ox_inventory:openInventory('stash', name)
 end)

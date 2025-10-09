@@ -1,3 +1,5 @@
+ps.success('Draw Text Module Loaded: ox_lib')
+
 function ps.drawText(text)
     if not text then return end
     lib.showTextUI(text)

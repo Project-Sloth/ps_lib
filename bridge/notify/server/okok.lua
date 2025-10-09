@@ -7,3 +7,4 @@ function ps.notify(src, text, type, time)
     TriggerClientEvent('okokNotify:Alert', src, '', text, time, type, false)
 end
 exports('notify', ps.notify)
+ps.success('Notification Module Loaded: okok Notify')

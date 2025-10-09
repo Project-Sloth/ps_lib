@@ -1,4 +1,4 @@
-
+ps.success('Inventory Module Loaded: PS Inventory')
 
 function ps.removeItem(identifier, item, amount, slot, reason)
     if not identifier or not item then return end

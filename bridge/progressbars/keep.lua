@@ -1,5 +1,5 @@
 local p = nil
-
+ps.success('Progressbar Module Loaded: keep-progressbar')
 local function handleDisable(disabled)
     if disabled.movement == nil then
         disabled.movement = Config.Progressbar.Movement

@@ -12,3 +12,5 @@ function ps.removeVehicleKey(vehicle)
     end
     exports.MrNewbVehicleKeys:RemoveKeys(vehicle)
 end
+
+ps.success('Vehicle Keys Module Loaded: MrNewb Vehicle Keys')

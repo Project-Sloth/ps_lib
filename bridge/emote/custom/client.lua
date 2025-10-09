@@ -1,3 +1,5 @@
+ps.success('Emote Module Loaded: Custom Emotes')
+
 local props = {}
 local IsInEmote = false
 local emotes = {

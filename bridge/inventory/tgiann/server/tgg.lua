@@ -1,4 +1,4 @@
-
+ps.success('Inventory Module Loaded: TGiann Inventory')
 -- @param identifier number|string i.e. source or CitizenID
 -- @param item string
 -- @param amount number

@@ -1,4 +1,4 @@
-
+ps.success('Inventory Module Loaded: JPR Inventory')
 function ps.getImage(item)
     local itemData = QBCore.Shared.Items[item]
     if itemData then

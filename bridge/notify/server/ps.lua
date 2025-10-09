@@ -6,3 +6,4 @@ function ps.notify(source, text, type, time)
     TriggerClientEvent('ps_lib:notify', source, text, type, time)
 end
 exports('notify', ps.notify)
+ps.success('Notification Module Loaded: PS-UI')

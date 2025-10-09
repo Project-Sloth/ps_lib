@@ -1,4 +1,4 @@
-
+ps.success('Inventory Module Loaded: TGiann Inventory')
 
 --@param item string
 -- @return string

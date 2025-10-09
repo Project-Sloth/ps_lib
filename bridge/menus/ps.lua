@@ -1,4 +1,4 @@
-
+ps.success('Menu Module Loaded: PS-UI')
 
 function ps.menu(name, label, data)
     local options = {}

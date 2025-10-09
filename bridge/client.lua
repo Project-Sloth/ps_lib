@@ -64,13 +64,6 @@ local vehicleKeys = {
     ['mrnewb'] = 'bridge/vehiclekeys/mrnewb/client/client.lua',
 }
 
-for k, v in pairs(zones) do
-    if GetResourceState(v.script) == 'started' then
-        loadLib(v.path)
-        ps.success(('Zone resource found: %s'):format(v.script))
-        break
-    end
-end
 
 local function loadFramework()
     for key, v in ipairs(frameworkResources) do
@@ -94,7 +87,6 @@ local function loadInventory()
         if GetResourceState(script) == 'started' then
             loadLib(path)
             inventory = script
-            ps.success(('Inventory resource found: %s'):format(script))
             break
         end
     end
@@ -105,61 +97,59 @@ local function loadInventory()
     end
 end
 
-loadInventory()
-
-AddEventHandler('onResourceStart', function(resourceName)
-    if inventoryResources[resourceName] then
-        loadLib(inventoryResources[resourceName])
-        ps.success(('Inventory resource started: %s'):format(resourceName))
-    end
-end)
-
 local function loadTarget()
     for script, path in pairs(targetResources) do
         if GetResourceState(script) == 'started' then
             loadLib(path)
-            target = script
-            ps.success(('Target resource found: %s'):format(script))
             return
         end
     end
 end
 
-loadTarget()
-
-AddEventHandler('onResourceStart', function(resourceName)
-    if targetResources[resourceName] then
-        loadLib(targetResources[resourceName])
-        ps.success(('Target resource started: %s'):format(resourceName))
+local function loadAll()
+    if Config.Inventory ~= 'auto' then
+        if inventoryResources[Config.Inventory] then
+            loadLib(inventoryResources[Config.Inventory])
+        else
+            loadLib('bridge/inventory/custom/client/custom.lua')
+            ps.warn('No inventory resource found: falling back to custom')
+        end
+    else
+        loadInventory()
     end
-end)
 
-if menus[Config.Menus] then
-    loadLib('bridge/menus/'..menus[Config.Menus])
-    ps.success(('Menu system loaded: %s'):format(Config.Menus))
+    if Config.Target ~= 'auto' then
+        if targetResources[Config.Target] then
+            loadLib(targetResources[Config.Target])
+        end
+    else
+        loadTarget()
+    end
+
+    if menus[Config.Menus] then
+        loadLib('bridge/menus/'..menus[Config.Menus])
+    end
+
+    if drawText[Config.DrawText] then
+        loadLib('bridge/drawtext/'..drawText[Config.DrawText])
+    end
+    if notify[Config.Notify] then
+        loadLib('bridge/notify/'..notify[Config.Notify])
+    end
+    if progressbars[Config.Progressbar.style] then
+        loadLib('bridge/progressbars/'..progressbars[Config.Progressbar.style])
+    end
+    if vehicleKeys[Config.VehicleKeys] then
+        loadLib(vehicleKeys[Config.VehicleKeys])
+    end
+    if emoteResources[Config.EmoteMenu] then
+        loadLib(emoteResources[Config.EmoteMenu])
+    end
+    if GetResourceState('ox_lib') == 'started' then
+        loadLib('bridge/zones/ox/client.lua')
+    else
+        loadLib('bridge/zones/PolyZone/client.lua')
+    end
 end
 
-if drawText[Config.DrawText] then
-    loadLib('bridge/drawtext/'..drawText[Config.DrawText])
-    ps.success(('DrawText system loaded: %s'):format(Config.DrawText))
-end
-
-if notify[Config.Notify] then
-    loadLib('bridge/notify/'..notify[Config.Notify])
-    ps.success(('Notify system loaded: %s'):format(Config.Notify))
-end
-
-if progressbars[Config.Progressbar.style] then
-    loadLib('bridge/progressbars/'..progressbars[Config.Progressbar.style])
-    ps.success(('Progressbar system loaded: %s'):format(Config.Progressbar.style))
-end
-
-if vehicleKeys[Config.VehicleKeys] then
-    loadLib(vehicleKeys[Config.VehicleKeys])
-    ps.success(('Vehicle Keys system loaded: %s'):format(Config.VehicleKeys))
-end
-
-if emoteResources[Config.EmoteMenu] then
-    loadLib(emoteResources[Config.EmoteMenu])
-    ps.success(('Emote system loaded: %s'):format(Config.EmoteMenu))
-end
+loadAll()

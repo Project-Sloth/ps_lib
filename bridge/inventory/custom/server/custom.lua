@@ -1,4 +1,5 @@
 --- function to remove item needs return true
+ps.success('Inventory Module Loaded: Custom Inventory')
 function ps.removeItem(identifier, item, amount, slot, reason)
     if not identifier or not item then return end
     if not amount then amount = 1 end

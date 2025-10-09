@@ -1,6 +1,8 @@
 Config = {}
 ps = {}
 
+Config.Inventory = "auto" -- auto, ox, qb, ps, lj, tgg, jpr
+Config.Target = "auto" -- auto, ox, qb, interact
 Config.EmoteMenu = "rpemotes" -- rpemotes, dpemotes, scully, anything else for custom
 Config.Notify = "ox" -- qb, ox, ps, esx, mad_thoughts, okok, lation
 Config.Menus = "ox" -- qb, ox, ps, lation

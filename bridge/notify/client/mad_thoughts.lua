@@ -1,3 +1,6 @@
+ps.success('Notification Module Loaded: Mad Thoughts')
+ 
+ --- IGNORE ---
 function ps.notify(text, type, time)
     if not text then return end
     if not type then type = 'info' end

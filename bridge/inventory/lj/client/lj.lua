@@ -1,3 +1,4 @@
+ps.success('Inventory Module Loaded: LJ Inventory')
 RegisterNetEvent('lj-inventory:client:openInventoryBackWards', function(name, data)
         TriggerEvent("inventory:client:SetCurrentStash", name)
 	    TriggerServerEvent("inventory:server:OpenInventory", "stash", name, {

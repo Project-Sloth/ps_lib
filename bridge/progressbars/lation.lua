@@ -1,4 +1,4 @@
-
+ps.success('Progressbar Module Loaded: Lation UI')
 local function handleDisable(disabled)
     if disabled.movement == nil then
         disabled.movement = Config.Progressbar.Movement

@@ -1,4 +1,4 @@
-
+ps.success('Notification Module Loaded: Lation UI')
 function ps.notify(text, type, time)
     if not text then return end
     if not type then type = 'info' end

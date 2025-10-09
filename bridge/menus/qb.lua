@@ -1,4 +1,4 @@
-
+ps.success('Menu Module Loaded: QB Menu')
 
 function ps.menu(name, label, data)
     local options = {}

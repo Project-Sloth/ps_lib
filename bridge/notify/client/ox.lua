@@ -1,3 +1,4 @@
+ps.success('Notification Module Loaded: ox_lib Notify')
 function ps.notify(text, type, time)
     if not text then return end
     if not type then type = 'info' end

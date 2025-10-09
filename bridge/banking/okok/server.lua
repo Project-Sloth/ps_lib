@@ -1,4 +1,4 @@
-
+ps.success('Banking Module Loaded: OKOK Banking')
 function ps.addAccountMoney(id, amount, reason)
     if not id then 
         return false

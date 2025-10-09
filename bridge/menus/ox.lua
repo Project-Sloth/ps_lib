@@ -1,4 +1,4 @@
-
+ps.success('Menu Module Loaded: ox_lib')
 
 function ps.menu(name, label, data)
     local options = {}

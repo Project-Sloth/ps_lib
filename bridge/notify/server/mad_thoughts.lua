@@ -14,3 +14,4 @@ function ps.notify(source, text, type, time)
     end
 end
 exports('notify', ps.notify)
+ps.success('Notification Module Loaded: Mad Thoughts')

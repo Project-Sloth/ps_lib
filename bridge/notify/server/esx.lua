@@ -1,3 +1,4 @@
+ps.success('Notification Module Loaded: ESX Notify')
 function ps.notify(source, text, type, time)
     if not source then return end
     if not text then return end
