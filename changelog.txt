@@ -29,11 +29,30 @@ Build: 0.5.3
     - returns the total amount of the item you send through
 
  
-Newest Build: 0.5.4
+Build: 0.5.4
   - moved a lot to bridge
      - progressbars, menus, notifications, drawtext, zones
   - removed ox_grids&Arrays&zones folder from modules
   - built wrapper for ox zones and PolyZone
   - fix small ox_inventory bugs for stashes
   - added support for mad_thoughts and keep_progressbar
+
+Newest Build: 0.5.5
+  - added notification options
+    - okok, lation, paradise
+  - added inventory options
+    - tgg
+  - added Banking to bridge
+    - qb-banking, renewed-banking, okok banking
+  - added Vehicle Keys options
+    - MrNewb Vehicle Keys, qb
+  - Added Config Options Config.Inventory, Config.Target
+    - this allows you to load those modules before the scripts so load order is less
+    - of an issues
+  - added exports for most of the functions so you dont need to always load the entire
+    - lib
+  - added Lation Menus 
+  - added Lation Draw Text
+  - added "or 'en'" to the langs global in config in case the native doesnt do it properly 
+
   
