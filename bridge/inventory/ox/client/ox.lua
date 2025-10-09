@@ -1,3 +1,4 @@
+ps.success('Inventory Module Loaded: OX Inventory')
 RegisterNetEvent('ps_lib:client:openInventory', function(name)
     exports.ox_inventory:openInventory('stash', name)
 end)
@@ -55,3 +56,8 @@ RegisterNetEvent('ps_lib:client:createShop', function(shopData)
     if not shopData then shopData.name = 'Shop' end
     exports.ox_inventory:openInventory('shop', { type = shopData, id = shopData })
 end)
+
+exports('getImage', ps.getImage)
+exports('getLabel', ps.getLabel)
+exports('hasItem', ps.hasItem)
+exports('hasItems', ps.hasItems)

@@ -5,7 +5,7 @@ lua54 'yes'
 game 'gta5'
 
 name 'ps_lib'
-version '0.5.4'
+version '0.5.5'
 description 'Project Sloth Library'
 author 'Project Sloth'
 

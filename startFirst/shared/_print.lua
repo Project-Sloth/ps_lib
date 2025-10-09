@@ -48,3 +48,9 @@ end
 function ps.success(...)
     print('^2[SUCCESS]^0 ' .. formatArgs(...))
 end
+
+exports('debug', ps.debug)
+exports('info', ps.info)
+exports('error', ps.error)
+exports('warn', ps.warn)
+exports('success', ps.success)

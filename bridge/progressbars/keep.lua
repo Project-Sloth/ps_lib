@@ -1,5 +1,5 @@
 local p = nil
-
+ps.success('Progressbar Module Loaded: keep-progressbar')
 local function handleDisable(disabled)
     if disabled.movement == nil then
         disabled.movement = Config.Progressbar.Movement
@@ -37,9 +37,13 @@ function ps.progressbar(text, time, emote, disabled)
         ps.cancelEmote()
         if not cancelled then
             p:resolve(true)
+            p = nil
         else
             p:resolve(false)
+            p = nil
         end
     end)
     return Citizen.Await(p)
 end
+
+exports('progressbar', ps.progressbar)

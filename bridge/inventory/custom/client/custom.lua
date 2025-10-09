@@ -1,3 +1,5 @@
+ps.success('Inventory Module Loaded: Custom Inventory')
+
 -- returns path for image like nui://qb-inventory/html/images/item_image.png
 function ps.getImage(item)
     
@@ -26,3 +28,8 @@ function ps.hasItems(items)
     end
     return true
 end
+
+exports('getImage', ps.getImage)
+exports('getLabel', ps.getLabel)
+exports('hasItem', ps.hasItem)
+exports('hasItems', ps.hasItems)

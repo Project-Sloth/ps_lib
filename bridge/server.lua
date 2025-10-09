@@ -10,6 +10,7 @@ local inventoryResources = {
     ['lj-inventory'] = 'bridge/inventory/lj/server/lj.lua',
     ['ps-inventory'] = 'bridge/inventory/ps/server/ps.lua',
     ['jpr-inventory'] = 'bridge/inventory/jpr/server/jpr.lua',
+    ['tgiann-inventory'] = 'bridge/inventory/tgiann/server/tgg.lua',
 }
 
 local notify = {
@@ -20,53 +21,65 @@ local notify = {
     ['mad_thoughts'] = 'server/mad_thoughts.lua',
 }
 
-if notify[Config.Notify] then
-    loadLib('bridge/notify/'..notify[Config.Notify])
-    ps.success(('Notify system loaded: %s'):format(Config.Notify))
-end
+local banking = {
+    ['qb'] = 'bridge/banking/qb/server.lua',
+    ['okok'] = 'bridge/banking/okok/server.lua',
+    ['Renewed'] = 'bridge/banking/Renewed/server.lua',
+}
 
 local function loadFramework()
     for key, data in ipairs(frameworkResources) do
         if GetResourceState(data.name) == 'started' then
             loadLib(data.path)
-            framework = data.name
+            inventory = data.name
             ps.success(('Framework resource found: %s'):format(data.name))
             break
         end
     end
-    if not framework then
+    if not inventory then
         loadLib('bridge/framework/custom/client.lua')
         ps.warn('No framework resource found: falling back to custom')
     end
 end
 
-loadFramework()
-
 local function loadInventory()
+    local inside = false
     for script, path in pairs(inventoryResources) do
         if GetResourceState(script) == 'started' then
             loadLib(path)
-            inventory = script
-            ps.success(('Inventory resource found: %s'):format(script))
+            inside = true
             break
         end
     end
 
-    if not inventory then
+    if not inside then
         loadLib('bridge/inventory/custom/server/custom.lua')
         ps.warn('No inventory resource found: falling back to custom')
     end
 end
 
-loadInventory()
-
-AddEventHandler('onResourceStart', function(resourceName)
-    if inventoryResources[resourceName] then
-        loadLib(inventoryResources[resourceName])
-        ps.success(('Inventory resource started: %s'):format(resourceName))
-    end
-end)
-
 function ps.getFramework()
     return framework
 end
+
+local function loadAll()
+    if Config.Inventory ~= 'auto' then
+        if inventoryResources[Config.Inventory] then
+            loadLib(inventoryResources[Config.Inventory])
+        else
+            loadLib('bridge/inventory/custom/server/custom.lua')
+            ps.warn('No inventory resource found: falling back to custom')
+        end
+    else
+        loadInventory()
+    end
+    if notify[Config.Notify] then
+        loadLib('bridge/notify/'..notify[Config.Notify])
+    end
+
+    if banking[Config.Banking] then
+        loadLib(banking[Config.Banking])
+    end
+    loadFramework()
+end
+loadAll()

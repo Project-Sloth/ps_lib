@@ -22,6 +22,8 @@ function ps.getNearestPed(coords, distance)
     end
 end
 
+exports('getNearestPed', ps.getNearestPed)
+exports('GetClosestPed', ps.getNearestPed)
 function ps.getNearestVehicle(coords, distance)
     if not coords then coords = GetEntityCoords(PlayerPedId()) end
     if not distance then distance = 10.0 end
@@ -45,6 +47,8 @@ function ps.getNearestVehicle(coords, distance)
         return 'no nearby vehicle', 'no nearby vehicle'
     end
 end
+exports('getNearestVehicle', ps.getNearestVehicle)
+exports('GetClosestVehicle', ps.getNearestVehicle)
 
 function ps.getNearestPlayers(coords, distance)
     local ped = PlayerPedId()
@@ -66,7 +70,8 @@ function ps.getNearestPlayers(coords, distance)
     end
     return closestPlayer, closestDistance
 end
-
+exports('getNearestPlayers', ps.getNearestPlayers)
+exports('GetClosestPlayer', ps.getNearestPlayers)
 function ps.getNearestObject(coords, distance)
     if not coords then coords = GetEntityCoords(PlayerPedId()) end
     if not distance then distance = 10.0 end
@@ -91,12 +96,18 @@ function ps.getNearestObject(coords, distance)
     end
 end
 
+exports('getNearestObject', ps.getNearestObject)
+exports('GetClosestObject', ps.getNearestObject)
+
 function ps.getNearestObjectOfType(type, distance, coords)
     if not type then return end
     if not coords then coords = GetEntityCoords(PlayerPedId()) end
     if not distance then distance = 10.0 end
     return GetClosestObjectOfType(coords.x, coords.y, coords.z, distance, type, false, false, false)
 end
+
+exports('getNearestObjectOfType', ps.getNearestObjectOfType)
+exports('GetClosestObjectOfType', ps.getNearestObjectOfType)
 
 function ps.getNearbyPed(coords, distance)
     if not coords then coords = GetEntityCoords(PlayerPedId()) end
@@ -121,6 +132,7 @@ function ps.getNearbyPed(coords, distance)
     end
 end
 
+exports('getNearbyPeds', ps.getNearbyPed)
 function ps.getNearbyVehicles(coords, distance)
     if not coords then coords = GetEntityCoords(PlayerPedId()) end
     if not distance then distance = 25.0 end
@@ -143,7 +155,7 @@ function ps.getNearbyVehicles(coords, distance)
         return {}
     end
 end
-
+exports('getNearbyVehicles', ps.getNearbyVehicles)
 function ps.getNearbyObjects(coords, distance)
     if not coords then coords = GetEntityCoords(PlayerPedId()) end
     if not distance then distance = 25.0 end
@@ -166,3 +178,4 @@ function ps.getNearbyObjects(coords, distance)
         return {}
     end
 end
+exports('getNearbyObjects', ps.getNearbyObjects)

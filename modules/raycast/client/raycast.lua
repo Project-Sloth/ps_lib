@@ -35,3 +35,5 @@ function ps.raycast()
    local _, hit, endCoords, surfaceNormal, entityHit  = RayCastGamePlayCamera(1000.0)
     return hit, endCoords, surfaceNormal, entityHit
 end
+
+exports('raycast', ps.raycast)

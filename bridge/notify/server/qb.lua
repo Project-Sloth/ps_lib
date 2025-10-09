@@ -5,3 +5,5 @@ function ps.notify(source, text, type, time)
     if not time then time = 5000 end
     TriggerClientEvent('QBCore:Notify', source, text, type, time)
 end
+exports('notify', ps.notify)
+ps.success('Notification Module Loaded: QB Notify')

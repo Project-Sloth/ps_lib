@@ -1,4 +1,4 @@
-
+ps.success('Inventory Module Loaded: QB Inventory')
 
 --@param item string
 -- @return string
@@ -57,3 +57,7 @@ function ps.getItemCount(item)
     end
     return amount
 end
+exports('getImage', ps.getImage)
+exports('getLabel', ps.getLabel)
+exports('hasItem', ps.hasItem)
+exports('hasItems', ps.hasItems)

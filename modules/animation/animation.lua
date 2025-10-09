@@ -27,3 +27,5 @@ function ps.playAnim(ped, animDictionary, animationName, blendInSpeed, blendOutS
     )
     RemoveAnimDict(animDictionary)
 end
+
+exports('playAnim', ps.playAnim)

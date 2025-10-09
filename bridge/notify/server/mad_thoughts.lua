@@ -13,3 +13,5 @@ function ps.notify(source, text, type, time)
         exports['mad-thoughts']:warning(source, text, time / 1000)
     end
 end
+exports('notify', ps.notify)
+ps.success('Notification Module Loaded: Mad Thoughts')

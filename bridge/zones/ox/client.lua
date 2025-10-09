@@ -51,3 +51,10 @@ RegisterNetEvent('onResourceStop', function(resourceName)
         zones[resourceName] = nil
     end
 end)
+
+exports('boxZone', ps.zones.box)
+exports('sphereZone', ps.zones.sphere)
+exports('polyZone', ps.zones.poly)
+exports('removeZone', ps.zones.remove)
+
+ps.success('Zones Module Loaded: ox_lib Zones')

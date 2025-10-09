@@ -1,4 +1,4 @@
-
+ps.success('Inventory Module Loaded: PS Inventory')
 
 function ps.removeItem(identifier, item, amount, slot, reason)
     if not identifier or not item then return end
@@ -128,3 +128,18 @@ function ps.craftItem(source, recipe)
     
     return true
 end
+
+exports('removeItem', ps.removeItem)
+exports('addItem', ps.addItem)
+exports('openStash', ps.openStash)
+exports('hasItem', ps.hasItem)
+exports('getFreeWeight', ps.getFreeWeight)
+exports('openInventoryById', ps.openInventoryById)
+exports('clearInventory', ps.clearInventory)
+exports('clearStash', ps.clearStash)
+exports('getItemCount', ps.getItemCount)
+exports('getItemByName', ps.getItemByName)
+exports('getItemsByNames', ps.getItemsByNames)
+exports('createShop', ps.createShop)
+exports('verifyRecipe', ps.verifyRecipe)
+exports('craftItem', ps.craftItem)

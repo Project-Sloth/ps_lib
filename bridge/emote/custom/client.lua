@@ -1,3 +1,5 @@
+ps.success('Emote Module Loaded: Custom Emotes')
+
 local props = {}
 local IsInEmote = false
 local emotes = {
@@ -94,3 +96,6 @@ function ps.cancelEmote()
     IsInEmote = false
     ClearPedTasks(PlayerPedId())
 end
+
+exports('playEmote', ps.playEmote)
+exports('cancelEmote', ps.cancelEmote)
