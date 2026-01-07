@@ -36,6 +36,8 @@ local drawText = {
     ['qb'] = 'qb.lua',
     ['ox'] = 'ox.lua',
     ['ps'] = 'ps.lua',
+    ['lation'] = 'lation.lua',
+    ['okok'] = 'okok.lua',
 }
 
 local notify = {
@@ -44,6 +46,9 @@ local notify = {
     ['ps'] = 'client/ps.lua',
     ['esx'] = 'client/esx.lua',
     ['mad_thoughts'] = 'client/mad_thoughts.lua',
+    ['lation'] = 'client/lation.lua',
+    ['okok'] = 'client/okok.lua',
+    ['paradise'] = 'client/paradise.lua',
 }
 
 local progressbars = {
@@ -51,12 +56,14 @@ local progressbars = {
     ['oxbar'] = 'oxbar.lua',
     ['oxcircle'] = 'oxcircle.lua',
     ['keep'] = 'keep.lua',
+    ['lation'] = 'lation.lua',
 }
 
 local menus = {
     ['qb'] = 'qb.lua',
     ['ox'] = 'ox.lua',
     ['ps'] = 'ps.lua',
+    ['lation'] = 'lation.lua',
 }
 
 local vehicleKeys = {

@@ -37,7 +37,7 @@ Build: 0.5.4
   - fix small ox_inventory bugs for stashes
   - added support for mad_thoughts and keep_progressbar
 
-Newest Build: 0.5.5
+Build: 0.5.5
   - added notification options
     - okok, lation, paradise
   - added inventory options
@@ -55,4 +55,9 @@ Newest Build: 0.5.5
   - added Lation Draw Text
   - added "or 'en'" to the langs global in config in case the native doesnt do it properly 
 
-  
+Newest Build: 0.5.6
+  - bug fixes:
+    - qb draw text error for DrawText. Mustache_dom was dumb and wrote ShowText
+    - crafting module destroyTarget fix if you arent running qb-target
+  - adjustments:
+    - added more the loader files to properly load notifications, draw text, menu modules for various resources

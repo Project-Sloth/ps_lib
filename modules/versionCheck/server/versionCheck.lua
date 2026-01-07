@@ -13,6 +13,10 @@ function ps.versionCheck(script, link, updateLink)
     PerformHttpRequest(link, function(err, text, headers)
         local remoteVersion = nil
         local changelogLines = {}
+        if not text then
+            ps.error("Failed to fetch version info from " .. link .. " in Resource " .. script)
+            return
+        end
         for line in string.gmatch(text, "[^\r\n]+") do
             if not remoteVersion then
                 local match = string.match(line, "Newest Build:%s*(.+)")

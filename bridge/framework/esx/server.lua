@@ -24,33 +24,6 @@ local function handleJobGrades(jobName)
     return grades
 end
 
-local function loadJobsCompat()
-    local result = MySQL.query.await('SELECT * FROM jobs',{})
-    for k, v in pairs(result) do
-        jobs[v.name] = {
-            label = v.label,
-            defaultDuty = false,
-            type = esxJOBCompat[v.name] or 'none',
-            offDutyPay = 0,
-            grades = handleJobGrades(v.name),
-        }
-    end
-end
-
-local function loadVehiclesCompat()
-    local result = MySQL.query.await('SELECT * FROM vehicles')
-    for k, v in pairs(result) do
-        vehicles[v.model] = {
-            name = v.name,
-            price = v.price,
-            category = v.category,
-        }
-    end
-end
-loadJobsCompat()
-loadVehiclesCompat()
-ps.Shared.Vehicles = vehicles
-ps.Shared.Jobs = jobs
 
 ps.registerCallback('ps_lib:esx:getVehicleLabel', function(model)
    MySQL.query.await('SELECT name FROM vehicles WHERE model = ?', {model}, function(result)
@@ -417,7 +390,7 @@ function ps.hasPermission(source, permission)
 end
 
 function ps.getSharedItems()
-    return exports.ox_inventory:GetItems()
+    return exports.ox_inventory:Items()
 end
 
 function ps.getItemLabel(item)
@@ -437,3 +410,31 @@ RegisterNetEvent('ps_lib:server:toggleDuty', function(bool)
     local src = source
     ps.setJobDuty(src, bool)
 end)
+
+local function loadJobsCompat()
+    local result = MySQL.query.await('SELECT * FROM jobs',{})
+    for k, v in pairs(result) do
+        jobs[v.name] = {
+            label = v.label,
+            defaultDuty = false,
+            type = esxJOBCompat[v.name] or 'none',
+            offDutyPay = 0,
+            grades = handleJobGrades(v.name),
+        }
+    end
+end
+
+local function loadVehiclesCompat()
+    local result = MySQL.query.await('SELECT * FROM vehicles')
+    for k, v in pairs(result) do
+        vehicles[v.model] = {
+            name = v.name,
+            price = v.price,
+            category = v.category,
+        }
+    end
+end
+loadJobsCompat()
+loadVehiclesCompat()
+ps.Shared.Vehicles = vehicles
+ps.Shared.Jobs = jobs

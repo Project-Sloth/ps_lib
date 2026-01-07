@@ -171,7 +171,7 @@ initTargets()
 
 RegisterNetEvent('ps_lib:registerCraftingLocation', function()
     for k, v in pairs(craftingNames) do
-        exports['qb-target']:RemoveZone(v)
+        ps.destroyTarget(v)
     end
     craftingNames = {}
     initTargets()

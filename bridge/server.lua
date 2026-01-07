@@ -19,6 +19,9 @@ local notify = {
     ['ps'] = 'server/ps.lua',
     ['esx'] = 'server/esx.lua',
     ['mad_thoughts'] = 'server/mad_thoughts.lua',
+    ['lation'] = 'server/lation.lua',
+    ['okok'] = 'server/okok.lua',
+    ['paradise'] = 'server/paradise.lua',
 }
 
 local banking = {
