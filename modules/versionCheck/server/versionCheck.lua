@@ -11,6 +11,11 @@ function ps.versionCheck(script, link, updateLink)
     end
 
     PerformHttpRequest(link, function(err, text, headers)
+        if not text or type(text) ~= "string" then
+            ps.debug("Empty or invalid HTTP response for version check: " .. tostring(err))
+            return
+        end
+
         local remoteVersion = nil
         local changelogLines = {}
         for line in string.gmatch(text, "[^\r\n]+") do
