@@ -140,6 +140,11 @@ end
 --- @usage local jobData = ps.getJobData(source, 'dataKey')
 function ps.getJobData(source, data)
     local player = ps.getPlayer(source)
+    
+    if not data then
+        return player.PlayerData.job
+    end
+
     return player.PlayerData.job[data]
 end
 
