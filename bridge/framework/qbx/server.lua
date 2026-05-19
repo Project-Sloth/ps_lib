@@ -175,7 +175,7 @@ end
 --- @description Returns the job grade payment for the given source.
 function ps.getJobGradePay(source)
     local player = ps.getPlayer(source)
-    return player.PlayerData.job.grade.payment
+    return player.PlayerData.job.payment
 end
 
 --- comment
