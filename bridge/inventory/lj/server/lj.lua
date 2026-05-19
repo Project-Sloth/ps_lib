@@ -1,4 +1,4 @@
-ps.warn('lj inventory is archived and outdated, please use ps-inventory')
+ps.warn('lj inventory is archived and outdated, please use qb-inventory')
 
 function ps.removeItem(identifier, item, amount, slot, reason)
     local Player = ps.getPlayer(identifier)

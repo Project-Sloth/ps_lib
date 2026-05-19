@@ -8,7 +8,7 @@ local inventoryResources = {
     ['qb-inventory'] = 'bridge/inventory/qb/server/qb.lua',
     ['ox_inventory'] = 'bridge/inventory/ox/server/ox.lua',
     ['lj-inventory'] = 'bridge/inventory/lj/server/lj.lua',
-    ['ps-inventory'] = 'bridge/inventory/ps/server/ps.lua',
+    ['qb-inventory'] = 'bridge/inventory/ps/server/ps.lua',
     ['jpr-inventory'] = 'bridge/inventory/jpr/server/jpr.lua',
     ['tgiann-inventory'] = 'bridge/inventory/tgiann/server/tgg.lua',
 }

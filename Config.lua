@@ -1,7 +1,8 @@
 Config = {}
 ps = {}
 
-Config.Inventory = "auto" -- auto, ox_inventory, qb-inventory, ps-inventory, lj-inventory, tgiann-inventory, jpr-inventory
+Config.Debug = false -- Set true to turn ps_lib debug prints on, false to turn them off
+Config.Inventory = "auto" -- auto, ox_inventory, qb-inventory, qb-inventory, lj-inventory, tgiann-inventory, jpr-inventory
 Config.Target = "auto" -- auto, ox_target, qb-target, interact
 Config.EmoteMenu = "rpemotes" -- rpemotes, dpemotes, scully, anything else for custom
 Config.Notify = "ox" -- qb, ox, ps, esx, mad_thoughts, okok, lation

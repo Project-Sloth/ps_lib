@@ -2,7 +2,7 @@ ps.success('Inventory Module Loaded: PS Inventory')
 function ps.getImage(item)
     local itemData = QBCore.Shared.Items[item].image
     if itemData then
-        return 'nui://ps-inventory/html/images/' .. itemData
+        return 'nui://qb-inventory/html/images/' .. itemData
     else
         return 'https://avatars.githubusercontent.com/u/99291234?s=280&v=4'
     end

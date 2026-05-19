@@ -30,6 +30,8 @@ end
 
 
 function ps.debug(...)
+    if not (Config and Config.Debug == true) then return end
+
     print('^6[DEBUG]^0 ' .. formatArgs(...))
 end
 
