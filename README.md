@@ -26,13 +26,6 @@ We review all PRs promptly, test them thoroughly, and if accepted, merge them fo
 
 ---
 
-## Documentation
-
-Full documentation for **ps_lib** is available at:  
-[https://docs.projectsloth.org/ps/scripts/ps-lib](https://docs.projectsloth.org/ps/scripts/ps-lib)
-
----
-
 Thanks again for being part of the early journey. Your feedback and contributions help shape the future of this library!
 
 ---
