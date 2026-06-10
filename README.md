@@ -16,13 +16,13 @@ If you encounter issues or bugs, there are two primary ways to get our attention
 The best way to report bugs or problems is through GitHub Issues.  
 This helps us track problems in an organized way, replicate the issues, and patch them quickly.
 
-[Create an issue here](https://github.com/your-org/ps_lib/issues)
+[Create an issue here](https://github.com/Project-Sloth/ps_lib/issues)
 
 ### 2. GitHub Pull Requests
 If you've identified an easy fix or improvement, feel free to open a Pull Request!  
 We review all PRs promptly, test them thoroughly, and if accepted, merge them for the benefit of the whole community.
 
-[Open a Pull Request](https://github.com/your-org/ps_lib/pulls)
+[Open a Pull Request](https://github.com/Project-Sloth/ps_lib/pulls)
 
 ---
 
@@ -43,7 +43,7 @@ Thanks again for being part of the early journey. Your feedback and contribution
 
 We are a VPS and dedicated server provider, specializing in strong gaming DDoS protection and 99.9% uptime.  
 
-We host some of the biggest FiveM servers in the industry such as Prodigy RP, Smile RP, The Academy RP, and many more.  
+We host some of the biggest FiveM servers in the industry, such as Prodigy RP, Smile RP, The Academy RP, and many more.  
 
 ---
 
