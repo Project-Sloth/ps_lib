@@ -7,6 +7,7 @@ local emoteResources = {
 }
 
 local frameworkResources = {
+    {name = 'ox_core', path = 'bridge/framework/ox/client.lua'},
     {name = 'qbx_core', path = 'bridge/framework/qbx/client.lua'},
     {name = 'qb-core', path = 'bridge/framework/qb/client.lua'},
     {name = 'es_extended', path = 'bridge/framework/esx/client.lua'},

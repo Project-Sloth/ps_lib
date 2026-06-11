@@ -24,7 +24,9 @@ Config.Logs = "fivemerr" -- fivemerr or fivemanage
 
 QBCore, ESX, qbx, langs = nil, nil, nil
 
-if GetResourceState('qbx_core') == 'started' then
+if GetResourceState('ox_core') == 'started' then
+    langs = GetConvar('ox:locale', 'en') or 'en'
+elseif GetResourceState('qbx_core') == 'started' then
     qbx = exports.qbx_core
     langs = GetConvar('ox:locale', 'en') or 'en'
 elseif GetResourceState('es_extended') == 'started' then

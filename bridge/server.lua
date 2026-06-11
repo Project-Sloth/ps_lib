@@ -1,5 +1,6 @@
 local framework, inventory = false, false
 local frameworkResources = {
+    {name = 'ox_core', path = 'bridge/framework/ox/server.lua'},
     {name = 'qbx_core', path = 'bridge/framework/qbx/server.lua'},
     {name = 'qb-core', path = 'bridge/framework/qb/server.lua'},
     {name = 'es_extended', path = 'bridge/framework/esx/server.lua'},
