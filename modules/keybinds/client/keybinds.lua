@@ -1,14 +1,21 @@
 local keybinds = {}
 
-function ps.addKeybind(key, commmand) 
+function ps.addKeybind(key, command, message)
     if not keybinds[key] then
-        keybinds[key] = {command = commmand, disabled = false}
+        keybinds[key] = {
+            command = command,
+            disabled = false
+        }
+
         RegisterCommand(key, function()
             if not keybinds[key].disabled then
                 ExecuteCommand(keybinds[key].command)
             end
         end, false)
-        RegisterKeyMapping(key, 'Keybind for ' .. key, 'keyboard', key)
+
+        message = message == nil and ('Keyboard for %s'):format(key) or message
+
+        RegisterKeyMapping(key, message, 'keyboard', key)
     else
         if keybinds[key].disabled then
             keybinds[key].disabled = false
